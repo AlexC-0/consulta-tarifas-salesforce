@@ -17,7 +17,7 @@ LWC → Apex → Named Credential → API HTTPS → validación Apex → instant
 - Sin reintentos automáticos; timeout Apex inicial de diez segundos.
 - No confiar en importes ni respuestas del proveedor aportados por el navegador.
 
-## Modelo posterior, no implementado en fase 2
+## Modelo implementado en fase 3
 
 Product2 con CodigoProveedor__c único. ConsultaTarifa__c con autonumérico,
 producto, código y nombre copiados, cantidad, precio unitario, total, moneda,
@@ -53,3 +53,17 @@ Detalle en [CLIENTE_APEX](CLIENTE_APEX.md) y [STATUS](STATUS.md).
 Demostrados los tres productos y PRODUCT_NOT_FOUND/404 desde Apex mediante HTTPS.
 La organización y las credenciales de sesión 1B se reutilizan. Seguridad comercial,
 Product2, persistencia e interfaz quedan para fases posteriores.
+## Fase 3 — servicio y persistencia
+
+Product2 con código único y ConsultaTarifa__c privada. El servicio recibe Id de
+producto y cantidad; resuelve nombre/código, aplica autorización y CRUD/FLS,
+consulta al proveedor y guarda la respuesta validada en USER_MODE.
+
+Un contexto privado de un solo uso permite únicamente el insert del servicio.
+El trigger rechaza altas directas, edición, borrado y recuperación. El lookup
+SetNull conserva la instantánea si se elimina el producto. Sus copias de nombre,
+código y valores económicos permanecen intactas.
+
+Histórico propio acotado y detalle autorizado, sin callouts; las tarifas caducadas
+siguen legibles y la vigencia se calcula al leer. Sin LWC ni adaptadores Aura.
+Detalles en [MODELO](MODELO.md), [SEGURIDAD](SEGURIDAD.md) y [PERSISTENCIA](PERSISTENCIA.md).

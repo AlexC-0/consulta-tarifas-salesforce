@@ -1,6 +1,6 @@
 # Conexión P05 — configuración verificada y repetición
 
-La fase 2 completó tres tarifas 200 y producto desconocido 404 desde Apex mediante HTTPS. La sesión 1B conserva la evidencia histórica 200 → 401 → 200.
+La fase 3 añade guardado real e histórico sin callouts; véase [PERSISTENCIA](PERSISTENCIA.md). La fase 2 conserva las tres tarifas 200 y el 404; la sesión 1B conserva 200 → 401 → 200.
 Resultados en [STATUS](STATUS.md); evidencia en [evidencias-sesion-1b.json](evidencias-sesion-1b.json).
 Proveedor y túnel quedaron cerrados. No crear otro Playground ni regenerar la clave.
 
@@ -50,7 +50,7 @@ No añadir tolerancias arbitrarias ni alterar fechas del proveedor para superar 
 
 ## Túnel temporal
 
-La autorización de sesión 1B cubrió la demostración ya cerrada. Antes de una nueva
+Las autorizaciones de sesiones anteriores cubrieron sus demostraciones ya cerradas. Antes de una nueva
 exposición, confirmar autorización para el mismo entorno y finalidad.
 
 Desde la raíz del repositorio, con proveedor activo:
@@ -162,3 +162,14 @@ campos de tarifa o categoría/requestId, sin cuerpo externo. Correlacionar los c
 UUID con los logs mínimos y conservar solo esa evidencia saneada.
 La prueba de clave incorrecta de sesión 1B no se repite por rutina si no cambia
 la autenticación ni hay indicios de fallo. Cerrar los procesos propios al terminar.
+## Estado tras fase 3
+
+Conexión y clave existentes reutilizadas. Se actualizó solo la URL temporal para
+la demostración autorizada; proveedor y túnel cerrados después. La instantánea
+P05-000000 permanece legible sin esos procesos. No volver a crear conexión o
+secretos para leerla. La siguiente exposición temporal requiere autorización aplicable.
+
+Los scripts antiguos consulta-demo.apex y consulta-catalogo.apex consultan sin
+guardar. Para el servicio de persistencia, usar las transacciones separadas de
+[PERSISTENCIA](PERSISTENCIA.md). Los resultados actuales están en
+[evidencias-fase-3.json](evidencias-fase-3.json).

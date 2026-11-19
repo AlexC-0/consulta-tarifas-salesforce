@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses><apexClass>P05TarifasServicio</apexClass><enabled>true</enabled></classAccesses>
+    <customPermissions><enabled>true</enabled><name>P05_Consultar_Tarifas</name></customPermissions>
+    <description>Permiso funcional del servicio P05. Requiere datos y conexión por separado.</description>
+    <label>P05 Consultar tarifas</label>
+</PermissionSet>

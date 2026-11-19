@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>P05_FormatoCodigo</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(NOT(ISBLANK(CodigoProveedor__c)), NOT(REGEX(CodigoProveedor__c, "^PROD-[0-9]{3}$")))</errorConditionFormula>
+    <errorDisplayField>CodigoProveedor__c</errorDisplayField>
+    <errorMessage>El código debe seguir el formato PROD-001.</errorMessage>
+</ValidationRule>

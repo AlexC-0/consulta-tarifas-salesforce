@@ -1,58 +1,67 @@
 # P05 — Consulta de tarifas de proveedor desde Salesforce
 
-**Fase 2 completada:** catálogo de tres productos y cliente Apex parametrizable,
-con pruebas aisladas y cuatro llamadas HTTPS reales correlacionadas.
-Demostración como administrador; permisos comerciales todavía no acreditados.
-Product2, persistencia, instantáneas y LWC quedan para fases posteriores.
+**Fase 3 completada:** producto Salesforce + cantidad → consulta HTTPS validada →
+instantánea privada guardada. El histórico se lee sin contactar al proveedor,
+incluso cuando la tarifa caduca.
 
-Base publicada por Alex: `679182b` (sesión 1B).
-Cambios de fase 2 sin staging, para revisión, commit y push manuales de Alex.
+Base publicada por Alex: `ae25cec` (fase 2).
+Los cambios actuales quedan sin staging, para revisión, commit y push manuales.
 
-## Catálogo ficticio
+## Componentes
 
-| Código | Precio unitario EUR |
+- Proveedor Node.js/TypeScript/Fastify: tres productos ficticios; precios en céntimos.
+- Cliente HTTP P05ConsultaTarifa: contrato, correlación y validación de respuesta.
+- P05TarifasServicio: autorización, lectura de Product2, guardado USER_MODE e histórico propio.
+- ConsultaTarifa__c privada: valores históricos, propietario y autoría estándar.
+- Trigger de integridad: creación solo desde el servicio; sin edición ni borrado de instantáneas.
+- Permiso funcional y conjuntos mínimos para datos, servicio y conexión.
+
+| Producto | Precio EUR |
 | --- | --- |
 | PROD-001 | 19.90 |
 | PROD-002 | 125.50 |
 | PROD-003 | 0.99 |
 
-La fuente de precios de ejecución es el catálogo en
-[app.ts](proveedor/src/app.ts), en céntimos enteros. Apex no incorpora esos precios.
-Cantidad entera entre 1 y 10.000, vigencia de 24 horas, sin impuestos ni descuentos.
+Los precios se mantienen solo en [el proveedor](proveedor/src/app.ts).
+Product2 no almacena precios y el cliente Apex no duplica el catálogo.
+PROD-999 es un dato Salesforce separado para demostrar el 404 del proveedor.
 
-## Componentes y documentación
+## Resultados comprobados
 
-- `proveedor/`: Node.js 24, TypeScript y Fastify 5; API autenticada sin base de datos.
-- `salesforce/`: API 68.0; cliente interno, pruebas y credenciales sin secretos.
-- [Cliente Apex](docs/CLIENTE_APEX.md): entradas, validaciones y errores.
-- [Alcance](docs/PROJECT_BRIEF.md), [estado](docs/STATUS.md), [entorno](docs/ENVIRONMENT.md).
-- [OpenAPI y ejemplos](docs/openapi.json), [conexión](docs/CONEXION.md).
-- [Evidencia fase 2](docs/evidencias-fase-2.json).
-- [Histórico sesión 1B](docs/SESION-1B.md) y [evidencia 200/401/200](docs/evidencias-sesion-1b.json).
+- Despliegue incremental: **25 componentes**, API 68.0.
+- **29/29 pruebas Apex**: 16 del cliente y 13 del servicio/integridad.
+- Proveedor y contrato sin cambios; se reutiliza la evidencia de **42/42 pruebas de fase 2**.
+- Consulta HTTPS real PROD-001 × 3: **59.70 EUR**, instantánea **P05-000000**.
+- Producto desconocido: PRODUCT_NOT_FOUND / HTTP 404, **cero registros nuevos**.
+- Lectura posterior de P05-000000 con proveedor y túnel detenidos: **cero callouts**.
 
-## Comprobaciones
+Demostración real como administrador. Las pruebas automatizadas usan usuarios
+mínimos y controles USER_MODE; el recorrido interactivo comercial sigue pendiente.
+No hay LWC ni adaptadores @AuraEnabled y no se declara terminada la V1.
 
-Desde `proveedor/`:
+## Documentación
+
+- [Estado y resultados](docs/STATUS.md) · [evidencia fase 3](docs/evidencias-fase-3.json).
+- [Modelo](docs/MODELO.md) · [seguridad e integridad](docs/SEGURIDAD.md).
+- [Despliegue, carga y demostración](docs/PERSISTENCIA.md).
+- [Cliente HTTP](docs/CLIENTE_APEX.md) · [contrato OpenAPI](docs/openapi.json).
+- [Alcance](docs/PROJECT_BRIEF.md) · [entorno](docs/ENVIRONMENT.md) · [conexión](docs/CONEXION.md).
+- Históricos: [fase 2](docs/FASE-2.md) y [sesión 1B](docs/SESION-1B.md).
+
+## Retomar el trabajo
+
+La organización P05 y la clave ya existen. No recrearlas ni regenerar secretos.
+Proveedor y túnel quedaron cerrados. Para leer el histórico basta Salesforce.
+Cada nueva consulta satisfactoria guarda otra instantánea; no repetirla como lectura.
+
+La [guía de persistencia](docs/PERSISTENCIA.md) separa las transacciones de carga,
+consulta con insert y lectura. El manifiesto incremental está en salesforce/manifest/fase-3.xml.
+Alex realiza personalmente staging, commit y push.
+
+Para modificar el proveedor en otra fase, sus comprobaciones se ejecutan desde proveedor/:
 
 ```powershell
 npm.cmd ci --ignore-scripts
 npm.cmd run check
 npm.cmd run smoke
 ```
-
-`check` verifica tipos y ejecuta **42 pruebas**, incluidas validaciones OpenAPI.
-`smoke` abre solo 127.0.0.1:3055 con clave efímera y prueba los tres productos,
-404, health y autenticación; cierra el servicio al terminar.
-En P05 se desplegaron dos clases y pasaron **16 pruebas Apex con mocks**.
-La evidencia HTTPS real es independiente de esos resultados.
-
-## Retomar una demostración
-
-La organización P05 y su secreto ya existen. No recrearlos ni regenerar la clave.
-Desde `proveedor/`, `npm.cmd start` usa el .env local ignorado y escucha solo en loopback.
-No abre túneles automáticamente. /health es público y mínimo; tarifas exige clave y UUID.
-
-**Proveedor y túnel de fase 2 quedaron cerrados.** Seguir [CONEXION](docs/CONEXION.md)
-para otra demostración: la URL temporal debe actualizarse y la exposición requiere
-autorización aplicable. Mantener el reloj sincronizado: Apex rechaza fechas futuras
-y caducadas; fase 2 no requirió modificar la hora.

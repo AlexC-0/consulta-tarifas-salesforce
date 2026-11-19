@@ -5,10 +5,11 @@ Antes de editar: comprobar ruta, instrucciones, raíz, rama, remoto y estado Git
 Leer README.md, docs/PROJECT_BRIEF.md, docs/STATUS.md y docs/ENVIRONMENT.md.
 Conservar cambios del usuario. Documentación principalmente en castellano.
 
-Fase 2: catálogo de tres productos y cliente Apex parametrizable con validación
-previa y HttpCalloutMock. Demostrar tres consultas reales y producto desconocido.
-Reutilizar organización y credenciales P05. Sin Product2, persistencia, LWC ni V1 completa.
-Sesión 1B publicada por Alex en 679182b; conservar sus evidencias históricas.
+Fase 3: Product2 con código de proveedor, instantáneas privadas ConsultaTarifa__c,
+servicio de consulta/guardado e histórico sin callouts. USER_MODE explícito,
+permiso funcional y creación limitada mediante contexto privado de un solo uso.
+Sin LWC ni V1 completa. Reutilizar organización, cliente y credenciales P05.
+Fase 2 publicada por Alex en ae25cec; conservar sus evidencias históricas.
 No acceder a Gmail. No imprimir secretos, tokens, archivos de autenticación ni URLs
 reutilizables de acceso. No reutilizar organizaciones ajenas o destinos implícitos.
 Alex crea/identifica la organización P05, realiza login e introduce el secreto.
@@ -18,4 +19,4 @@ Antes de abrir un túnel público, presentar servicio, puerto, duración y final
 y obtener confirmación de Alex. Servicio exclusivamente en loopback.
 Sin servicios de pago, comunicaciones reales ni nuevos privilegios amplios.
 Separar pruebas por inyección, HTTP local, mocks Apex y callout real Salesforce.
-No atribuir éxito a pruebas no ejecutadas. Guardado de instantáneas queda para otra sesión.
+No atribuir éxito a pruebas no ejecutadas. Conservar instantáneas válidas de demostración. No borrar datos anteriores.

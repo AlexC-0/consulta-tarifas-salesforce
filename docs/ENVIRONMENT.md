@@ -11,7 +11,7 @@
 | Fastify | 5.12.8 |
 | TypeScript | 5.9.3 |
 | @types/node | 24.19.2 |
-| cloudflared | 2026.11.1 portable en .local/; SHA256 oficial verificado; túneles de sesión 1B y fase 2 utilizados y cerrados |
+| cloudflared | 2026.11.1 portable en .local/; SHA256 oficial verificado; túneles de sesión 1B y fases 2–3 utilizados y cerrados |
 | Organización P05 | Playground exclusivo verificado; CLI autorizada; demostración como System Administrator |
 | API Salesforce | 68.0 verificada en el destino y utilizada en despliegues |
 | Puerto | 3055, solo 127.0.0.1; probado y liberado al finalizar |
@@ -60,3 +60,23 @@ Dos clases desplegadas, 16/16 pruebas Apex, 42/42 pruebas del proveedor y TypeSc
 correcto. Cuatro llamadas reales correlacionadas. Solo se actualizó la URL de la
 Named Credential, sin cambios en claves ni permisos. No se modificó el reloj.
 Proveedor y túnel cerrados, puerto 3055 libre. Evidencia en STATUS.
+## Actualización de fase 3
+
+API 68.0 y herramientas conservadas. Despliegue incremental de 25 componentes;
+29/29 Apex (16 cliente y 13 servicio). Proveedor y OpenAPI no cambiaron; no se
+repitieron sus 42 pruebas. Conversión DX local correcta.
+
+Product2.Name admite 255 caracteres. Salesforce rechaza Restrict en lookups hijos
+a Product2; se desplegó SetNull, sin cascada, con copias históricas independientes.
+Los DateTime guardados se leen con resolución de segundos, comprobada en pruebas
+y en la evidencia real.
+
+Nuevo desfase pequeño diagnosticado: emisión 42 ms futura respecto a Salesforce.
+Windows aceptó w32tm /resync /rediscover pero mantenía aproximadamente 91 ms de
+adelanto. Con la sincronización puntual autorizada se completó el ajuste desde
+la misma fuente NTP mediante Set-Date. Medición posterior: +13.05225 ms (reloj
+local por detrás). Sin configuración persistente modificada ni validaciones relajadas.
+
+Una instantánea real conservada (referencia saneada P05-000000), lectura posterior
+sin proveedor/túnel y cero callouts. Puerto 3055 libre al cierre. Perfil real
+System Administrator; permisos de usuarios mínimos comprobados en tests.

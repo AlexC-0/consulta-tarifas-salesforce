@@ -1,0 +1,129 @@
+{
+    "phase":  "3",
+    "date":  "2026-11-19",
+    "apiVersion":  "68.0",
+    "userProfile":  "System Administrator",
+    "apexTestsExecuted":  29,
+    "apexTestsPassed":  29,
+    "apexTestsFailed":  0,
+    "deployedComponents":  25,
+    "endpointComponentsUpdated":  1,
+    "providerTestsReusedFromPhase2":  42,
+    "providerAndContractUnchanged":  true,
+    "productLoads":  [
+                         {
+                             "step":  "load",
+                             "reused":  0,
+                             "created":  3,
+                             "operation":  "product-load"
+                         },
+                         {
+                             "step":  "reload",
+                             "reused":  3,
+                             "created":  0,
+                             "operation":  "product-load"
+                         },
+                         {
+                             "step":  "negative-load",
+                             "reused":  0,
+                             "created":  1,
+                             "operation":  "product-load"
+                         }
+                     ],
+    "saved":  {
+                  "step":  "save",
+                  "callouts":  1,
+                  "ownedByCaller":  true,
+                  "persisted":  true,
+                  "tariffVersion":  "demo-1",
+                  "schemaVersion":  "1",
+                  "validUntil":  "2026-11-20T12:28:19.000Z",
+                  "receivedAt":  "2026-11-19T12:28:19.000Z",
+                  "issuedAt":  "2026-11-19T12:28:19.000Z",
+                  "quoteId":  "409b8d10-71b0-4d1f-a479-7666af579631",
+                  "requestId":  "ae786682-b496-42e6-87c2-5bffc4e2592e",
+                  "currency":  "EUR",
+                  "totalPrice":  59.70,
+                  "unitPrice":  19.90,
+                  "quantity":  3,
+                  "productName":  "Kit de conexión de demostración",
+                  "productCode":  "PROD-001",
+                  "reference":  "P05-000000",
+                  "operation":  "save",
+                  "providerHttpStatus":  200,
+                  "providerDurationMs":  0.62,
+                  "correlationVerified":  true
+              },
+    "negative":  {
+                     "step":  "negative",
+                     "callouts":  1,
+                     "newRecords":  0,
+                     "afterCount":  0,
+                     "beforeCount":  0,
+                     "requestId":  "2f02248d-226c-47c0-844d-6b3190bb6271",
+                     "category":  "PRODUCT_NOT_FOUND",
+                     "quantity":  1,
+                     "productCode":  "PROD-999",
+                     "operation":  "negative",
+                     "providerHttpStatus":  404,
+                     "providerDurationMs":  0.74,
+                     "correlationVerified":  true
+                 },
+    "readSeparateTransaction":  {
+                                    "step":  "read-active",
+                                    "callouts":  0,
+                                    "historyCount":  1,
+                                    "notice":  "Información obtenida en esta consulta; no se actualiza automáticamente",
+                                    "validNow":  true,
+                                    "validUntil":  "2026-11-20T12:28:19.000Z",
+                                    "receivedAt":  "2026-11-19T12:28:19.000Z",
+                                    "issuedAt":  "2026-11-19T12:28:19.000Z",
+                                    "currency":  "EUR",
+                                    "totalPrice":  59.70,
+                                    "quantity":  3,
+                                    "productName":  "Kit de conexión de demostración",
+                                    "productCode":  "PROD-001",
+                                    "requestId":  "ae786682-b496-42e6-87c2-5bffc4e2592e",
+                                    "reference":  "P05-000000",
+                                    "operation":  "read"
+                                },
+    "readProviderStopped":  {
+                                "step":  "read-offline",
+                                "callouts":  0,
+                                "historyCount":  1,
+                                "notice":  "Información obtenida en esta consulta; no se actualiza automáticamente",
+                                "validNow":  true,
+                                "validUntil":  "2026-11-20T12:28:19.000Z",
+                                "receivedAt":  "2026-11-19T12:28:19.000Z",
+                                "issuedAt":  "2026-11-19T12:28:19.000Z",
+                                "currency":  "EUR",
+                                "totalPrice":  59.70,
+                                "quantity":  3,
+                                "productName":  "Kit de conexión de demostración",
+                                "productCode":  "PROD-001",
+                                "requestId":  "ae786682-b496-42e6-87c2-5bffc4e2592e",
+                                "reference":  "P05-000000",
+                                "operation":  "read"
+                            },
+    "futureResponseRejections":  {
+                                     "requestIds":  [
+                                                        "cb48149d-1f83-4f45-9c54-fdea59eb808c",
+                                                        "de4500fc-6724-4e3a-a81f-1c22ab5b1422"
+                                                    ],
+                                     "category":  "INVALID_RESPONSE",
+                                     "persistedSnapshotsBeforeSuccessfulCall":  0,
+                                     "diagnosticFutureMs":  42
+                                 },
+    "authorizedClockSync":  {
+                                "success":  true,
+                                "source":  "time.windows.com",
+                                "offsetBeforeMs":  -93.1574,
+                                "offsetAfterMs":  13.05225,
+                                "configurationChanged":  false
+                            },
+    "validDemonstrationRecordPreserved":  true,
+    "existingSecretUnchanged":  true,
+    "providerStopped":  true,
+    "tunnelStopped":  true,
+    "port3055Listeners":  0
+}

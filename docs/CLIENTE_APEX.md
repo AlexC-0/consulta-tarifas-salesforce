@@ -14,8 +14,7 @@ No es @AuraEnabled, no recibe URLs ni secretos y no realiza DML.
 - Un código válido desconocido llega al proveedor y puede producir 404.
   No hay lista de productos ni precios de catálogo dentro del cliente.
 
-La futura capa comercial resolverá el código de proveedor a partir de Product2;
-no se implementa en esta fase.
+La capa P05TarifasServicio de fase 3 resuelve el código desde Product2, comprueba permisos y guarda la instantánea. Este cliente HTTP permanece independiente y sin DML.
 
 ## Petición y respuesta
 
