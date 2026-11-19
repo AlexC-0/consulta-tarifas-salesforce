@@ -2,8 +2,8 @@
   "openapi": "3.1.0",
   "info": {
     "title": "P05 — Proveedor simulado de tarifas",
-    "version": "0.1.0",
-    "description": "Sesión 1: solo PROD-001 a 19.90 EUR. Sin base de datos ni reservas. Cuerpos limitados a 4096 bytes. No sirve archivos. Errores de infraestructura pueden contener HTML/texto."
+    "version": "0.2.0",
+    "description": "Fase 2: catálogo ficticio PROD-001 (19.90 EUR), PROD-002 (125.50 EUR) y PROD-003 (0.99 EUR). Precios de ejecución centralizados en proveedor/src/app.ts, en céntimos enteros. Sin base de datos ni reservas. Cuerpos limitados a 4096 bytes. No sirve archivos. Errores de infraestructura pueden contener HTML/texto."
   },
   "servers": [
     {
@@ -84,20 +84,89 @@
                   }
                 }
               },
-              "example": {
-                "productCode": "PROD-001",
-                "quantity": 3
+              "examples": {
+                "PROD-001": {
+                  "value": {
+                    "productCode": "PROD-001",
+                    "quantity": 3
+                  }
+                },
+                "PROD-002": {
+                  "value": {
+                    "productCode": "PROD-002",
+                    "quantity": 2
+                  }
+                },
+                "PROD-003": {
+                  "value": {
+                    "productCode": "PROD-003",
+                    "quantity": 7
+                  }
+                },
+                "PROD-999": {
+                  "value": {
+                    "productCode": "PROD-999",
+                    "quantity": 1
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Tarifa emitida; sin guardado Salesforce en sesión 1.",
+            "description": "Tarifa emitida; sin persistencia Salesforce en fase 2.",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Tarifa"
+                },
+                "examples": {
+                  "PROD-001": {
+                    "value": {
+                      "schemaVersion": "1",
+                      "requestId": "11111111-1111-4111-8111-111111111111",
+                      "quoteId": "22222222-2222-4222-8222-222222222222",
+                      "productCode": "PROD-001",
+                      "quantity": 3,
+                      "currency": "EUR",
+                      "unitPrice": "19.90",
+                      "totalPrice": "59.70",
+                      "issuedAt": "2026-11-19T12:00:00.000Z",
+                      "validUntil": "2026-11-20T12:00:00.000Z",
+                      "tariffVersion": "demo-1"
+                    }
+                  },
+                  "PROD-002": {
+                    "value": {
+                      "schemaVersion": "1",
+                      "requestId": "11111111-1111-4111-8111-111111111111",
+                      "quoteId": "22222222-2222-4222-8222-222222222222",
+                      "productCode": "PROD-002",
+                      "quantity": 2,
+                      "currency": "EUR",
+                      "unitPrice": "125.50",
+                      "totalPrice": "251.00",
+                      "issuedAt": "2026-11-19T12:00:00.000Z",
+                      "validUntil": "2026-11-20T12:00:00.000Z",
+                      "tariffVersion": "demo-1"
+                    }
+                  },
+                  "PROD-003": {
+                    "value": {
+                      "schemaVersion": "1",
+                      "requestId": "11111111-1111-4111-8111-111111111111",
+                      "quoteId": "22222222-2222-4222-8222-222222222222",
+                      "productCode": "PROD-003",
+                      "quantity": 7,
+                      "currency": "EUR",
+                      "unitPrice": "0.99",
+                      "totalPrice": "6.93",
+                      "issuedAt": "2026-11-19T12:00:00.000Z",
+                      "validUntil": "2026-11-20T12:00:00.000Z",
+                      "tariffVersion": "demo-1"
+                    }
+                  }
                 }
               }
             }
@@ -195,7 +264,8 @@
         "properties": {
           "schemaVersion": {
             "type": "string",
-            "const": "1"
+            "const": "1",
+            "description": "Versión de contrato admitida: 1. No es la versión de tarifa."
           },
           "requestId": {
             "type": "string",
@@ -223,7 +293,10 @@
           "unitPrice": {
             "type": "string",
             "pattern": "^(0|[1-9][0-9]{0,5})\\.[0-9]{2}$",
-            "description": "Positivo, máximo 999999.99; PROD-001 cuesta 19.90."
+            "description": "Positivo, máximo 999999.99. El cliente valida límites y coherencia, sin incrustar precios del catálogo.",
+            "not": {
+              "const": "0.00"
+            }
           },
           "totalPrice": {
             "type": "string",
@@ -243,7 +316,10 @@
           },
           "tariffVersion": {
             "type": "string",
-            "const": "demo-1"
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "\\S",
+            "description": "Identificador de tarifa de 1 a 64 caracteres, no compuesto solo por espacios. Independiente de schemaVersion. El proveedor emite demo-1; el cliente acepta otras versiones válidas."
           }
         }
       },

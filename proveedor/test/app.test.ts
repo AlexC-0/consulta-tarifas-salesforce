@@ -132,3 +132,36 @@ test('el proceso falla al arrancar sin secreto', () => {
   assert.equal(result.stdout, '');
   assert.match(result.stderr, /No se pudo iniciar P05/);
 });
+
+// Resultados esperados independientes del catálogo: detectan errores de precio/cálculo.
+for (const [productCode, quantity, unitPrice, totalPrice] of [
+  ['PROD-002', 2, '125.50', '251.00'], ['PROD-003', 7, '0.99', '6.93'],
+  ['PROD-002', 1, '125.50', '125.50'], ['PROD-002', 10000, '125.50', '1255000.00'],
+  ['PROD-003', 1, '0.99', '0.99'], ['PROD-003', 10000, '0.99', '9900.00'],
+] as const) {
+  test('catálogo y cálculo exacto: ' + productCode + ' x ' + quantity, async (t) => {
+    const entries: AccessEntry[] = [];
+    const app = await fixture(t, (entry) => entries.push(entry));
+    const h = headers();
+    const response = await app.inject({ method: 'POST', url: '/v1/tarifas/consultar', headers: h, payload: { productCode, quantity } });
+    assert.equal(response.statusCode, 200);
+    const quote = response.json();
+    assert.equal(quote.productCode, productCode); assert.equal(quote.quantity, quantity);
+    assert.equal(quote.unitPrice, unitPrice); assert.equal(quote.totalPrice, totalPrice);
+    assert.equal(quote.currency, 'EUR'); assert.equal(quote.schemaVersion, '1');
+    assert.equal(quote.requestId, h['x-request-id']);
+    assert.equal(entries[0].requestId, quote.requestId); assert.equal(entries[0].status, 200);
+    assert.equal(Date.parse(quote.validUntil) - Date.parse(quote.issuedAt), 86400000);
+    assert.match(quote.quoteId, UUID_PATTERN);
+    assert.match(quote.unitPrice, /^[0-9]+\.[0-9]{2}$/);
+    assert.match(quote.totalPrice, /^[0-9]+\.[0-9]{2}$/);
+  });
+}
+for (const productCode of [null, 1, 'prod-001', ' PROD-001', 'PROD-01', 'PROD-1000']) {
+  test('formato de código inválido: ' + JSON.stringify(productCode), async (t) => {
+    const app = await fixture(t);
+    const response = await app.inject({ method: 'POST', url: '/v1/tarifas/consultar', headers: headers(), payload: { productCode, quantity: 1 } });
+    assert.equal(response.statusCode, 400);
+    assert.equal(response.json().error.code, 'INVALID_REQUEST');
+  });
+}

@@ -1,5 +1,5 @@
 /**
- * Sonda de sesión 1: una consulta fija, sin DML, interfaz LWC ni secretos.
+ * Cliente interno parametrizable: sin DML, interfaz LWC ni secretos.
  * La Named Credential P05_Proveedor incorpora X-API-Key.
  */
 public with sharing class P05ConsultaTarifa {
@@ -21,7 +21,16 @@ public with sharing class P05ConsultaTarifa {
         '(?i)^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$';
 
     public static Tarifa consultarDemo() {
+        return consultar('PROD-001', 3);
+    }
+    // Decimal permite rechazar fracciones antes de convertir a entero.
+    public static Tarifa consultar(String productCode, Decimal quantity) {
         String requestId = UUID.randomUUID().toString();
+        if (productCode == null || !Pattern.matches('^PROD-[0-9]{3}$', productCode) ||
+            quantity == null || quantity < 1 || quantity > 10000 || quantity != quantity.setScale(0)) {
+            throw failure('INVALID_REQUEST', requestId);
+        }
+        Integer requestedQuantity = quantity.intValue();
         HttpRequest request = new HttpRequest();
         request.setEndpoint('callout:P05_Proveedor/v1/tarifas/consultar');
         request.setMethod('POST');
@@ -30,7 +39,7 @@ public with sharing class P05ConsultaTarifa {
         request.setHeader('Accept', 'application/json');
         request.setHeader('X-Request-Id', requestId);
         request.setBody(JSON.serialize(new Map<String, Object>{
-            'productCode' => 'PROD-001', 'quantity' => 3
+            'productCode' => productCode, 'quantity' => requestedQuantity
         }));
         HttpResponse response;
         try {
@@ -62,18 +71,19 @@ public with sharing class P05ConsultaTarifa {
             }));
             require(text(data, 'schemaVersion').equals('1'));
             require(text(data, 'requestId').equals(requestId));
-            require(text(data, 'productCode').equals('PROD-001'));
-            Object quantity = data.get('quantity');
-            require(quantity instanceof Integer || quantity instanceof Long || quantity instanceof Decimal);
-            require(Decimal.valueOf(String.valueOf(quantity)) == 3);
+            require(text(data, 'productCode').equals(productCode));
+            Object returnedQuantity = data.get('quantity');
+            require(returnedQuantity instanceof Integer || returnedQuantity instanceof Long || returnedQuantity instanceof Decimal);
+            require(Decimal.valueOf(String.valueOf(returnedQuantity)) == requestedQuantity);
             require(text(data, 'currency').equals('EUR'));
-            require(text(data, 'tariffVersion').equals('demo-1'));
+            String tariffVersion = text(data, 'tariffVersion');
+            require(!String.isBlank(tariffVersion) && tariffVersion.length() <= 64);
             String quoteId = text(data, 'quoteId');
             require(Pattern.matches(UUID_REGEX, quoteId));
             Decimal unitPrice = amount(text(data, 'unitPrice'), 6);
             Decimal totalPrice = amount(text(data, 'totalPrice'), 10);
             require(unitPrice > 0 && unitPrice <= 999999.99);
-            require(unitPrice == 19.90 && totalPrice == unitPrice * 3);
+            require(totalPrice == unitPrice * requestedQuantity);
             Datetime issuedAt = utc(text(data, 'issuedAt'));
             Datetime validUntil = utc(text(data, 'validUntil'));
             Datetime receivedAt = Datetime.now();
@@ -82,14 +92,14 @@ public with sharing class P05ConsultaTarifa {
             Tarifa result = new Tarifa();
             result.requestId = requestId;
             result.quoteId = quoteId;
-            result.productCode = 'PROD-001';
-            result.quantity = 3;
+            result.productCode = productCode;
+            result.quantity = requestedQuantity;
             result.currencyCode = 'EUR';
             result.unitPrice = unitPrice;
             result.totalPrice = totalPrice;
             result.issuedAt = issuedAt;
             result.validUntil = validUntil;
-            result.tariffVersion = 'demo-1';
+            result.tariffVersion = tariffVersion;
             result.httpStatus = 200;
             return result;
         } catch (Exception ex) {

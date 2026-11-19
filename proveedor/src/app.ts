@@ -5,7 +5,8 @@ export const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-
 export type AccessEntry = { requestId: string; status: number; durationMs: number };
 type Options = { apiKey: string; log?: (entry: AccessEntry) => void };
 type QuoteRequest = { productCode: string; quantity: number };
-const catalogue = new Map([['PROD-001', 1990]]);
+// Catálogo ficticio versionado. Única fuente de precios de ejecución, en céntimos.
+const catalogue = new Map([['PROD-001', 1990], ['PROD-002', 12550], ['PROD-003', 99]]);
 const digest = (value: string) => createHash('sha256').update(value).digest();
 const money = (cents: number) => Math.trunc(cents / 100) + '.' + String(cents % 100).padStart(2, '0');
 const failure = (requestId: string, code: string, message: string) => ({ requestId, error: { code, message } });

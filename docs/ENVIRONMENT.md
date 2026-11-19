@@ -11,7 +11,7 @@
 | Fastify | 5.12.8 |
 | TypeScript | 5.9.3 |
 | @types/node | 24.19.2 |
-| cloudflared | 2026.11.1 portable en .local/; SHA256 oficial verificado; túnel utilizado y cerrado en sesión 1B |
+| cloudflared | 2026.11.1 portable en .local/; SHA256 oficial verificado; túneles de sesión 1B y fase 2 utilizados y cerrados |
 | Organización P05 | Playground exclusivo verificado; CLI autorizada; demostración como System Administrator |
 | API Salesforce | 68.0 verificada en el destino y utilizada en despliegues |
 | Puerto | 3055, solo 127.0.0.1; probado y liberado al finalizar |
@@ -48,3 +48,15 @@ Binario portable descargado de la [release oficial 2026.11.1](https://github.com
 Playwright CLI 0.1.25 preparado exclusivamente en .local/browser-tools, con caché local. Conexión a Chrome recuperada frente a la incompatibilidad del conector MCP. Sin actualizaciones globales. El Playground P05 fue creado desde Trailhead; autenticación CLI completada e identidad contrastada mediante Organization. API 68.0 confirmada por consulta autenticada.
 
 En sesión 1B se verificó un adelanto del reloj local de unos 2,08 segundos. Con autorización expresa de Alex se ejecutó w32tm /resync /rediscover con elevación; terminó correctamente y dejó el desfase medido en pocos milisegundos, sin cambiar configuración persistente. El proveedor y el túnel se cerraron al completar la demostración.
+
+## Actualización de fase 2
+
+Versiones de ejecución y API 68.0 conservadas. Ajv 8.20.0, que ya estaba en el
+lockfile como dependencia transitiva, se declara también como dependencia directa
+de desarrollo para ejecutar las pruebas del contrato. Sin actualización global.
+
+Identidad de Organization P05 y perfil System Administrator comprobados de nuevo.
+Dos clases desplegadas, 16/16 pruebas Apex, 42/42 pruebas del proveedor y TypeScript
+correcto. Cuatro llamadas reales correlacionadas. Solo se actualizó la URL de la
+Named Credential, sin cambios en claves ni permisos. No se modificó el reloj.
+Proveedor y túnel cerrados, puerto 3055 libre. Evidencia en STATUS.

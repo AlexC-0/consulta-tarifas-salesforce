@@ -1,0 +1,79 @@
+{
+    "phase":  "2",
+    "date":  "2026-11-19",
+    "transport":  "Apex -\u003e Named Credential -\u003e HTTPS -\u003e proveedor P05",
+    "userProfile":  "System Administrator",
+    "apiVersion":  "68.0",
+    "providerTestsPassed":  42,
+    "providerTestsFailed":  0,
+    "apexTestsPassed":  16,
+    "apexTestsFailed":  0,
+    "apexComponentsDeployed":  2,
+    "namedCredentialComponentsUpdated":  1,
+    "records":  {
+                    "value":  [
+                                  {
+                                      "productCode":  "PROD-001",
+                                      "quantity":  3,
+                                      "httpStatus":  200,
+                                      "requestId":  "46ca534b-0f9b-4a7f-a58d-c16b50bc53ad",
+                                      "quoteId":  "673b2394-5b56-468d-b8bd-ebac6661f541",
+                                      "currency":  "EUR",
+                                      "unitPrice":  19.90,
+                                      "totalPrice":  59.70,
+                                      "issuedAt":  "2026-11-19T11:59:55.287Z",
+                                      "validUntil":  "2026-11-20T11:59:55.287Z",
+                                      "tariffVersion":  "demo-1",
+                                      "providerHttpStatus":  200,
+                                      "providerDurationMs":  8.26,
+                                      "correlationVerified":  true
+                                  },
+                                  {
+                                      "productCode":  "PROD-002",
+                                      "quantity":  2,
+                                      "httpStatus":  200,
+                                      "requestId":  "d5d7e646-b349-4094-90ca-037a6bf0126e",
+                                      "quoteId":  "ff406ab0-1556-43e2-aa26-0fe081aa6c67",
+                                      "currency":  "EUR",
+                                      "unitPrice":  125.50,
+                                      "totalPrice":  251.00,
+                                      "issuedAt":  "2026-11-19T11:59:55.405Z",
+                                      "validUntil":  "2026-11-20T11:59:55.405Z",
+                                      "tariffVersion":  "demo-1",
+                                      "providerHttpStatus":  200,
+                                      "providerDurationMs":  3.14,
+                                      "correlationVerified":  true
+                                  },
+                                  {
+                                      "productCode":  "PROD-003",
+                                      "quantity":  7,
+                                      "httpStatus":  200,
+                                      "requestId":  "5fec0429-7562-4ff3-92e9-3b9c0cc9bda6",
+                                      "quoteId":  "f07a9963-76aa-4590-b76b-9f690ff512b3",
+                                      "currency":  "EUR",
+                                      "unitPrice":  0.99,
+                                      "totalPrice":  6.93,
+                                      "issuedAt":  "2026-11-19T11:59:55.513Z",
+                                      "validUntil":  "2026-11-20T11:59:55.513Z",
+                                      "tariffVersion":  "demo-1",
+                                      "providerHttpStatus":  200,
+                                      "providerDurationMs":  0.58,
+                                      "correlationVerified":  true
+                                  },
+                                  {
+                                      "productCode":  "PROD-999",
+                                      "quantity":  1,
+                                      "requestId":  "ce7393b8-b141-4aab-9d74-2ea1eb62ba16",
+                                      "category":  "PRODUCT_NOT_FOUND",
+                                      "providerHttpStatus":  404,
+                                      "providerDurationMs":  0.75,
+                                      "correlationVerified":  true
+                                  }
+                              ],
+                    "Count":  4
+                },
+    "existingSecretUnchanged":  true,
+    "providerStopped":  true,
+    "tunnelStopped":  true,
+    "port3055Listeners":  0
+}

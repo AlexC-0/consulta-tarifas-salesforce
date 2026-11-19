@@ -1,6 +1,6 @@
 # Conexión P05 — configuración verificada y repetición
 
-La sesión 1B completó 200 → 401 → 200 desde Apex mediante HTTPS.
+La fase 2 completó tres tarifas 200 y producto desconocido 404 desde Apex mediante HTTPS. La sesión 1B conserva la evidencia histórica 200 → 401 → 200.
 Resultados en [STATUS](STATUS.md); evidencia en [evidencias-sesion-1b.json](evidencias-sesion-1b.json).
 Proveedor y túnel quedaron cerrados. No crear otro Playground ni regenerar la clave.
 
@@ -134,9 +134,31 @@ ejecuta la sonda y exige UNAUTHORIZED en Apex y 401 en proveedor con el mismo UU
 Restaurar siempre la clave válida, incluso si falla la comprobación, y exigir un
 nuevo éxito correlacionado. No dejar configuración inválida.
 
-Estas llamadas se ejecutan fuera de Test. Los ocho métodos HttpCalloutMock
+Estas llamadas se ejecutan fuera de Test. Los 16 métodos HttpCalloutMock actuales
 no prueban red o permisos ordinarios. La demostración 1B se realizó como
 System Administrator; no se atribuye a un comercial.
 
 Detener los procesos propios de proveedor y túnel, verificar puerto libre y
 registrar resultados saneados. No modificar procesos o configuraciones ajenos.
+
+## Repetición del catálogo de fase 2
+
+Con la organización existente, la clave conservada y un túnel autorizado activo,
+actualizar únicamente la URL de P05_Proveedor. No recrear External Credential,
+principal, parámetro protegido o permisos. En fase 2 se materializó la plantilla
+Named Credential bajo .local y se desplegó un paquete de un solo componente:
+únicamente cambió su URL. No versionar el endpoint temporal.
+
+Desde salesforce/:
+
+```powershell
+sf.cmd apex run --file scripts/consulta-catalogo.apex --target-org p05-tarifas-dev
+```
+
+Esperado: PROD-001 × 3 = 59.70, PROD-002 × 2 = 251.00, PROD-003 × 7 = 6.93 EUR;
+PROD-999 × 1 produce PRODUCT_NOT_FOUND y HTTP 404 en el proveedor.
+El script comprueba importes, rechazo del desconocido y cero DML; emite únicamente
+campos de tarifa o categoría/requestId, sin cuerpo externo. Correlacionar los cuatro
+UUID con los logs mínimos y conservar solo esa evidencia saneada.
+La prueba de clave incorrecta de sesión 1B no se repite por rutina si no cambia
+la autenticación ni hay indicios de fallo. Cerrar los procesos propios al terminar.

@@ -5,8 +5,10 @@ Antes de editar: comprobar ruta, instrucciones, raíz, rama, remoto y estado Git
 Leer README.md, docs/PROJECT_BRIEF.md, docs/STATUS.md y docs/ENVIRONMENT.md.
 Conservar cambios del usuario. Documentación principalmente en castellano.
 
-Sesión 1: proveedor mínimo autenticado con PROD-001, pruebas locales y cliente Apex
-mínimo con HttpCalloutMock. No LWC, objetos de instantáneas ni V1 completa.
+Fase 2: catálogo de tres productos y cliente Apex parametrizable con validación
+previa y HttpCalloutMock. Demostrar tres consultas reales y producto desconocido.
+Reutilizar organización y credenciales P05. Sin Product2, persistencia, LWC ni V1 completa.
+Sesión 1B publicada por Alex en 679182b; conservar sus evidencias históricas.
 No acceder a Gmail. No imprimir secretos, tokens, archivos de autenticación ni URLs
 reutilizables de acceso. No reutilizar organizaciones ajenas o destinos implícitos.
 Alex crea/identifica la organización P05, realiza login e introduce el secreto.

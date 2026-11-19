@@ -1,24 +1,36 @@
 # P05 — Consulta de tarifas de proveedor desde Salesforce
 
-**Sesión 1B completada:** llamada real desde Apex mediante Named Credential y
-HTTPS al proveedor autenticado, rechazo de clave incorrecta y restauración comprobados.
-La demostración utilizó un administrador; los permisos del futuro comercial no
-están acreditados. No hay todavía LWC ni modelo de instantáneas.
+**Fase 2 completada:** catálogo de tres productos y cliente Apex parametrizable,
+con pruebas aisladas y cuatro llamadas HTTPS reales correlacionadas.
+Demostración como administrador; permisos comerciales todavía no acreditados.
+Product2, persistencia, instantáneas y LWC quedan para fases posteriores.
 
-La base local fue publicada por Alex en `603ebd1`. Los cambios de sesión 1B quedan
-para su revisión, staging, commit y push manuales.
+Base publicada por Alex: `679182b` (sesión 1B).
+Cambios de fase 2 sin staging, para revisión, commit y push manuales de Alex.
 
-## Componentes
+## Catálogo ficticio
 
-- `proveedor/`: Node.js 24, TypeScript y Fastify 5; PROD-001 a 19.90 EUR.
-- `salesforce/`: proyecto DX API 68.0, sonda Apex, ocho métodos de prueba,
-  External Credential y Permission Set mínimo.
-- `salesforce/templates/`: Named Credential actual sin URL temporal ni secreto.
-- `docs/`: [alcance](docs/PROJECT_BRIEF.md), [resultados](docs/STATUS.md),
-  [entorno](docs/ENVIRONMENT.md), [OpenAPI](docs/openapi.json),
-  [conexión reproducible](docs/CONEXION.md) y [evidencia saneada](docs/evidencias-sesion-1b.json).
+| Código | Precio unitario EUR |
+| --- | --- |
+| PROD-001 | 19.90 |
+| PROD-002 | 125.50 |
+| PROD-003 | 0.99 |
 
-## Pruebas locales
+La fuente de precios de ejecución es el catálogo en
+[app.ts](proveedor/src/app.ts), en céntimos enteros. Apex no incorpora esos precios.
+Cantidad entera entre 1 y 10.000, vigencia de 24 horas, sin impuestos ni descuentos.
+
+## Componentes y documentación
+
+- `proveedor/`: Node.js 24, TypeScript y Fastify 5; API autenticada sin base de datos.
+- `salesforce/`: API 68.0; cliente interno, pruebas y credenciales sin secretos.
+- [Cliente Apex](docs/CLIENTE_APEX.md): entradas, validaciones y errores.
+- [Alcance](docs/PROJECT_BRIEF.md), [estado](docs/STATUS.md), [entorno](docs/ENVIRONMENT.md).
+- [OpenAPI y ejemplos](docs/openapi.json), [conexión](docs/CONEXION.md).
+- [Evidencia fase 2](docs/evidencias-fase-2.json).
+- [Histórico sesión 1B](docs/SESION-1B.md) y [evidencia 200/401/200](docs/evidencias-sesion-1b.json).
+
+## Comprobaciones
 
 Desde `proveedor/`:
 
@@ -28,26 +40,19 @@ npm.cmd run check
 npm.cmd run smoke
 ```
 
-`check` verifica tipos y ejecuta 27 pruebas. `smoke` abre temporalmente
-`127.0.0.1:3055`, prueba HTTP con clave efímera y cierra el servicio.
-Estas pruebas no sustituyen el callout real de Salesforce.
+`check` verifica tipos y ejecuta **42 pruebas**, incluidas validaciones OpenAPI.
+`smoke` abre solo 127.0.0.1:3055 con clave efímera y prueba los tres productos,
+404, health y autenticación; cierra el servicio al terminar.
+En P05 se desplegaron dos clases y pasaron **16 pruebas Apex con mocks**.
+La evidencia HTTPS real es independiente de esos resultados.
 
-## Retomar el proveedor
+## Retomar una demostración
 
-Ya existe una clave local en `proveedor/.env`, excluida de Git. No regenerarla.
-Desde `proveedor/`:
+La organización P05 y su secreto ya existen. No recrearlos ni regenerar la clave.
+Desde `proveedor/`, `npm.cmd start` usa el .env local ignorado y escucha solo en loopback.
+No abre túneles automáticamente. /health es público y mínimo; tarifas exige clave y UUID.
 
-```powershell
-npm.cmd start
-```
-
-Para una instalación nueva sin .env, Alex ejecuta primero
-`scripts/create-local-secret.ps1`; no imprime el valor ni sobrescribe archivos.
-La sesión 1B contó con autorización expresa de Alex para que Codex generara y
-cargara el secreto mediante un proceso local.
-
-El proveedor escucha solo en loopback. No abre túneles automáticamente.
-/health es mínimo y público; tarifas exige clave y UUID.
-**Proveedor y túnel de la demostración quedaron cerrados.** Para repetirla,
-seguir CONEXION: la URL del Quick Tunnel cambia y debe actualizarse en Salesforce.
-Mantener sincronizado el reloj: Apex rechaza emisiones futuras y tarifas caducadas.
+**Proveedor y túnel de fase 2 quedaron cerrados.** Seguir [CONEXION](docs/CONEXION.md)
+para otra demostración: la URL temporal debe actualizarse y la exposición requiere
+autorización aplicable. Mantener el reloj sincronizado: Apex rechaza fechas futuras
+y caducadas; fase 2 no requirió modificar la hora.
