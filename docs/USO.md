@@ -50,8 +50,9 @@ con requestId cuando está disponible, sin respuestas externas ni detalles inter
 Si el guardado tuvo éxito pero falla el refresco, se conserva su confirmación y referencia.
 Si se pierde la respuesta, revisar Mis consultas antes de repetir: no hay reintentos
 automáticos en el código de la aplicación ni garantía de idempotencia entre dos
-pulsaciones separadas. La matriz de fase 5 detecta dos recepciones del proveedor
-ante 429/503 pese a un solo envío; la capa causante sigue pendiente de aislar.
+pulsaciones separadas. Fase 5B confirma dos entradas HTTP ante 429/503 por una
+llamada Apex. El tramo externo queda acotado y su componente interno sin identificar;
+no hay garantía de entrega única. [Diagnóstico y límites](FASE-5B.md).
 Las respuestas tardías no sustituyen un detalle seleccionado después.
 
 ## Despliegue incremental comprobado

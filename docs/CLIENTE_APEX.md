@@ -20,9 +20,11 @@ La capa P05TarifasServicio de fase 3 resuelve el código desde Product2, comprue
 
 Un único POST a `callout:P05_Proveedor/v1/tarifas/consultar`, timeout de 10 segundos,
 sin bucles de reintento en la aplicación. Salesforce incorpora la clave protegida
-desde la Named Credential. En fase 5 el proveedor recibió dos peticiones para
-429/503 pese a un callout Apex; la capa causante queda por aislar. No equiparar
-Limits.getCallouts() a recepciones del proveedor. [Matriz](STATUS.md).
+desde la Named Credential. Fase 5B confirma dos entradas HTTP independientes ante
+429/503 por un callout Apex y una en los controles Node por loopback/HTTPS.
+La divergencia queda acotada al recorrido externo de Apex, sin identificar su
+componente interno. No equiparar Limits.getCallouts() a recepciones del proveedor
+ni prometer entrega única. [Diagnóstico](FASE-5B.md) y [matriz](STATUS.md).
 
 Respuesta 200: Content-Type JSON, máximo 8192 caracteres y conjunto exacto de campos
 del contrato. Producto, cantidad y requestId deben coincidir con la petición.

@@ -427,7 +427,7 @@
                                              }
                                          ],
                    "visibleValidity":  "Vigente",
-                   "visibleValidityEvidence":  "ObservaciÃ³n visual manual",
+                   "visibleValidityEvidence":  "Observación visual manual",
                    "providerStopped":  true
                },
     "snapshots":  {
@@ -517,13 +517,13 @@
                         "secretChanged":  false
                     },
     "limits":  [
-                   "429 y 503: dos peticiones recibidas con el mismo requestId frente a un callout Apex y un envÃ­o LWC; capa causante sin aislar",
-                   "InstalaciÃ³n limpia no ejecutada",
+                   "429 y 503: dos peticiones recibidas con el mismo requestId frente a un callout Apex y un envío LWC; capa causante sin aislar",
+                   "Instalación limpia no ejecutada",
                    "Fronteras exactas y carreras temporales mediante pruebas deterministas; no equivalen a espera real de 24 horas",
                    "Timeout loopback separado del timeout real Salesforce",
-                   "401 inducido despuÃ©s de autenticaciÃ³n vÃ¡lida; clave incorrecta real solo HTTP local y evidencia histÃ³rica 1B",
-                   "ResoluciÃ³n persistida DateTime de segundos; precisiÃ³n visual estimada",
-                   "Sin idempotencia entre envÃ­os separados"
+                   "401 inducido después de autenticación válida; clave incorrecta real solo HTTP local y evidencia histórica 1B",
+                   "Resolución persistida DateTime de segundos; precisión visual estimada",
+                   "Sin idempotencia entre envíos separados"
                ],
     "v1":  {
                "functionalCandidate":  false,

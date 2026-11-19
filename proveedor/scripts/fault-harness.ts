@@ -1,6 +1,7 @@
 // Exclusivo de pruebas. El servidor normal nunca importa este módulo.
 import { readFileSync } from 'node:fs';
 import { buildApp, type AccessEntry } from '../src/app.ts';
+import { instrumentReceptions, type ReceptionEvent } from './reception-diagnostics.ts';
 
 export const scenarios = ['valid', 'unauthorized', 'rate-limit', 'unavailable', 'inconsistent',
   'expired', 'future', 'timeout', 'disconnect'] as const;
@@ -13,8 +14,10 @@ export function readScenario(path: string): Scenario {
 export function buildFaultHarness(options: {
   apiKey: string; scenario: () => Scenario; log?: (entry: AccessEntry) => void;
   observed?: (requestId: string, scenario: Scenario) => void;
+  diagnostic?: (event: ReceptionEvent) => void;
 }) {
   const app = buildApp({ apiKey: options.apiKey, log: options.log });
+  const recordFault = options.diagnostic ? instrumentReceptions(app, options.scenario, options.diagnostic) : undefined;
   // Solo el proceso de pruebas: permite observar el timeout Apex de 10 s.
   app.server.setTimeout(20_000);
   app.addHook('onSend', async (request, reply, payload) => {
@@ -22,6 +25,7 @@ export function buildFaultHarness(options: {
     // Solo se induce un fallo después de autenticación y validación normales.
     const scenario = options.scenario();
     options.observed?.(request.id, scenario);
+    recordFault?.(request);
     const statuses: Partial<Record<Scenario, number>> = { unauthorized: 401, 'rate-limit': 429, unavailable: 503 };
     const status = statuses[scenario];
     if (status) {

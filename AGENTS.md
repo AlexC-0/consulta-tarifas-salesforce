@@ -10,7 +10,14 @@ cambios, comprobaciones y limitaciones del proyecto. Utilizar redacción técnic
 directa. Excluir relatos de conversaciones, asignaciones personales, firmas
 automáticas y detalles internos de elaboración.
 
-Fase 5: robustez temporal y matriz de fallos. Conservar funcionalidades, USER_MODE,
+Fase 5B: diagnóstico acotado de recepciones repetidas ante 429/503, sobre fase 5
+publicada en 3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16. Distinguir entrada HTTP,
+hook y respuesta mediante identificación local por recepción. Comparar 200/401/429/503
+en loopback, HTTPS del túnel y una llamada Apex. Evitar Login As salvo necesidad.
+No atribuir causas más allá de la evidencia ni cambiar criterios de aceptación.
+No desplegar componentes Salesforce si solo cambian herramientas o documentación.
+Túnel de fase 5 cerrado: esta ejecución requiere autorización temporal específica.
+Conservar funcionalidades, USER_MODE,
 permisos e integridad. Emisión futura: margen fijo máximo de 1000 ms; caducidad sin
 tolerancia y duración exacta de 24 horas. No cambiar relojes ni configuración NTP.
 Sin ampliaciones comerciales ni cierre definitivo V1 antes de revisión.
@@ -38,6 +45,12 @@ Conservar credenciales e instantáneas. V1 no cerrada.
 Fase 5 desplegada incrementalmente: 40/40 Apex, 30/30 Jest, 43/43 proveedor.
 P05-000000 a P05-000004 conservadas. Proveedor/túnel cerrados, endpoint inicial
 y Login As=false restaurados. Ver docs/STATUS.md y docs/evidencias-fase-5.json.
-Pendiente V1: aislar dos recepciones ante 429/503 pese a un callout Apex y un envío
-LWC. No afirmar ausencia de repeticiones de extremo a extremo. Instalación limpia
-sin comprobar. No añadir idempotencia ni reintentos para ocultar el hallazgo.
+Fase 5B: 14 operaciones A/B/C, 18 entradas HTTP independientes. A/B: una entrada
+por estado; C 429/503: dos por un callout, confirmadas una vez por estado. Tramo
+externo de Apex acotado, componente interno sin identificar. Sin defecto propio
+demostrado. TypeScript y 3/3 pruebas afectadas correctos; sin despliegue de aplicación.
+Cinco instantáneas intactas, endpoint restaurado, procesos propios detenidos en
+3,78 minutos de túnel autorizado; Login As no utilizado. Ver docs/FASE-5B.md.
+Pendiente V1: revisar la garantía de ausencia de reintentos programados sin prometer
+entrega única externa; instalación limpia sin comprobar. No añadir idempotencia
+ni reintentos para ocultar el hallazgo. Fase 5B preparada sin commit ni publicación.

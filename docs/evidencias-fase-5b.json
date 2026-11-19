@@ -1,0 +1,567 @@
+{
+  "phase": "5B",
+  "date": "2026-11-19",
+  "publishedBase": "3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16",
+  "workingChangesPublished": false,
+  "initial": {
+    "branch": "main",
+    "workingTreeInitiallyClean": true,
+    "organizationVerified": true,
+    "snapshots": 5,
+    "historicalCorrelationsVerified": 5
+  },
+  "originalCounting": {
+    "method": "max(hooks,responses), no suma; sin identificador físico de entrada",
+    "lines": 47,
+    "exactDuplicateLines": 4,
+    "repeatedGroups": [
+      {
+        "requestId": "3eba27ed-406d-4e56-84a5-a38bc414b982",
+        "hookEvents": 2,
+        "responseEvents": 2,
+        "distinctDurations": 2
+      },
+      {
+        "requestId": "6d73da77-dd69-4bba-8d43-f42e698a551b",
+        "hookEvents": 2,
+        "responseEvents": 2,
+        "distinctDurations": 2
+      },
+      {
+        "requestId": "b7f1bcdd-d54d-447d-8a98-244187a42e5f",
+        "hookEvents": 2,
+        "responseEvents": 2,
+        "distinctDurations": 2
+      },
+      {
+        "requestId": "eeb444c3-1651-4f57-9008-ca4245d702f9",
+        "hookEvents": 2,
+        "responseEvents": 2,
+        "distinctDurations": 2
+      }
+    ],
+    "originalLogHash": "BA98CA24CE374C304FBBB816521CE9438BA59AF4A9A0DD8BD65178FC978C200E"
+  },
+  "encodingRepair": {
+    "changedStrings": [
+      "/resume/visibleValidityEvidence",
+      "/limits/0",
+      "/limits/1",
+      "/limits/4",
+      "/limits/5",
+      "/limits/6"
+    ],
+    "nonTextValuesUnchanged": true
+  },
+  "instrumentation": {
+    "optional": true,
+    "normalServerChanged": false,
+    "singleLoopbackProcess": true,
+    "portInitiallyFree": true,
+    "runId": "0e2ee448-3c70-4a6f-97e1-05034341d528",
+    "events": 54,
+    "distinctHttpEntries": 18,
+    "sequenceContinuous": true,
+    "duplicateSequences": 0,
+    "unmatchedEvents": 0,
+    "logSha256": "9c33518256cf19a80842c44b31963280e838d45ca5efd5fa49104dab58a4c1f1"
+  },
+  "client": {
+    "node": "v24.13.0",
+    "fastify": "5.12.8",
+    "api": "http/https.request",
+    "agent": false,
+    "applicationRetries": 0,
+    "redirectFollowing": false,
+    "timeoutMs": 10000,
+    "product": "PROD-001",
+    "quantity": 3
+  },
+  "matrix": [
+    {
+      "requestId": "80a3694b-e059-4dc3-b9a4-431cf45c65da",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 200,
+      "elapsedMs": 39.69,
+      "scenario": "valid",
+      "layer": "A",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "1519e86d-81dc-4893-8d15-74f853d898b2",
+          "entrySequence": 1,
+          "hookSequence": 2,
+          "responseSequence": 3,
+          "startedUtc": "2026-11-19T15:20:47.193Z",
+          "completedUtc": "2026-11-19T15:20:47.216Z",
+          "durationMs": 23.49,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "requestId": "3441331a-d2b9-45db-b458-c62d45f51124",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 401,
+      "elapsedMs": 27.38,
+      "scenario": "unauthorized",
+      "layer": "A",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "636cf25e-4329-40b5-b0fc-b0b6d9257774",
+          "entrySequence": 4,
+          "hookSequence": 5,
+          "responseSequence": 6,
+          "startedUtc": "2026-11-19T15:20:47.490Z",
+          "completedUtc": "2026-11-19T15:20:47.506Z",
+          "durationMs": 15.09,
+          "status": 401
+        }
+      ]
+    },
+    {
+      "requestId": "4bb5a770-f894-4b35-9745-2b71ab2e11ba",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 429,
+      "elapsedMs": 24.26,
+      "scenario": "rate-limit",
+      "layer": "A",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "75037ca6-1444-406a-a6f4-86382187b214",
+          "entrySequence": 7,
+          "hookSequence": 8,
+          "responseSequence": 9,
+          "startedUtc": "2026-11-19T15:20:47.740Z",
+          "completedUtc": "2026-11-19T15:20:47.751Z",
+          "durationMs": 12,
+          "status": 429
+        }
+      ]
+    },
+    {
+      "requestId": "70139b23-71f0-4364-aeea-d618967ccc2d",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 503,
+      "elapsedMs": 28.18,
+      "scenario": "unavailable",
+      "layer": "A",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "ffd087b2-8e85-4c21-9c54-8b249fa6f372",
+          "entrySequence": 10,
+          "hookSequence": 11,
+          "responseSequence": 12,
+          "startedUtc": "2026-11-19T15:20:47.995Z",
+          "completedUtc": "2026-11-19T15:20:48.008Z",
+          "durationMs": 13.42,
+          "status": 503
+        }
+      ]
+    },
+    {
+      "requestId": "5c74e9d2-a424-4ff3-8ec0-7c821bc86278",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 200,
+      "elapsedMs": 300.64,
+      "scenario": "valid",
+      "layer": "B",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "2719b8ad-32ae-46d3-a2a4-eeff51cada7e",
+          "entrySequence": 13,
+          "hookSequence": 14,
+          "responseSequence": 15,
+          "startedUtc": "2026-11-19T15:24:48.003Z",
+          "completedUtc": "2026-11-19T15:24:48.017Z",
+          "durationMs": 14.26,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "requestId": "73c87477-03a2-4716-929a-5d068280d037",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 401,
+      "elapsedMs": 159.4,
+      "scenario": "unauthorized",
+      "layer": "B",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "119450ae-7db2-4bfb-8449-07527076f10a",
+          "entrySequence": 16,
+          "hookSequence": 17,
+          "responseSequence": 18,
+          "startedUtc": "2026-11-19T15:24:48.417Z",
+          "completedUtc": "2026-11-19T15:24:48.429Z",
+          "durationMs": 12.58,
+          "status": 401
+        }
+      ]
+    },
+    {
+      "requestId": "76c88abb-5638-4962-8fa3-888e62b02f0c",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 429,
+      "elapsedMs": 147.43,
+      "scenario": "rate-limit",
+      "layer": "B",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "5878104a-02e0-45e7-abe4-87f284d23075",
+          "entrySequence": 19,
+          "hookSequence": 20,
+          "responseSequence": 21,
+          "startedUtc": "2026-11-19T15:24:48.791Z",
+          "completedUtc": "2026-11-19T15:24:48.794Z",
+          "durationMs": 3.19,
+          "status": 429
+        }
+      ]
+    },
+    {
+      "requestId": "dc883237-7d99-47be-b071-616359d80e22",
+      "operations": 1,
+      "socketAssignments": 1,
+      "status": 503,
+      "elapsedMs": 142.68,
+      "scenario": "unavailable",
+      "layer": "B",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "4b2d2fb1-4ba4-493c-8de4-e64a07fa05f3",
+          "entrySequence": 22,
+          "hookSequence": 23,
+          "responseSequence": 24,
+          "startedUtc": "2026-11-19T15:24:49.164Z",
+          "completedUtc": "2026-11-19T15:24:49.177Z",
+          "durationMs": 13.61,
+          "status": 503
+        }
+      ]
+    },
+    {
+      "dmlStatements": 0,
+      "historyUnchanged": true,
+      "afterCount": 5,
+      "beforeCount": 5,
+      "elapsedMs": 396,
+      "status": 200,
+      "category": "OK",
+      "requestId": "34f7a485-f40b-410c-a95a-9b6b26f90a78",
+      "callouts": 1,
+      "operations": 1,
+      "layer": "C",
+      "scenario": "valid",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "7db74b09-2083-4d0d-ae9b-6d5c92360421",
+          "entrySequence": 25,
+          "hookSequence": 26,
+          "responseSequence": 27,
+          "startedUtc": "2026-11-19T15:25:49.884Z",
+          "completedUtc": "2026-11-19T15:25:49.896Z",
+          "durationMs": 12.66,
+          "status": 200
+        }
+      ]
+    },
+    {
+      "dmlStatements": 0,
+      "historyUnchanged": true,
+      "afterCount": 5,
+      "beforeCount": 5,
+      "elapsedMs": 194,
+      "status": 401,
+      "category": "UNAUTHORIZED",
+      "requestId": "e378cf45-bd22-4bfe-871f-3da4e48cb857",
+      "callouts": 1,
+      "operations": 1,
+      "layer": "C",
+      "scenario": "unauthorized",
+      "httpEntries": 1,
+      "faultHooks": 1,
+      "responses": 1,
+      "receptions": [
+        {
+          "receptionId": "d41afa8b-91b7-458b-9f20-ab241ddf8464",
+          "entrySequence": 28,
+          "hookSequence": 29,
+          "responseSequence": 30,
+          "startedUtc": "2026-11-19T15:26:03.548Z",
+          "completedUtc": "2026-11-19T15:26:03.561Z",
+          "durationMs": 12.95,
+          "status": 401
+        }
+      ]
+    },
+    {
+      "dmlStatements": 0,
+      "historyUnchanged": true,
+      "afterCount": 5,
+      "beforeCount": 5,
+      "elapsedMs": 1351,
+      "status": 429,
+      "category": "RATE_LIMITED",
+      "requestId": "f8e14d6f-10ae-458b-8479-ef22c13af356",
+      "callouts": 1,
+      "operations": 1,
+      "layer": "C",
+      "scenario": "rate-limit",
+      "httpEntries": 2,
+      "faultHooks": 2,
+      "responses": 2,
+      "receptions": [
+        {
+          "receptionId": "83d04604-3262-4380-a025-bd9cd322aace",
+          "entrySequence": 31,
+          "hookSequence": 32,
+          "responseSequence": 33,
+          "startedUtc": "2026-11-19T15:26:15.827Z",
+          "completedUtc": "2026-11-19T15:26:15.840Z",
+          "durationMs": 12.96,
+          "status": 429
+        },
+        {
+          "receptionId": "998dd565-5bb1-479c-b9df-31e8f7ad7b5b",
+          "entrySequence": 34,
+          "hookSequence": 35,
+          "responseSequence": 36,
+          "startedUtc": "2026-11-19T15:26:17.011Z",
+          "completedUtc": "2026-11-19T15:26:17.022Z",
+          "durationMs": 11.39,
+          "status": 429
+        }
+      ],
+      "entrySeparationMs": 1184
+    },
+    {
+      "dmlStatements": 0,
+      "historyUnchanged": true,
+      "afterCount": 5,
+      "beforeCount": 5,
+      "elapsedMs": 1304,
+      "status": 503,
+      "category": "PROVIDER_UNAVAILABLE",
+      "requestId": "0a485e0b-235e-4db6-b2ec-aab5dd27e60d",
+      "callouts": 1,
+      "operations": 1,
+      "layer": "C",
+      "scenario": "unavailable",
+      "httpEntries": 2,
+      "faultHooks": 2,
+      "responses": 2,
+      "receptions": [
+        {
+          "receptionId": "b99ec843-285b-430c-b3c7-10268963e876",
+          "entrySequence": 37,
+          "hookSequence": 38,
+          "responseSequence": 39,
+          "startedUtc": "2026-11-19T15:26:29.939Z",
+          "completedUtc": "2026-11-19T15:26:29.941Z",
+          "durationMs": 2.04,
+          "status": 503
+        },
+        {
+          "receptionId": "748a47b1-64b8-4abc-a310-ae72fe161a36",
+          "entrySequence": 40,
+          "hookSequence": 41,
+          "responseSequence": 42,
+          "startedUtc": "2026-11-19T15:26:31.069Z",
+          "completedUtc": "2026-11-19T15:26:31.082Z",
+          "durationMs": 12.72,
+          "status": 503
+        }
+      ],
+      "entrySeparationMs": 1130
+    },
+    {
+      "dmlStatements": 0,
+      "historyUnchanged": true,
+      "afterCount": 5,
+      "beforeCount": 5,
+      "elapsedMs": 1376,
+      "status": 429,
+      "category": "RATE_LIMITED",
+      "requestId": "38bada57-532f-41c0-8857-888b921c7d4b",
+      "callouts": 1,
+      "operations": 1,
+      "layer": "C-confirm",
+      "scenario": "rate-limit",
+      "httpEntries": 2,
+      "faultHooks": 2,
+      "responses": 2,
+      "receptions": [
+        {
+          "receptionId": "63d183de-82b3-4f6c-b291-f378f206b26e",
+          "entrySequence": 43,
+          "hookSequence": 44,
+          "responseSequence": 45,
+          "startedUtc": "2026-11-19T15:26:55.380Z",
+          "completedUtc": "2026-11-19T15:26:55.382Z",
+          "durationMs": 1.89,
+          "status": 429
+        },
+        {
+          "receptionId": "525dda76-b9c9-4284-94e3-1cb4c109cf69",
+          "entrySequence": 46,
+          "hookSequence": 47,
+          "responseSequence": 48,
+          "startedUtc": "2026-11-19T15:26:56.481Z",
+          "completedUtc": "2026-11-19T15:26:56.483Z",
+          "durationMs": 2.42,
+          "status": 429
+        }
+      ],
+      "entrySeparationMs": 1101
+    },
+    {
+      "dmlStatements": 0,
+      "historyUnchanged": true,
+      "afterCount": 5,
+      "beforeCount": 5,
+      "elapsedMs": 1230,
+      "status": 503,
+      "category": "PROVIDER_UNAVAILABLE",
+      "requestId": "6d7a3117-ef65-429e-b879-7968f87d6867",
+      "callouts": 1,
+      "operations": 1,
+      "layer": "C-confirm",
+      "scenario": "unavailable",
+      "httpEntries": 2,
+      "faultHooks": 2,
+      "responses": 2,
+      "receptions": [
+        {
+          "receptionId": "8499282c-9674-4b90-9ec3-f9ec40fcb56d",
+          "entrySequence": 49,
+          "hookSequence": 50,
+          "responseSequence": 51,
+          "startedUtc": "2026-11-19T15:27:10.382Z",
+          "completedUtc": "2026-11-19T15:27:10.396Z",
+          "durationMs": 13.27,
+          "status": 503
+        },
+        {
+          "receptionId": "d0332ef3-709a-413f-a770-48ac40e7c969",
+          "entrySequence": 52,
+          "hookSequence": 53,
+          "responseSequence": 54,
+          "startedUtc": "2026-11-19T15:27:11.472Z",
+          "completedUtc": "2026-11-19T15:27:11.484Z",
+          "durationMs": 12.04,
+          "status": 503
+        }
+      ],
+      "entrySeparationMs": 1090
+    }
+  ],
+  "tests": {
+    "typecheck": "passed",
+    "affectedTests": {
+      "passed": 3,
+      "failed": 0,
+      "files": [
+        "proveedor/test/reception-diagnostics.test.ts",
+        "proveedor/test/fault-http.test.ts"
+      ]
+    },
+    "apexSuiteRepeated": false,
+    "jestSuiteRepeated": false,
+    "lwcCommercialRepeated": false
+  },
+  "snapshots": {
+    "before": 5,
+    "after": 5,
+    "unchanged": true,
+    "perApexOperationFullSnapshotHashEqual": true,
+    "finalNamesCorrelationsTotalsEqual": true,
+    "names": [
+      "P05-000000",
+      "P05-000001",
+      "P05-000002",
+      "P05-000003",
+      "P05-000004"
+    ],
+    "created": 0,
+    "updated": 0,
+    "deleted": 0
+  },
+  "restoration": {
+    "tunnelStopped": true,
+    "providerStopped": true,
+    "authorizedMinutes": 30,
+    "tunnelMinutes": 3.78,
+    "stoppedUtc": "2026-11-19T15:28:16.0805841+00:00",
+    "withinAuthorizedWindow": true,
+    "port3055Free": true,
+    "loginAsUsed": false,
+    "endpointRestore": "Succeeded",
+    "namedCredentialMetadataEqual": true,
+    "secretChanged": false,
+    "principalChanged": false,
+    "applicationComponentsDeployed": 0,
+    "temporaryEndpointChanges": 2
+  },
+  "conclusion": {
+    "demonstrated": "Dos entradas HTTP independientes por un callout Apex ante 429/503, reproducidas en dos intentos por estado; una en controles A/B y C 200/401.",
+    "boundedSegment": "Recorrido externo desde Http.send mediante Named Credential hasta el proveedor, incluida la interacción con el túnel; componente interno no identificado.",
+    "ownRetryOrDoubleInvocationFound": false,
+    "specificDocumentedDisableOptionFound": false,
+    "guarantee": "Sin reintentos programados en la aplicación; no entrega única de extremo a extremo.",
+    "acceptanceChangeApproved": false,
+    "v1Closed": false,
+    "cleanInstallationVerified": false
+  },
+  "verification": {
+    "diffCheck": "passed",
+    "jsonFilesParsed": 13,
+    "relativeLinksChecked": 97,
+    "affectedFiles": 16,
+    "secretsOrAccessUrlsFound": 0,
+    "temporaryEndpointPublished": false,
+    "encoding": "UTF-8, sin secuencias mal codificadas detectadas",
+    "stagedFiles": 0,
+    "publishedBaseUnchanged": true
+  },
+  "sources": [
+    "https://nodejs.org/download/release/v24.13.0/docs/api/http.html",
+    "https://fastify.dev/docs/latest/Reference/Lifecycle/",
+    "https://developer.salesforce.com/docs/platform/apex-ref/references/apex-ref/apex-classes-restful-http-httprequest.html",
+    "https://developer.salesforce.com/docs/platform/named-credentials/references/named-credentials-reference/nc-glossary.html",
+    "https://developers.cloudflare.com/tunnel/reference/run-parameters/"
+  ]
+}
