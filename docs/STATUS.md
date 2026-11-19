@@ -1,144 +1,147 @@
-# Estado — fase 3 completada, 19/11/2026
+# Estado — fase 4 completada, 19/11/2026
 
-Servidor completo: Product2 + cantidad → autorización/validación → HTTPS →
-respuesta validada → ConsultaTarifa__c persistida. Histórico propio sin callouts.
-V1 no terminada: quedan LWC, demostración comercial y matriz final de fallos reales.
+Interfaz comercial desplegada y recorrido real comprobado: LWC → controlador →
+servicio existente → HTTPS autenticado → instantánea privada → resultado/histórico.
+**V1 no terminada**: robustez temporal y matriz final de fallos reales pertenecen a fase 5.
 
-## Base y alcance
+## Base, alcance y acceso
 
-Ruta: `C:\Users\kaosk\source\repos\consulta-tarifas-salesforce`.
-Rama main; origin: https://github.com/AlexC-0/consulta-tarifas-salesforce.git.
-Inicio limpio, HEAD y origin/main en `ae25cecd4ae10b9a7ecf9f03552074937f0e6982`.
-Alex publicó la fase 2. Los cambios actuales quedan sin staging; Codex no ejecuta
-commits ni push. No se modifican otros proyectos ni se consulta Gmail.
+Ruta: C:\Users\kaosk\source\repos\consulta-tarifas-salesforce.
+Rama main; origin https://github.com/AlexC-0/consulta-tarifas-salesforce.git.
+Inicio limpio, HEAD/origin main en 148d0e0b8654efcb1d57ba3af5b211f98083f9a6.
+Alex publicó fase 3. Cambios sin staging, sin commits ni push de Codex.
+No se inspeccionaron ni modificaron P01–P04; sin Gmail ni herramientas globales nuevas.
 
-Organización P05 reutilizada e identidad contrastada antes de desplegar.
-Destino explícito p05-tarifas-dev, API 68.0, Developer Edition.
-Se mantienen cliente, contrato, secreto y conexión anteriores.
-[Histórico fase 2](FASE-2.md), [sesión 1B](SESION-1B.md) y sus JSON se conservan.
+Organización P05 e identidad comprobadas, destino explícito p05-tarifas-dev, API 68.0.
+Conexión, principal y clave reutilizados; solo se actualizó el endpoint temporal.
+El estado publicado de fase 3 se conserva íntegro en [FASE-3](FASE-3.md), junto con
+sus evidencias y los históricos anteriores.
+
+Acceso: Iniciador de aplicaciones → **P05 Tarifas** → **Consulta de tarifas**.
+[Guía de uso y despliegue](USO.md), [seguridad](SEGURIDAD.md).
 
 ## Implementación
 
-- Product2.CodigoProveedor__c único y con formato, sin precios locales.
-- ConsultaTarifa__c privada: 14 campos personalizados, autonumérico, propietario
-  y autoría estándar. Nombres históricos de 255 caracteres; total Number(12,2).
-- Servicio separado del cliente HTTP. Permiso funcional y CRUD/FLS antes del
-  callout; consultas y escritura USER_MODE, sin DML previo a la llamada.
-- Un contexto privado, de un solo uso y sin setter/TestVisible, permite solo
-  el insert construido por el servicio. Trigger contra altas directas,
-  update, delete y undelete; sin Test.isRunningTest ni interruptores públicos.
-- Savepoint después del callout; rollback y SAVE_FAILED si falla persistencia
-  o relectura. Errores del proveedor conservan categoría y requestId.
-- Lista propia de 1–100 filas, CreatedDate DESC e Id DESC; detalle propio,
-  vigencia calculada al leer y aviso de que no se actualiza automáticamente.
-- Sin LWC, @AuraEnabled, asincronía de producción, reintentos ni Price Books.
+- Controlador with sharing con cuatro operaciones Aura imperativas, no cacheables.
+  Delega guardado/histórico/detalle al servicio; guardado acepta únicamente Id y cantidad.
+- DTO de nivel superior P05ProductoOpcion y P05TarifaVista, propiedades AuraEnabled.
+  No se expone la clase interna Detalle ni SObject/propietario/datos innecesarios.
+- Productos con autorización funcional, CRUD/FLS y USER_MODE; activos con código válido,
+  orden nombre/Id y límite 200 candidatos. PROD-999 excluido solo del selector normal;
+  fixture y tres productos normales intactos.
+- LWC p05Tarifas con componentes base y SLDS: enteros 1–10000, carga y doble envío
+  bloqueado; confirmación con referencia y valores persistidos; EUR con dos decimales,
+  fechas en zona del usuario y vigencia recalculada cada segundo desde caducidad.
+- Mis consultas: 50 propias; detalle y actualización explícita solo de Salesforce.
+  Errores seguros en castellano con requestId cuando existe y canales independientes.
+  Refresco fallido conserva confirmación; nueva petición limpia el detalle anterior;
+  respuestas tardías no pisan selección posterior. Sin reintentos ni precios calculados en JS.
+- Aplicación P05_Tarifas y pestaña P05_Consulta; dos conjuntos existentes actualizados.
+  Cliente HTTP, servicio e integridad permanecen sin cambios.
 
-Detalles: [MODELO](MODELO.md), [SEGURIDAD](SEGURIDAD.md), [PERSISTENCIA](PERSISTENCIA.md).
+## Perfil y permisos reales
 
-## Decisiones y ajustes verificados
+Se comprobó una licencia Salesforce libre. Alex autorizó crear Comercial Demo P05,
+perfil **Minimum Access - Salesforce**, sin rol, sin enviar correos ni cambiar
+credenciales existentes. Cuenta conservada, con exactamente tres conjuntos:
+P05_Datos_Tarifas, P05_Consultar_Tarifas y P05_Conexion_Proveedor.
 
-Salesforce rechazó Restrict en el lookup hacia Product2. La alternativa SetNull
-no borra consultas en cascada: conserva copias históricas y elimina solo el enlace
-si un administrador borra el producto. Prueba automatizada aprobada.
+El perfil carecía de LightningExperienceUser y lectura UserExternalCredential.
+Se añadieron esos permisos específicos a consulta y conexión respectivamente.
+Comprobación final: cero concesiones de ViewAllData, ModifyAllData,
+CustomizeApplication o ManageUsers; sin View All/Modify All de objetos P05.
 
-Los DateTime persistidos se leen con resolución de segundos. La validación del
-cliente conserva milisegundos y duración exacta de 24 horas antes de insertar.
-Se documenta la precisión real del almacenamiento, sin añadir tolerancias al reloj.
+La navegación inicial recuperaba una pestaña administrativa, descartada como evidencia
+comercial. Se siguió el enlace oficial Login As a nivel de pestaña y se verificó
+la identidad efectiva antes de guardar. No se convirtió al administrador ni se usó
+Apex anónimo como sustituto del recorrido interactivo.
 
-Los primeros tests detectaron que el contador DML incluía trabajo del fixture y
-System.runAs. El mock compara contra el contador previo y exige cero DML añadido
-por el servicio antes del HTTP. Los históricos de test se crean por el propio
-servicio en transacciones Queueable exclusivamente de test; sin bypass del guardián.
-
-## Despliegue y pruebas
+## Pruebas y despliegue final
 
 | Comprobación | Resultado |
 | --- | --- |
-| Despliegue incremental final con manifest/fase-3.xml | Succeeded, **25 componentes**, 0 errores |
-| P05ConsultaTarifaTest | **16/16** aprobadas |
-| P05TarifasServicioTest | **13/13** aprobadas |
-| Total Apex | **29 ejecutadas, 29 aprobadas, 0 fallidas**, sin advertencias de cobertura |
-| Named Credential para demostración | Succeeded, **1 componente**; únicamente nueva URL temporal |
-| Conversión DX local | Correcta, estado 0 |
-| Proveedor/OpenAPI | Sin cambios; 42/42 de fase 2 reutilizadas, no repetidas |
+| manifest/fase-4.xml | Succeeded, **9 componentes**, 0 errores |
+| P05ConsultaTarifaTest | **16/16** |
+| P05TarifasServicioTest | **13/13** |
+| P05TarifasControladorTest | **7/7** |
+| Total Apex | **36/36**, 0 fallos |
+| Jest local | **21/21**, 0 fallos |
+| Endpoint temporal | Succeeded, 1 Named Credential |
+| Conversión DX local | Estado 0 |
+| Proveedor/OpenAPI | Sin cambios; 42/42 fase 2 reutilizadas, no repetidas |
 
-Pruebas: todos los campos guardados, cantidades 1/10000, total máximo
-9999999900.00, nombre 255 caracteres, validación previa, producto inactivo/sin
-código/inaccesible, permiso funcional/objeto/FLS, 404/timeout/respuesta inválida,
-fallo real de FK con cero instantáneas nuevas, nuevo precio sin alterar anterior,
-cambios/borrado de producto, histórico caducado, orden estable, usuarios propios/
-ajenos e intentos de escritura directa. Usuarios y permisos parciales solo de test,
-sin nuevas cuentas persistentes.
+Comandos reproducibles en [USO](USO.md). Jest cubre carga/vacío, entradas inválidas,
+argumentos, doble clic, confirmación/formato, errores seguros, recuperación, éxito
+antiguo, fallo de refresco, carreras, deduplicación, caducidad y desconexión.
+Apex cubre filtros/permisos, DTO, delegación, 404 sin insert, aislamiento/histórico
+sin callouts y traducción segura, además de cliente/servicio/integridad anteriores.
+Jest no acredita integración ni permisos reales de Salesforce.
 
-## Carga real
+Se corrigieron el form factor Large de la aplicación y exclusiones Jest en .forceignore
+tras el primer despliegue fallido. Se ajustó una expectativa de atributos numéricos
+en los stubs de Jest. Los intentos fallidos no se contabilizan como éxitos.
+Apex se repitió tras cambios de permisos; Jest no se repitió por rutina tras pasar.
 
-Se asignaron al administrador P05 los conjuntos nuevos P05_Datos_Tarifas y
-P05_Consultar_Tarifas. P05_Conexion_Proveedor ya estaba asignado.
-No se ampliaron privilegios generales.
+## Demostración comercial
 
-Carga normal: **3 creados**. Repetición: **0 creados y 3 reutilizados**.
-Carga negativa independiente: **1 creado**, PROD-999.
-No se modificaron productos incompatibles ni datos anteriores.
-Cada carga se ejecutó en transacción separada.
+| Caso | Evidencia |
+| --- | --- |
+| Selector | Tres productos normales; PROD-999 ausente |
+| Cantidad 0 | Rechazo visible antes del envío |
+| Histórico inicial | Vacío; P05-000000 administrativa ausente |
+| PROD-001 × 3 | **P05-000001**, 19.90 × 3 = **59.70 EUR**, confirmación y detalle |
+| Correlación | **680c6dff-0916-4b82-a0cc-7a06bdfb783f**, exactamente un HTTP 200 proveedor |
+| Propietario y autoría | Ambos del comercial; lectura administrativa de contraste |
+| Abrir histórico propio | P05-000001 abierta desde su botón de referencia |
+| Detalle ajeno | «La consulta histórica no está disponible para tu usuario» |
+| Proveedor/túnel apagados | Recarga, Actualizar histórico y detalle propio correctos |
+| Nueva consulta tras apagado | HTTP_ERROR seguro, 0 nuevos registros, sin detalle/éxito anterior |
+| Lectura tras ese error | Histórico y detalle P05-000001 disponibles de nuevo |
 
-## Evidencia real y persistencia
+El sondeo de detalle ajeno usó un evento rowaction del LWC con el Id administrativo,
+bajo la sesión comercial verificada; invocó el controlador real.
+Propiedad y recuentos se contrastaron mediante lecturas administrativas complementarias,
+no presentadas como API ordinaria. Recuento final: **2 registros**, uno de cada usuario.
+P05-000000 y su requestId de fase 3 se conservan intactos.
 
-| Caso | Resultado | Referencia / requestId |
-| --- | --- | --- |
-| PROD-001 × 3 | 200 proveedor; **59.70 EUR guardados** | **P05-000000** / ae786682-b496-42e6-87c2-5bffc4e2592e |
-| PROD-999 × 1 | PRODUCT_NOT_FOUND / 404; **0 registros nuevos** | 2f02248d-226c-47c0-844d-6b3190bb6271 |
-| Lectura en otra transacción | Misma referencia, total y requestId; 0 callouts | P05-000000 |
-| Lectura con proveedor/túnel detenidos | Misma referencia, total y requestId; **0 callouts** | P05-000000 |
+[Evidencia saneada](evidencias-fase-4.json), [detalle sin proveedor](evidencias/fase-4/detalle-sin-proveedor.png)
+y [error sin proveedor](evidencias/fase-4/error-sin-proveedor.png). Capturas limitadas
+al componente y revisadas visualmente, sin usuario, dominio, IDs privados ni secretos.
 
-El caso negativo se ejecutó antes del guardado satisfactorio: recuentos 0 → 0.
-La consulta válida posterior dejó una instantánea, conservada como evidencia.
-Se contrastaron los requestId del registro y del 404 con los logs mínimos del
-proveedor, exactamente una coincidencia por llamada.
-[Evidencia saneada completa](evidencias-fase-3.json), sin IDs de Salesforce.
+## Reloj y restauración
 
-Perfil real confirmado: **System Administrator**, UserType Standard.
-Esto se distingue de los tests con usuarios mínimos y no acredita todavía una
-demostración interactiva comercial.
+Una llamada inicial falló por permisos de credencial, sin llegar al proveedor ni guardar.
+Tras corregirlos, otra obtuvo HTTP 200 pero fue rechazada por INVALID_RESPONSE sin insert.
+Sonda administrativa de diagnóstico sin DML: emisión **13 ms futura** respecto a recepción;
+correlación, producto, cantidad, importes y duración exacta de 24 horas correctos.
 
-## Reloj, restauración y cierre
+Alex autorizó expresamente la sincronización de fase 4. w32tm /resync /rediscover
+terminó con código 0; la medición posterior aún mostraba adelanto local de 49.9497 ms.
+Se completó corrección puntual con tres muestras NTP correlacionadas de la misma
+fuente time.windows.com. Medición posterior: offset +6.01825 ms (local ligeramente
+por detrás). Sin configuración persistente, offsets del proveedor o validaciones
+relajadas. La siguiente consulta del LWC comercial guardó P05-000001.
 
-Dos intentos de guardado fueron rechazados por INVALID_RESPONSE antes de insertar.
-El diagnóstico observó emisión 42 ms futura respecto a Salesforce, con importes,
-correlación y duración correctos. Recuento posterior: cero instantáneas.
+Proveedor/túnel propios detenidos y puerto 3055 sin listener antes de la prueba offline.
+Endpoint temporal inactivo; clave y principal conservados.
+Login As comenzó en false, se habilitó con autorización, se cerró la sesión comercial
+y se restauró **false**, comprobado tras recarga. Cuenta y registros válidos conservados.
 
-Alex autorizó expresamente la sincronización puntual de Windows y completó la
-elevación. w32tm /resync /rediscover terminó con código 0, pero mantenía unos
-91 ms de adelanto. Se completó el ajuste puntual con tres muestras NTP correlacionadas
-de la misma fuente time.windows.com y Set-Date, sin cambios de configuración
-persistente. Medición seleccionada previa: -93.1574 ms; posterior: +13.05225 ms
-(reloj local ligeramente por detrás). La llamada siguiente fue válida.
-No se alteraron fechas del proveedor ni validaciones del cliente.
+## Límites y siguiente paso
 
-Alex autorizó el Quick Tunnel de fase 3 solo hacia 127.0.0.1:3055 durante la
-demostración. Binding verificado. Túnel y proveedor propios detenidos; puerto
-3055 sin listeners. La lectura posterior se ejecutó después de ese cierre.
+Instalación incremental verificada; instalación limpia desde cero no ejecutada.
+La caducidad visual depende del reloj del navegador. La validación Apex sigue
+siendo estricta y sensible a desfases pequeños. Sin idempotencia entre pulsaciones
+separadas: si falta confirmación, revisar el histórico antes de repetir.
+No hay bloqueos pendientes de fase 4. Robustez temporal y matriz final de fallos
+reales quedan para fase 5, con nuevo encargo. **No declarar V1 cerrada.**
 
-La clave y el principal se conservan. Se conservan los cuatro productos ficticios
-y la instantánea válida; no se borra automáticamente evidencia de negocio.
-El endpoint temporal queda inactivo hasta una nueva ejecución autorizada.
-No hay bloqueos pendientes para cerrar fase 3.
-
-## Siguiente paso
-
-Revisión y publicación manual de Alex. La siguiente fase necesita su nuevo encargo:
-interfaz LWC, recorrido comercial y matriz final de fallos reales.
-La instalación probada es incremental sobre P05; no se ha ejecutado una instalación
-limpia desde cero.
+Revisión y publicación manual de Alex. Codex no realiza staging, commit ni push.
 
 ## Revisión local final
 
-74 archivos versionables revisados: nueve JSON/plantillas, 30 XML/plantillas,
-tres scripts PowerShell y 39 enlaces relativos correctos. Clave, ID/dominio/usuario
-privado y URL temporal ausentes de los archivos versionables, comprobados en memoria
-sin mostrar valores. .env, .local y .sf siguen excluidos de Git.
-El histórico de fase 2 coincide íntegramente con STATUS del commit base.
-
-Se retiraron 16 temporales propios de diagnóstico, elevación, despliegue y túnel.
-Se conservan originales, herramientas, evidencia saneada y conversión local.
-No se guardaron logs de depuración Apex completos. Árbol sin staging;
-HEAD y origin/main siguen en ae25cec. Puerto 3055 libre al cierre.
+99 archivos versionables revisados: 11 JSON, 36 XML y 57 enlaces relativos correctos.
+Escaneo en memoria sin clave, endpoint temporal, dominio/usuario ni IDs privados.
+.env, .local, .sf y node_modules excluidos. Histórico fase 3 idéntico al STATUS
+del commit base. Cliente, servicio, proveedor y OpenAPI sin cambios.
+Git sin staging; HEAD y origin/main siguen en 148d0e0. Sin commits ni push.

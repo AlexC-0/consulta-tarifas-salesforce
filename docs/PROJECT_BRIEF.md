@@ -67,3 +67,12 @@ código y valores económicos permanecen intactas.
 Histórico propio acotado y detalle autorizado, sin callouts; las tarifas caducadas
 siguen legibles y la vigencia se calcula al leer. Sin LWC ni adaptadores Aura.
 Detalles en [MODELO](MODELO.md), [SEGURIDAD](SEGURIDAD.md) y [PERSISTENCIA](PERSISTENCIA.md).
+## Fase 4 — interfaz y recorrido comercial completados
+
+LWC p05Tarifas, controlador with sharing y DTO de nivel superior. Aplicación/pestaña
+P05 y permisos mínimos versionados. Consulta/guardado delegados al servicio anterior,
+histórico propio sin proveedor, errores seguros y caducidad visual dinámica.
+
+Recorrido comercial real, propiedad/autoría, detalle ajeno denegado y lectura offline
+comprobados. 36/36 Apex y 21/21 Jest. Fase 5 conserva la matriz final de fallos reales
+y revisión de robustez temporal; la V1 no se declara terminada.

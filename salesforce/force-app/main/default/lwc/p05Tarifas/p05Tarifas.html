@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Consulta de tarifas" icon-name="standard:product">
+        <div class="slds-p-around_medium">
+            <p class="slds-m-bottom_medium">Cada consulta válida guarda una nueva instantánea. El histórico no consulta al proveedor.</p>
+            <section aria-label="Nueva consulta" class="slds-box slds-m-bottom_medium">
+                <h2 class="slds-text-heading_small">Nueva consulta</h2>
+                <template lwc:if={loadingProducts}><lightning-spinner alternative-text="Cargando productos" size="small"></lightning-spinner></template>
+                <template lwc:if={productError}><p role="alert" class="slds-text-color_error">{productError}</p></template>
+                <template lwc:if={noProducts}><p role="status">No hay productos disponibles para consultar.</p></template>
+                <div class="slds-grid slds-wrap slds-gutters">
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-3">
+                        <lightning-combobox name="product" label="Producto" value={productId} options={productOptions} onchange={handleProduct} required disabled={saving} placeholder="Selecciona un producto"></lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                        <lightning-input name="quantity" type="number" label="Cantidad" value={quantity} min="1" max="10000" step="1" required disabled={saving} onchange={handleQuantity} message-when-range-underflow="La cantidad mínima es 1." message-when-range-overflow="La cantidad máxima es 10.000." message-when-step-mismatch="Introduce una cantidad entera."></lightning-input>
+                    </div>
+                </div>
+                <lightning-button data-action="save" class="slds-m-top_medium" variant="brand" label="Consultar y guardar tarifa" onclick={handleSave} disabled={submitDisabled}></lightning-button>
+                <template lwc:if={saving}><lightning-spinner alternative-text="Consultando y guardando tarifa" size="small"></lightning-spinner><p role="status">Consulta en curso…</p></template>
+                <template lwc:if={formError}><p data-message="form-error" role="alert" class="slds-text-color_error slds-m-top_small">{formError}</p></template>
+                <p data-message="confirmation" role="status" aria-live="polite" class="slds-m-top_small">{confirmation}</p>
+            </section>
+            <section aria-label="Detalle de consulta" class="slds-m-bottom_medium">
+                <template lwc:if={loadingDetail}><lightning-spinner alternative-text="Cargando detalle" size="small"></lightning-spinner></template>
+                <template lwc:if={detailError}><p role="alert" class="slds-text-color_error">{detailError}</p></template>
+                <template lwc:if={detail}>
+                    <h2 class="slds-text-heading_small">{detailHeading}: {detail.reference}</h2>
+                    <dl class="slds-list_horizontal slds-wrap slds-m-top_small">
+                        <dt class="slds-item_label">Producto histórico</dt><dd class="slds-item_detail">{detail.productName} · {detail.productCode}</dd>
+                        <dt class="slds-item_label">Cantidad</dt><dd class="slds-item_detail">{detail.quantity}</dd>
+                        <dt class="slds-item_label">Precio unitario (EUR)</dt><dd class="slds-item_detail"><lightning-formatted-number value={detail.unitPrice} minimum-fraction-digits="2" maximum-fraction-digits="2"></lightning-formatted-number></dd>
+                        <dt class="slds-item_label">Total (EUR)</dt><dd class="slds-item_detail"><lightning-formatted-number value={detail.totalPrice} minimum-fraction-digits="2" maximum-fraction-digits="2"></lightning-formatted-number></dd>
+                        <dt class="slds-item_label">Fecha de consulta</dt><dd class="slds-item_detail"><lightning-formatted-date-time value={detail.createdAt} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" second="2-digit" time-zone={timeZone} time-zone-name="short"></lightning-formatted-date-time></dd>
+                        <dt class="slds-item_label">Emisión del proveedor</dt><dd class="slds-item_detail"><lightning-formatted-date-time value={detail.issuedAt} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" second="2-digit" time-zone={timeZone} time-zone-name="short"></lightning-formatted-date-time></dd>
+                        <dt class="slds-item_label">Caducidad</dt><dd class="slds-item_detail"><lightning-formatted-date-time value={detail.validUntil} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" second="2-digit" time-zone={timeZone} time-zone-name="short"></lightning-formatted-date-time></dd>
+                        <dt class="slds-item_label">Vigencia</dt><dd data-message="validity" role="status" class="slds-item_detail">{validity}</dd>
+                    </dl>
+                    <p class="slds-m-top_small">{detail.notice}</p>
+                    <p class="slds-text-body_small">Zona horaria: {timeZone}</p>
+                </template>
+            </section>
+            <section aria-label="Mis consultas">
+                <h2 class="slds-text-heading_small">Mis consultas</h2>
+                <p>Las 50 más recientes. Fechas en {timeZone}.</p>
+                <lightning-button data-action="refresh" label="Actualizar histórico" onclick={refreshHistory} disabled={loadingHistory} class="slds-m-vertical_small"></lightning-button>
+                <template lwc:if={loadingHistory}><lightning-spinner alternative-text="Cargando histórico" size="small"></lightning-spinner></template>
+                <template lwc:if={historyError}><p data-message="history-error" role="alert" class="slds-text-color_error">{historyError}</p></template>
+                <template lwc:if={emptyHistory}><p role="status">Todavía no tienes consultas guardadas.</p></template>
+                <template lwc:if={hasRows}><lightning-datatable key-field="recordId" data={rows} columns={columns} hide-checkbox-column onrowaction={handleRowAction} aria-label="Mis consultas guardadas"></lightning-datatable></template>
+            </section>
+        </div>
+    </lightning-card>
+</template>

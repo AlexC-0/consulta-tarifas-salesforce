@@ -1,0 +1,4 @@
+section { position: relative; }
+.slds-item_label { width: 35%; }
+.slds-item_detail { width: 65%; overflow-wrap: anywhere; }
+lightning-button { display: inline-block; }

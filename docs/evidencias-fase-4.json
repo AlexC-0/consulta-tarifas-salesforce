@@ -1,0 +1,140 @@
+{
+  "phase": 4,
+  "date": "2026-11-19",
+  "baseCommit": "148d0e0b8654efcb1d57ba3af5b211f98083f9a6",
+  "deployment": {
+    "status": "Succeeded",
+    "components": 9,
+    "apexTests": 36,
+    "apexFailures": 0
+  },
+  "jest": {
+    "passed": 21,
+    "failed": 0,
+    "tool": "@salesforce/sfdx-lwc-jest 7.9.0"
+  },
+  "commercial": {
+    "profile": "Minimum Access - Salesforce",
+    "role": null,
+    "assignedSets": [
+      "P05_Conexion_Proveedor",
+      "P05_Consultar_Tarifas",
+      "P05_Datos_Tarifas"
+    ],
+    "broadPermissionsFound": 0,
+    "creationAuthorized": true,
+    "emailsRequested": false,
+    "existingCredentialsChanged": false
+  },
+  "ui": {
+    "sessionIdentityVerified": true,
+    "timeZone": "Europe/Madrid",
+    "normalProducts": 3,
+    "negativeFixtureExcluded": true,
+    "quantityZeroRejected": true,
+    "initialHistoryEmpty": true,
+    "ownDetailOpened": true,
+    "adminOriginalAbsent": true,
+    "foreignDetailDenied": true,
+    "foreignProbe": "Evento rowaction del LWC con Id ajeno bajo sesión comercial; controlador real, sin token administrativo."
+  },
+  "saved": {
+    "reference": "P05-000001",
+    "productCode": "PROD-001",
+    "quantity": 3,
+    "unitPrice": 19.9,
+    "total": 59.7,
+    "currency": "EUR",
+    "requestId": "680c6dff-0916-4b82-a0cc-7a06bdfb783f",
+    "issuedAt": "2026-11-19T13:14:40.000+0000",
+    "validUntil": "2026-11-20T13:14:40.000+0000",
+    "ownerIsCommercial": true,
+    "createdByCommercial": true,
+    "providerMatches": 1,
+    "providerStatus": 200,
+    "originalPreserved": true,
+    "totalSnapshots": 2
+  },
+  "rejectedBeforeSave": [
+    {
+      "category": "CONNECTION_ERROR",
+      "requestId": "e5401027-3194-4520-b1ac-939fc062e764",
+      "providerRequest": false,
+      "newSnapshots": 0,
+      "correction": "Lectura UserExternalCredential ausente del perfil mínimo."
+    },
+    {
+      "category": "INVALID_RESPONSE",
+      "requestId": "4ba00cfa-dacc-4c8b-9d2d-c31014b0d4bd",
+      "providerStatus": 200,
+      "newSnapshots": 0
+    }
+  ],
+  "clock": {
+    "diagnostic": {
+      "currency": "EUR",
+      "schemaVersion": "1",
+      "totalPrice": "59.70",
+      "unitPrice": "19.90",
+      "quantityMatches": true,
+      "productMatches": true,
+      "requestIdMatches": true,
+      "durationMs": 86400000,
+      "issuedMinusReceivedMs": 13,
+      "httpStatus": 200,
+      "requestId": "e327a2a0-3904-45fa-9210-f0bbe4fdf0c8",
+      "purpose": "clock-diagnostic-admin-no-dml"
+    },
+    "authorization": "Expresa para fase 4: w32tm y corrección precisa con la misma fuente NTP si resulta necesaria.",
+    "success": true,
+    "source": "time.windows.com",
+    "resyncExitCode": 0,
+    "preciseAdjustment": true,
+    "offsetBeforeMs": -49.9497,
+    "offsetAfterMs": 6.01825,
+    "configurationChanged": false,
+    "providerDatesChanged": false,
+    "validationRelaxed": false
+  },
+  "offline": {
+    "providerStopped": true,
+    "tunnelStopped": true,
+    "listener3055": 0,
+    "pageReloaded": true,
+    "historyRefreshed": true,
+    "detailOpened": true,
+    "reference": "P05-000001",
+    "total": 59.7,
+    "newQueryError": "HTTP_ERROR",
+    "requestId": "ee1ad634-77d5-4e34-a838-fe34706b3590",
+    "newSnapshots": 0,
+    "oldSuccessAndDetailCleared": true,
+    "historyReadableAfterFailure": true,
+    "finalCounts": {
+      "total": 2,
+      "commercialCount": 1,
+      "references": [
+        "P05-000000",
+        "P05-000001"
+      ],
+      "validCommercialPreserved": true
+    }
+  },
+  "restoration": {
+    "commercialSessionEnded": true,
+    "loginAsPolicyInitially": false,
+    "loginAsPolicyFinally": false,
+    "policyVerifiedAfterReload": true,
+    "validSnapshotsKept": true,
+    "commercialAccountKept": true,
+    "secretUnchanged": true
+  },
+  "boundaries": {
+    "uiDemo": "Comercial real mediante Login As",
+    "ownerAndCounts": "Lecturas administrativas complementarias, no prueba API ordinaria.",
+    "providerTests": "42/42 fase 2 reutilizadas; proveedor/OpenAPI sin cambios.",
+    "installation": "Incremental; instalación desde cero no ejecutada.",
+    "v1Complete": false,
+    "nextPhase": "Robustez temporal y matriz final de fallos reales."
+  }
+}

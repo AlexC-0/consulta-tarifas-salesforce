@@ -1,4 +1,4 @@
-# Seguridad e integridad — fase 3
+# Seguridad e integridad — fases 3–4
 
 ## Permisos
 
@@ -8,8 +8,8 @@ Tres conjuntos separan las responsabilidades:
 | Permission Set | Concesiones |
 | --- | --- |
 | P05_Datos_Tarifas | Leer Product2/código; crear y leer ConsultaTarifa__c y sus campos; sin editar ni borrar objetos, View All o Modify All |
-| P05_Consultar_Tarifas | Custom Permission P05_Consultar_Tarifas y acceso a P05TarifasServicio |
-| P05_Conexion_Proveedor | Conjunto existente: cliente HTTP y principal externo P05_Compartido |
+| P05_Consultar_Tarifas | Custom Permission P05_Consultar_Tarifas, servicio/controlador, aplicación/pestaña P05 y LightningExperienceUser |
+| P05_Conexion_Proveedor | Cliente HTTP, principal externo P05_Compartido y lectura UserExternalCredential |
 
 La creación exige FLS de escritura de campos, pero no permiso de edición del objeto.
 Así se permite insert USER_MODE y se niega update/delete ordinario. El trigger
@@ -69,7 +69,7 @@ rollback y SAVE_FAILED, sin devolver ID ni detalles internos de DML.
 
 ## Pruebas y límites
 
-Usuarios, Permission Sets parciales y datos de prueba se crean solo en tests y
+Los usuarios y Permission Sets parciales de las suites y sus datos se crean solo en tests y
 se revierten al terminarlos. System.runAs se combina con USER_MODE y comprobaciones
 explícitas de permisos; no se usa como sustituto de CRUD/FLS.
 
@@ -88,6 +88,29 @@ instantáneas mediante el usuario que lo creó. No se añade ninguna puerta de
 prueba al servicio ni se altera la integridad. Otra prueba espera brevemente
 la caducidad real de una tarifa próxima a vencer; no cambia reloj o campos.
 
-Las comprobaciones con usuarios mínimos son automatizadas. La demostración
-HTTPS real se realiza como System Administrator; todavía no acredita el recorrido
-interactivo comercial, reservado a la fase del LWC.
+La fase 3 acreditó la llamada real como administrador; su evidencia se conserva en
+[FASE-3](FASE-3.md). Fase 4 incorpora la cuenta comercial persistente autorizada;
+el resultado de su recorrido interactivo y restauración consta en [STATUS](STATUS.md).
+
+## Adaptador y presentación de fase 4
+
+P05TarifasControlador es with sharing y conserva las comprobaciones del servicio.
+Sus cuatro métodos Aura son imperativos y no cacheables. El guardado acepta solo
+productId y quantity. P05ProductoOpcion y P05TarifaVista son DTO de nivel superior
+con propiedades AuraEnabled; no se expone la clase interna Detalle ni un SObject.
+Productos: autorización funcional, CRUD/FLS, WITH USER_MODE, activos/código válido,
+orden nombre/Id, máximo 200 candidatos y exclusión del fixture negativo PROD-999.
+Histórico: 50 propias; detalle ajeno rechazado por el servicio.
+
+Los errores conocidos se traducen mediante una lista de categorías admitidas.
+Solo se extrae requestId con formato UUID; no se devuelven stacks ni mensajes DML.
+Errores desconocidos invitan a revisar el histórico antes de repetir el guardado.
+No hay reintentos automáticos, modificaciones de precios en JavaScript ni llamada
+directa del navegador al proveedor. El control privado de integridad no cambia.
+
+Los permisos específicos ausentes del perfil mínimo fueron comprobados en P05:
+LightningExperienceUser permite entrar en Lightning, y lectura UserExternalCredential
+permite usar el secreto protegido con el principal expresamente asignado. No se
+conceden Create/Edit/Delete de ese objeto ni permisos de administración.
+Referencias oficiales: [acceso a Lightning](https://help.salesforce.com/s/articleView?id=sf.lex_enable_users.htm&language=en_US&type=5) y
+[credenciales de usuario y acceso al secreto](https://developer.salesforce.com/docs/platform/named-credentials/references/named-credentials-reference/nc-glossary.html).

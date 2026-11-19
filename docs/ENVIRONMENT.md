@@ -80,3 +80,16 @@ local por detrás). Sin configuración persistente modificada ni validaciones re
 Una instantánea real conservada (referencia saneada P05-000000), lectura posterior
 sin proveedor/túnel y cero callouts. Puerto 3055 libre al cierre. Perfil real
 System Administrator; permisos de usuarios mínimos comprobados en tests.
+## Actualización de fase 4
+
+@salesforce/sfdx-lwc-jest 7.9.0 (dist-tag summer26), Jest 29.7.0 y LWC 8.28.2,
+dependencias locales con lockfile. 21/21 Jest; API 68.0, nueve componentes incrementales
+y 36/36 Apex. .forceignore excluye pruebas/dependencias del metadata desplegado.
+
+Cuenta comercial real autorizada con Minimum Access - Salesforce, sin rol y tres
+conjuntos P05; LightningExperienceUser y lectura UserExternalCredential específicos.
+Login As restaurado false. Se conserva la instantánea comercial y la administrativa.
+Proveedor/túnel cerrados, puerto 3055 libre. Desfase diagnosticado: emisión 13 ms futura.
+Sincronización puntual autorizada; w32tm correcto y ajuste NTP con time.windows.com,
+offset posterior +6.01825 ms. Sin configuración persistente ni validación modificadas.
+Resultados y límites en [STATUS](STATUS.md), [evidencia fase 4](evidencias-fase-4.json).

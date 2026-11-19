@@ -100,3 +100,11 @@ la hora sin autorización expresa aplicable.
 
 Conservar el registro válido y los cuatro productos ficticios de demostración.
 Los históricos no se actualizan automáticamente, incluso cuando caducan.
+
+## Continuidad de fase 4
+
+Cliente HTTP, servicio e integridad conservados sin cambios. La interfaz añade
+controlador/DTO/LWC y reutiliza sus operaciones. Los ejemplos administrativos anteriores
+siguen siendo diagnósticos; el recorrido comercial real consta en [STATUS](STATUS.md).
+Acceso y despliegue incremental de la interfaz en [USO](USO.md).
+Se conservan P05-000000 y P05-000001.

@@ -10,4 +10,13 @@
         <externalCredentialPrincipal>P05_Proveedor_Externo-P05_Compartido</externalCredentialPrincipal>
     </externalCredentialPrincipalAccesses>
     <label>P05 Conexion Proveedor</label>
+    <objectPermissions>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>UserExternalCredential</object>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
 </PermissionSet>

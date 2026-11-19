@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+ <types><members>P05ProductoOpcion</members><members>P05TarifaVista</members><members>P05TarifasControlador</members><members>P05TarifasControladorTest</members><name>ApexClass</name></types>
+ <types><members>p05Tarifas</members><name>LightningComponentBundle</name></types>
+ <types><members>P05_Consultar_Tarifas</members>
+        <members>P05_Conexion_Proveedor</members><name>PermissionSet</name></types>
+ <types><members>P05_Tarifas</members><name>CustomApplication</name></types>
+ <types><members>P05_Consulta</members><name>CustomTab</name></types>
+ <version>68.0</version>
+</Package>

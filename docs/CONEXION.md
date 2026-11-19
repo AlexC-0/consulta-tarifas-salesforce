@@ -173,3 +173,13 @@ Los scripts antiguos consulta-demo.apex y consulta-catalogo.apex consultan sin
 guardar. Para el servicio de persistencia, usar las transacciones separadas de
 [PERSISTENCIA](PERSISTENCIA.md). Los resultados actuales están en
 [evidencias-fase-3.json](evidencias-fase-3.json).
+## Estado tras fase 4
+
+Demostración comercial real mediante LWC; la demo administrativa no se presentó
+como prueba del comercial. Solo cambió el endpoint temporal; clave conservada.
+El conjunto de conexión añade lectura UserExternalCredential, necesaria en el perfil
+mínimo para usar el principal asignado; sin edición ni administración de credenciales.
+[Seguridad](SEGURIDAD.md). P05-000001 guardada y correlacionada. Proveedor/túnel
+detenidos; histórico/detalle comerciales comprobados tras recarga y tras un fallo
+de consulta externa. Sincronización puntual con autorización expresa de fase 4.
+No reabrir túnel para leer histórico ni recrear credenciales. [Evidencia](evidencias-fase-4.json).
