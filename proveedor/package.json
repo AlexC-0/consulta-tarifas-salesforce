@@ -1,0 +1,24 @@
+{
+  "name": "p05-proveedor-tarifas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.13.0 <25",
+    "npm": ">=11 <12"
+  },
+  "scripts": {
+    "start": "node --env-file=.env src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "smoke": "node scripts/smoke-local.ts"
+  },
+  "dependencies": {
+    "fastify": "5.12.8"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,31 @@
+# Dependencias y artefactos
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+# Secretos, autorizaciones y material local
+.env
+.env.*
+!.env.example
+.sf/
+.sfdx/
+.local/
+.auth/
+auth/
+logs/
+*.log
+tmp/
+temp/
+*auth-url*
+*sfdx-url*
+*.key
+*.pem
+*.p12
+*.pfx
+credentials*.json
+secrets*.json
+# Editor
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

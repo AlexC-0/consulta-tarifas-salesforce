@@ -1,0 +1,291 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "P05 — Proveedor simulado de tarifas",
+    "version": "0.1.0",
+    "description": "Sesión 1: solo PROD-001 a 19.90 EUR. Sin base de datos ni reservas. Cuerpos limitados a 4096 bytes. No sirve archivos. Errores de infraestructura pueden contener HTML/texto."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:3055",
+      "description": "Solo loopback. HTTPS temporal se configura fuera del repositorio."
+    }
+  ],
+  "security": [
+    {
+      "ApiKey": []
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Proceso disponible, sin configuración.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "status"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "const": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/tarifas/consultar": {
+      "post": {
+        "operationId": "consultarTarifa",
+        "description": "Sin reintentos ni idempotencia: cada consulta correcta genera quoteId nuevo. UUID válido se conserva exactamente; si falta o es inválido se genera otro para el error. quantity no se convierte desde cadenas.",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "X-Request-Id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "productCode",
+                  "quantity"
+                ],
+                "properties": {
+                  "productCode": {
+                    "type": "string",
+                    "pattern": "^PROD-[0-9]{3}$"
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 10000
+                  }
+                }
+              },
+              "example": {
+                "productCode": "PROD-001",
+                "quantity": 3
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tarifa emitida; sin guardado Salesforce en sesión 1.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tarifa"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "INVALID_REQUEST: cabecera, cuerpo, tipo o tamaño inválidos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "UNAUTHORIZED: clave ausente o incorrecta; autenticación antes de procesar el cuerpo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "PRODUCT_NOT_FOUND: código válido no presente en el catálogo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "RATE_LIMITED: puede devolverlo la infraestructura; no necesariamente JSON.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "INTERNAL_ERROR: fallo inesperado, sin detalles internos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "PROVIDER_UNAVAILABLE: infraestructura no disponible; no necesariamente JSON.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "64 caracteres hexadecimales aleatorios, generados e introducidos por Alex."
+      }
+    },
+    "schemas": {
+      "Tarifa": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "schemaVersion",
+          "requestId",
+          "quoteId",
+          "productCode",
+          "quantity",
+          "currency",
+          "unitPrice",
+          "totalPrice",
+          "issuedAt",
+          "validUntil",
+          "tariffVersion"
+        ],
+        "properties": {
+          "schemaVersion": {
+            "type": "string",
+            "const": "1"
+          },
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "quoteId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "productCode": {
+            "type": "string",
+            "pattern": "^PROD-[0-9]{3}$"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "currency": {
+            "type": "string",
+            "const": "EUR"
+          },
+          "unitPrice": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,5})\\.[0-9]{2}$",
+            "description": "Positivo, máximo 999999.99; PROD-001 cuesta 19.90."
+          },
+          "totalPrice": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,9})\\.[0-9]{2}$",
+            "description": "Precio unitario por cantidad; cálculo en céntimos enteros."
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$"
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$",
+            "description": "issuedAt más exactamente 24 horas."
+          },
+          "tariffVersion": {
+            "type": "string",
+            "const": "demo-1"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "requestId",
+          "error"
+        ],
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
+          },
+          "error": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "message"
+            ],
+            "properties": {
+              "code": {
+                "type": "string",
+                "enum": [
+                  "INVALID_REQUEST",
+                  "UNAUTHORIZED",
+                  "PRODUCT_NOT_FOUND",
+                  "RATE_LIMITED",
+                  "INTERNAL_ERROR",
+                  "PROVIDER_UNAVAILABLE"
+                ]
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
