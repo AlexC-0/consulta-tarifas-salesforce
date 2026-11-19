@@ -11,7 +11,9 @@ LWC → Apex → Named Credential → API HTTPS → validación Apex → instant
 - Precio unitario fijo positivo, dos decimales, máximo 999999.99.
 - Total = precio unitario × cantidad. Sin descuentos, impuestos, pagos, pedidos ni reservas.
 - Importes JSON como cadenas con dos decimales; cálculo en céntimos enteros.
-- Vigencia de 24 horas desde emisión. Caducidad o incoherencia implica rechazo.
+- Vigencia de 24 horas exactas desde emisión. Emisión futura: máximo 1000 ms respecto
+  a recepción. Caducidad sin tolerancia y comprobada de nuevo al guardar. Las demás
+  incoherencias siguen implicando rechazo.
 - Éxito: nueva instantánea guardada automáticamente. Error: ninguna instantánea válida.
 - Histórico sin actualización automática. Nueva consulta, nueva instantánea.
 - Sin reintentos automáticos; timeout Apex inicial de diez segundos.
@@ -76,3 +78,11 @@ histórico propio sin proveedor, errores seguros y caducidad visual dinámica.
 Recorrido comercial real, propiedad/autoría, detalle ajeno denegado y lectura offline
 comprobados. 36/36 Apex y 21/21 Jest. Fase 5 conserva la matriz final de fallos reales
 y revisión de robustez temporal; la V1 no se declara terminada.
+
+## Fase 5 — robustez temporal y fallos
+
+Margen fijo de emisión, recepción única, vigencia al guardar y referencia temporal
+Salesforce para la interfaz. Pruebas de fronteras y suspensión, banco aislado y
+matriz diferenciada entre mocks, HTTP local, callout Salesforce y LWC comercial.
+Sin ampliaciones de negocio, nuevos permisos amplios o cambios de reloj.
+Resultados, criterios V1 y limitaciones en [STATUS](STATUS.md) y [FASE-5](FASE-5.md).

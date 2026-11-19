@@ -42,10 +42,11 @@ fuera de código, argumentos y registros. No cambiar credenciales ajenas.
 
 ## Reloj
 
-Mantener el reloj del equipo sincronizado. La validación de Apex rechaza fechas
-futuras y caducadas. En fase 1B se diagnosticaron 2,08 s de adelanto y se ejecutó,
+La fase 5 admite como máximo 1000 ms de emisión futura y rechaza toda caducidad,
+sin modificar relojes ni configuración NTP. En fase 1B se diagnosticaron 2,08 s de adelanto y se ejecutó,
 con autorización expresa y elevación de Windows, una resincronización puntual.
-No añadir tolerancias arbitrarias ni alterar fechas del proveedor para superar pruebas.
+Ese ajuste es evidencia histórica, no un paso operativo actual. No alterar fechas
+del proveedor normal para superar pruebas. [Contrato temporal](CLIENTE_APEX.md).
 
 ## Túnel temporal
 
@@ -128,10 +129,11 @@ Esperado: HTTP 200, PROD-001, cantidad 3, EUR, 19.90, 59.70, UUID y 24 horas.
 Guardar únicamente los campos que emite el script y correlacionar requestId con
 el log mínimo del proveedor. No copiar la salida completa de depuración.
 
-La prueba negativa sustituye temporalmente el parámetro protegido por otra clave,
-ejecuta la sonda y exige UNAUTHORIZED en Apex y 401 en proveedor con el mismo UUID.
-Restaurar siempre la clave válida, incluso si falla la comprobación, y exigir un
-nuevo éxito correlacionado. No dejar configuración inválida.
+En fase 1B la prueba negativa sustituyó temporalmente el parámetro protegido y lo
+restauró. No repetir ese procedimiento en fase 5: la clave persistente se conserva.
+El banco aislado rechaza deliberadamente con 401 después de la autenticación normal,
+sin reemplazar secretos. La autenticación incorrecta real se comprueba por HTTP local
+con una clave efímera independiente. Véase [FASE-5](FASE-5.md).
 
 Estas llamadas se ejecutan fuera de Test. Los 16 métodos HttpCalloutMock actuales
 no prueban red o permisos ordinarios. La demostración 1B se realizó como

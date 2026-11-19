@@ -1,0 +1,535 @@
+{
+    "phase":  5,
+    "date":  "2026-11-19",
+    "baseCommit":  "bece641edf2f6293a6df177327dac6697653b9a4",
+    "initial":  {
+                    "branch":  "main",
+                    "pendingFiles":  [
+                                         "docs/openapi.json"
+                                     ],
+                    "snapshots":  2
+                },
+    "temporal":  {
+                     "maxFutureEmissionMs":  1000,
+                     "durationMs":  86400000,
+                     "expiryGraceMs":  0,
+                     "receipt":  "Retorno de Http.send",
+                     "clockChanged":  false,
+                     "providerNormalDatesChanged":  false
+                 },
+    "deployment":  {
+                       "status":  "Succeeded",
+                       "components":  8,
+                       "tests":  40,
+                       "testFailures":  0,
+                       "installation":  "Incremental sobre fase 4"
+                   },
+    "local":  {
+                  "apex":  {
+                               "client":  18,
+                               "service":  14,
+                               "controller":  8
+                           },
+                  "jest":  30,
+                  "providerInjectionAndContract":  42,
+                  "providerRealHttpTest":  1,
+                  "typescript":  "PASS",
+                  "contractAfterDocumentationChange":  3
+              },
+    "serviceReal":  [
+                        {
+                            "callouts":  1,
+                            "ownedByCaller":  true,
+                            "persisted":  true,
+                            "tariffVersion":  "demo-1",
+                            "schemaVersion":  "1",
+                            "validUntil":  "2026-11-20T14:41:33.000Z",
+                            "receivedAt":  "2026-11-19T14:41:33.000Z",
+                            "issuedAt":  "2026-11-19T14:41:33.000Z",
+                            "quoteId":  "4a77867c-2d9d-45d5-9e87-80ae1f4ab21c",
+                            "requestId":  "bb2664be-a948-4951-a5e7-a87e5e779d8c",
+                            "currency":  "EUR",
+                            "totalPrice":  59.70,
+                            "unitPrice":  19.90,
+                            "quantity":  3,
+                            "productName":  "Kit de conexión de demostración",
+                            "productCode":  "PROD-001",
+                            "reference":  "P05-000002",
+                            "operation":  "save",
+                            "scenario":  "valid",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  200,
+                                             "scenario":  "valid"
+                                         }
+                        },
+                        {
+                            "callouts":  1,
+                            "newRecords":  0,
+                            "afterCount":  2,
+                            "beforeCount":  2,
+                            "requestId":  "db0f90ae-99d6-46d9-a721-71018b466a13",
+                            "category":  "PRODUCT_NOT_FOUND",
+                            "quantity":  1,
+                            "productCode":  "PROD-999",
+                            "operation":  "negative",
+                            "scenario":  "404",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  404,
+                                             "scenario":  null
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "07067cee-5e9f-4fd4-a3f1-1fc6a644a51a",
+                            "category":  "UNAUTHORIZED",
+                            "operation":  "failure-check",
+                            "scenario":  "unauthorized",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  401,
+                                             "scenario":  "unauthorized"
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "3eba27ed-406d-4e56-84a5-a38bc414b982",
+                            "category":  "RATE_LIMITED",
+                            "operation":  "failure-check",
+                            "scenario":  "rate-limit",
+                            "provider":  {
+                                             "receivedRequests":  2,
+                                             "singleDelivery":  false,
+                                             "httpStatus":  429,
+                                             "scenario":  "rate-limit"
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "6d73da77-dd69-4bba-8d43-f42e698a551b",
+                            "category":  "PROVIDER_UNAVAILABLE",
+                            "operation":  "failure-check",
+                            "scenario":  "unavailable",
+                            "provider":  {
+                                             "receivedRequests":  2,
+                                             "singleDelivery":  false,
+                                             "httpStatus":  503,
+                                             "scenario":  "unavailable"
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "ce57c211-15be-4a46-8fa5-edda5d2f6499",
+                            "category":  "INVALID_RESPONSE",
+                            "operation":  "failure-check",
+                            "scenario":  "inconsistent",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  200,
+                                             "scenario":  "inconsistent"
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "9355b95c-cb1b-46f8-9cc5-01723722e005",
+                            "category":  "INVALID_RESPONSE",
+                            "operation":  "failure-check",
+                            "scenario":  "expired",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  200,
+                                             "scenario":  "expired"
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "46367fb3-58d6-4d87-9b22-b37c84e3d51d",
+                            "category":  "INVALID_RESPONSE",
+                            "operation":  "failure-check",
+                            "scenario":  "future",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  200,
+                                             "scenario":  "future"
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "f68f9c7d-cbb1-40fb-9992-bfc91a8de29a",
+                            "category":  "TIMEOUT",
+                            "operation":  "failure-check",
+                            "scenario":  "timeout",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  null,
+                                             "scenario":  "timeout"
+                                         }
+                        },
+                        {
+                            "newSnapshots":  0,
+                            "historyUnchanged":  true,
+                            "afterCount":  3,
+                            "beforeCount":  3,
+                            "callouts":  1,
+                            "requestId":  "c51c01cb-f381-4d30-802d-a5a7628dac7d",
+                            "category":  "HTTP_ERROR",
+                            "operation":  "failure-check",
+                            "scenario":  "disconnect",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  null,
+                                             "scenario":  "disconnect"
+                                         }
+                        }
+                    ],
+    "commercialValid":  {
+                            "commercial":  true,
+                            "invalidCalls":  0,
+                            "saveCalls":  1,
+                            "confirmation":  "Consulta P05-000003 guardada.",
+                            "validity":  "Vigencia pendiente de verificar",
+                            "detail":  "Tarifa guardada: P05-000003\nProducto histórico\nKit de conexión de demostración · PROD-001\nCantidad\n3\nPrecio unitario (EUR)\n19,90\nTotal (EUR)\n59,70\nFecha de consulta\n19/11/2026, 15:50:16 CET\nEmisión del proveedor\n19/11/2026, 15:50:16 CET\nCaducidad\n20/11/2026, 15:50:16 CET\nVigencia estimada\nVigencia pendiente de verificar\n\nInformación obtenida en esta consulta; no se actualiza automáticamente\n\nZona horaria: Europe/Madrid",
+                            "requestId":  "8e1ea042-c697-4a2f-8784-a64c8e218c90",
+                            "provider":  {
+                                             "receivedRequests":  1,
+                                             "singleDelivery":  true,
+                                             "httpStatus":  200,
+                                             "scenario":  "valid"
+                                         }
+                        },
+    "commercialFailures":  [
+                               {
+                                   "calls":  1,
+                                   "message":  "No se ha podido autenticar la conexión con el proveedor. Contacta con el responsable. Referencia de diagnóstico: 27b35c15-e127-4ef6-a8fe-e40570515cb9",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "unauthorized",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "27b35c15-e127-4ef6-a8fe-e40570515cb9",
+                                   "provider":  {
+                                                    "receivedRequests":  1,
+                                                    "singleDelivery":  true,
+                                                    "httpStatus":  401,
+                                                    "scenario":  "unauthorized"
+                                                }
+                               },
+                               {
+                                   "calls":  1,
+                                   "message":  "El proveedor ha limitado las consultas. Inténtalo más tarde. Referencia de diagnóstico: b7f1bcdd-d54d-447d-8a98-244187a42e5f",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "rate-limit",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "b7f1bcdd-d54d-447d-8a98-244187a42e5f",
+                                   "provider":  {
+                                                    "receivedRequests":  2,
+                                                    "singleDelivery":  false,
+                                                    "httpStatus":  429,
+                                                    "scenario":  "rate-limit"
+                                                }
+                               },
+                               {
+                                   "calls":  1,
+                                   "message":  "El proveedor no está disponible en este momento. Referencia de diagnóstico: eeb444c3-1651-4f57-9008-ca4245d702f9",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "unavailable",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "eeb444c3-1651-4f57-9008-ca4245d702f9",
+                                   "provider":  {
+                                                    "receivedRequests":  2,
+                                                    "singleDelivery":  false,
+                                                    "httpStatus":  503,
+                                                    "scenario":  "unavailable"
+                                                }
+                               },
+                               {
+                                   "calls":  1,
+                                   "message":  "La respuesta del proveedor no es válida. No se ha guardado ninguna tarifa. Referencia de diagnóstico: 0847c8b9-cd26-4561-978b-a6fa52ed7a1b",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "inconsistent",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "0847c8b9-cd26-4561-978b-a6fa52ed7a1b",
+                                   "provider":  {
+                                                    "receivedRequests":  1,
+                                                    "singleDelivery":  true,
+                                                    "httpStatus":  200,
+                                                    "scenario":  "inconsistent"
+                                                }
+                               },
+                               {
+                                   "calls":  1,
+                                   "message":  "La respuesta del proveedor no es válida. No se ha guardado ninguna tarifa. Referencia de diagnóstico: 1b171d01-f3f4-49c6-8d3e-c984426a5ee4",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "expired",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "1b171d01-f3f4-49c6-8d3e-c984426a5ee4",
+                                   "provider":  {
+                                                    "receivedRequests":  1,
+                                                    "singleDelivery":  true,
+                                                    "httpStatus":  200,
+                                                    "scenario":  "expired"
+                                                }
+                               },
+                               {
+                                   "calls":  1,
+                                   "message":  "La respuesta del proveedor no es válida. No se ha guardado ninguna tarifa. Referencia de diagnóstico: 43f7dedf-d222-49eb-b5fa-eb32b52c0ec1",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "future",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "43f7dedf-d222-49eb-b5fa-eb32b52c0ec1",
+                                   "provider":  {
+                                                    "receivedRequests":  1,
+                                                    "singleDelivery":  true,
+                                                    "httpStatus":  200,
+                                                    "scenario":  "future"
+                                                }
+                               },
+                               {
+                                   "calls":  1,
+                                   "message":  "El proveedor ha tardado demasiado en responder. Referencia de diagnóstico: 9e69d8b0-6ee8-41b6-9d86-c5ba1a8af3c0",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "timeout",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "9e69d8b0-6ee8-41b6-9d86-c5ba1a8af3c0",
+                                   "provider":  {
+                                                    "receivedRequests":  1,
+                                                    "singleDelivery":  true,
+                                                    "httpStatus":  null,
+                                                    "scenario":  "timeout"
+                                                }
+                               },
+                               {
+                                   "calls":  1,
+                                   "message":  "El proveedor no ha respondido correctamente. Referencia de diagnóstico: 997d8b0e-0517-4c24-98ee-e8a01566d8f1",
+                                   "oldResultCleared":  true,
+                                   "historyPreserved":  true,
+                                   "scenario":  "disconnect",
+                                   "newSnapshots":  0,
+                                   "allStoredFieldsUnchanged":  true,
+                                   "requestId":  "997d8b0e-0517-4c24-98ee-e8a01566d8f1",
+                                   "provider":  {
+                                                    "receivedRequests":  1,
+                                                    "singleDelivery":  true,
+                                                    "httpStatus":  null,
+                                                    "scenario":  "disconnect"
+                                                }
+                               }
+                           ],
+    "commercialRecovery":  {
+                               "recovered":  true,
+                               "confirmation":  "Consulta P05-000004 guardada.",
+                               "detail":  "Tarifa guardada: P05-000004\nProducto histórico\nKit de conexión de demostración · PROD-001\nCantidad\n3\nPrecio unitario (EUR)\n19,90\nTotal (EUR)\n59,70\nFecha de consulta\n19/11/2026, 15:54:34 CET\nEmisión del proveedor\n19/11/2026, 15:54:34 CET\nCaducidad\n20/11/2026, 15:54:34 CET\nVigencia estimada\nVigencia pendiente de verificar\n\nInformación obtenida en esta consulta; no se actualiza automáticamente\n\nZona horaria: Europe/Madrid",
+                               "requestId":  "685f744e-ef8d-49f0-ba5b-4c81140e89a5",
+                               "provider":  {
+                                                "receivedRequests":  1,
+                                                "singleDelivery":  true,
+                                                "httpStatus":  200,
+                                                "scenario":  "valid"
+                                            }
+                           },
+    "offline":  {
+                    "reloaded":  true,
+                    "ownHistory":  true,
+                    "detailWithoutProvider":  true,
+                    "historyAfterFailure":  true,
+                    "oldResultCleared":  true,
+                    "message":  "El proveedor no está disponible en este momento. Referencia de diagnóstico: 2d2743fa-d09a-47d9-ba52-49309dc3a408",
+                    "reference":  "P05-000004"
+                },
+    "serviceOffline":  {
+                           "callouts":  0,
+                           "historyCount":  2,
+                           "notice":  "Información obtenida en esta consulta; no se actualiza automáticamente",
+                           "validNow":  true,
+                           "validUntil":  "2026-11-20T14:41:33.000Z",
+                           "receivedAt":  "2026-11-19T14:41:33.000Z",
+                           "issuedAt":  "2026-11-19T14:41:33.000Z",
+                           "currency":  "EUR",
+                           "totalPrice":  59.70,
+                           "quantity":  3,
+                           "productName":  "Kit de conexión de demostración",
+                           "productCode":  "PROD-001",
+                           "requestId":  "bb2664be-a948-4951-a5e7-a87e5e779d8c",
+                           "reference":  "P05-000002",
+                           "operation":  "read"
+                       },
+    "resume":  {
+                   "visibilitySamples":  [
+                                             {
+                                                 "visibility":  "hidden"
+                                             },
+                                             {
+                                                 "visibility":  "visible"
+                                             },
+                                             {
+                                                 "visibility":  "visible"
+                                             },
+                                             {
+                                                 "visibility":  "visible"
+                                             },
+                                             {
+                                                 "visibility":  "hidden"
+                                             },
+                                             {
+                                                 "visibility":  "hidden"
+                                             },
+                                             {
+                                                 "visibility":  "hidden"
+                                             }
+                                         ],
+                   "visibleValidity":  "Vigente",
+                   "visibleValidityEvidence":  "ObservaciÃ³n visual manual",
+                   "providerStopped":  true
+               },
+    "snapshots":  {
+                      "value":  [
+                                    {
+                                        "reference":  "P05-000000",
+                                        "requestId":  "ae786682-b496-42e6-87c2-5bffc4e2592e",
+                                        "total":  59.7,
+                                        "commercialOwner":  false,
+                                        "commercialAuthor":  false,
+                                        "issuedAt":  "2026-11-19T12:28:19.000+0000",
+                                        "receivedAt":  "2026-11-19T12:28:19.000+0000",
+                                        "validUntil":  "2026-11-20T12:28:19.000+0000"
+                                    },
+                                    {
+                                        "reference":  "P05-000001",
+                                        "requestId":  "680c6dff-0916-4b82-a0cc-7a06bdfb783f",
+                                        "total":  59.7,
+                                        "commercialOwner":  true,
+                                        "commercialAuthor":  true,
+                                        "issuedAt":  "2026-11-19T13:14:40.000+0000",
+                                        "receivedAt":  "2026-11-19T13:14:40.000+0000",
+                                        "validUntil":  "2026-11-20T13:14:40.000+0000"
+                                    },
+                                    {
+                                        "reference":  "P05-000002",
+                                        "requestId":  "bb2664be-a948-4951-a5e7-a87e5e779d8c",
+                                        "total":  59.7,
+                                        "commercialOwner":  false,
+                                        "commercialAuthor":  false,
+                                        "issuedAt":  "2026-11-19T14:41:33.000+0000",
+                                        "receivedAt":  "2026-11-19T14:41:33.000+0000",
+                                        "validUntil":  "2026-11-20T14:41:33.000+0000"
+                                    },
+                                    {
+                                        "reference":  "P05-000003",
+                                        "requestId":  "8e1ea042-c697-4a2f-8784-a64c8e218c90",
+                                        "total":  59.7,
+                                        "commercialOwner":  true,
+                                        "commercialAuthor":  true,
+                                        "issuedAt":  "2026-11-19T14:50:16.000+0000",
+                                        "receivedAt":  "2026-11-19T14:50:16.000+0000",
+                                        "validUntil":  "2026-11-20T14:50:16.000+0000"
+                                    },
+                                    {
+                                        "reference":  "P05-000004",
+                                        "requestId":  "685f744e-ef8d-49f0-ba5b-4c81140e89a5",
+                                        "total":  59.7,
+                                        "commercialOwner":  true,
+                                        "commercialAuthor":  true,
+                                        "issuedAt":  "2026-11-19T14:54:34.000+0000",
+                                        "receivedAt":  "2026-11-19T14:54:34.000+0000",
+                                        "validUntil":  "2026-11-20T14:54:34.000+0000"
+                                    }
+                                ],
+                      "Count":  5
+                  },
+    "permissions":  {
+                        "sets":  [
+                                     "P05_Conexion_Proveedor",
+                                     "P05_Consultar_Tarifas",
+                                     "P05_Datos_Tarifas"
+                                 ],
+                        "profileAssignments":  1,
+                        "broadPermissionsFound":  0
+                    },
+    "restoration":  {
+                        "processes":  {
+                                          "providerStopped":  true,
+                                          "tunnelStopped":  true,
+                                          "listener3055":  0,
+                                          "durationMinutes":  14.82
+                                      },
+                        "namedCredential":  {
+                                                "metadataMatchesInitial":  true,
+                                                "credentialSecretChanged":  false
+                                            },
+                        "loginAs":  {
+                                        "initial":  false,
+                                        "final":  false,
+                                        "verifiedBy":  "Metadata API, lectura posterior",
+                                        "otherSecuritySettingsUnchanged":  true,
+                                        "commercialSessionEnded":  true
+                                    },
+                        "commercialSessionEnded":  true,
+                        "clockChanged":  false,
+                        "secretChanged":  false
+                    },
+    "limits":  [
+                   "429 y 503: dos peticiones recibidas con el mismo requestId frente a un callout Apex y un envÃ­o LWC; capa causante sin aislar",
+                   "InstalaciÃ³n limpia no ejecutada",
+                   "Fronteras exactas y carreras temporales mediante pruebas deterministas; no equivalen a espera real de 24 horas",
+                   "Timeout loopback separado del timeout real Salesforce",
+                   "401 inducido despuÃ©s de autenticaciÃ³n vÃ¡lida; clave incorrecta real solo HTTP local y evidencia histÃ³rica 1B",
+                   "ResoluciÃ³n persistida DateTime de segundos; precisiÃ³n visual estimada",
+                   "Sin idempotencia entre envÃ­os separados"
+               ],
+    "v1":  {
+               "functionalCandidate":  false,
+               "definitivelyClosed":  false,
+               "published":  false,
+               "cleanInstallationVerified":  false,
+               "noRepeatedProviderDeliveriesVerified":  false
+           }
+}

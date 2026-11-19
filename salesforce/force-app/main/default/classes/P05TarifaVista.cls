@@ -11,6 +11,7 @@ public class P05TarifaVista {
     @AuraEnabled public Datetime issuedAt {get;set;}
     @AuraEnabled public Datetime receivedAt {get;set;}
     @AuraEnabled public Datetime validUntil {get;set;}
+    @AuraEnabled public Datetime serverNow {get;set;}
     @AuraEnabled public String requestId {get;set;}
     @AuraEnabled public String notice {get;set;}
     public P05TarifaVista(P05TarifasServicio.Detalle source) {
@@ -20,5 +21,6 @@ public class P05TarifaVista {
         unitPrice=row.PrecioUnitario__c;totalPrice=row.Total__c;currencyCode=row.Moneda__c;
         createdAt=row.CreatedDate;issuedAt=row.EmitidaEn__c;receivedAt=row.RecibidaEn__c;
         validUntil=row.CaducaEn__c;requestId=row.RequestId__c;notice=source.aviso;
+        serverNow=Datetime.now();
     }
 }

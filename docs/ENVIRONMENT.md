@@ -96,3 +96,15 @@ Proveedor/túnel cerrados, puerto 3055 libre. Desfase diagnosticado: emisión 13
 Sincronización puntual autorizada; w32tm correcto y ajuste NTP con time.windows.com,
 offset posterior +6.01825 ms. Sin configuración persistente ni validación modificadas.
 Resultados y límites en [STATUS](STATUS.md), [evidencia fase 4](evidencias-fase-4.json).
+
+## Fase 5
+
+Mismas herramientas y API 68.0, sin instalación o actualización global. Despliegue
+incremental de ocho componentes; 40/40 Apex, 30/30 Jest, 43/43 pruebas del proveedor
+y TypeScript correcto. La prueba adicional usa HTTP loopback real y espera diez
+segundos para el timeout; las otras 42 cubren inyección y contrato.
+
+La CLI Playwright local 0.1.25 conecta con la extensión existente. El conector MCP
+no conectó por incompatibilidad de protocolo; no se actualizó. Los artefactos de
+navegador se mantienen fuera de control de versiones. Sin cambios de reloj o NTP.
+La verificación externa y restauración se detallan en [STATUS](STATUS.md).

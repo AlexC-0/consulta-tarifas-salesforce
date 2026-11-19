@@ -94,9 +94,11 @@ requestId/estado/duración del proveedor. No guardar debug logs completos ni
 salidas de autenticación. Los JSON de evidencia no deben incluir Ids privados.
 El estado del túnel y la ausencia de listener se verifican fuera de Salesforce.
 
-Si el cliente rechaza una fecha futura, diagnosticar la diferencia de relojes
-antes de actuar. No añadir tolerancias o reintentos para ocultarla y no cambiar
-la hora sin autorización expresa aplicable.
+La fase 5 admite únicamente el margen fijo de emisión de 1000 ms definido en
+[CLIENTE_APEX](CLIENTE_APEX.md). Si lo supera, se rechaza sin corregir fechas,
+cambiar relojes ni reintentar. La recepción se conserva desde Http.send y la
+caducidad se comprueba de nuevo antes del DML y en el trigger. Si vence en ese
+intervalo no se guarda; un rechazo del trigger se traduce a SAVE_FAILED con rollback.
 
 Conservar el registro válido y los cuatro productos ficticios de demostración.
 Los históricos no se actualizan automáticamente, incluso cuando caducan.
@@ -105,6 +107,6 @@ Los históricos no se actualizan automáticamente, incluso cuando caducan.
 
 Cliente HTTP, servicio e integridad conservados sin cambios. La interfaz añade
 controlador/DTO/LWC y reutiliza sus operaciones. Los ejemplos administrativos anteriores
-siguen siendo diagnósticos; el recorrido comercial real consta en [STATUS](STATUS.md).
+siguen siendo diagnósticos; el recorrido comercial de fase 4 consta en [FASE-4](FASE-4.md).
 Acceso y despliegue incremental de la interfaz en [USO](USO.md).
 Se conservan P05-000000 y P05-000001.

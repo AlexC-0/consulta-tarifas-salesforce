@@ -1,4 +1,4 @@
-# Uso comercial y despliegue de fase 4
+# Uso comercial y despliegue de fase 5
 
 ## Acceso y permisos
 
@@ -28,8 +28,15 @@ No se requieren privilegios administrativos ni View All/Modify All.
 La consulta nueva necesita proveedor y túnel activos y autorizados. Cada éxito crea
 otra instantánea: no usar este botón como lectura de una consulta anterior.
 El navegador no calcula precios ni llama al proveedor; el controlador delega al servicio.
-La vigencia visual se recalcula cada segundo a partir de la fecha de caducidad; no
-actualiza importes ni contacta al proveedor. Depende del reloj del navegador.
+La vigencia estimada usa una referencia de Salesforce incluida en el detalle y
+avanza cada segundo con performance.now(), sin depender de la hora de calendario
+del ordenador. La latencia completa de la petición delimita una banda de incertidumbre:
+si el vencimiento cae en ella, aparece «Vigencia pendiente de verificar».
+Al ocultar la vista se invalida la referencia; al reanudarla, recuperar el foco o
+detectar una pausa de temporizadores mayor de cinco segundos se consulta únicamente
+la hora de Salesforce. Un fallo deja la vigencia pendiente, sin reintentos automáticos
+ni pérdida de la confirmación. No actualiza importes ni contacta al proveedor.
+La estimación no garantiza precisión absoluta ni sustituye la validación del servidor.
 
 ## Histórico y fallos
 
@@ -42,7 +49,9 @@ Un intento nuevo limpia el resultado anterior. Los errores se presentan en caste
 con requestId cuando está disponible, sin respuestas externas ni detalles internos.
 Si el guardado tuvo éxito pero falla el refresco, se conserva su confirmación y referencia.
 Si se pierde la respuesta, revisar Mis consultas antes de repetir: no hay reintentos
-automáticos ni garantía de idempotencia entre dos pulsaciones separadas.
+automáticos en el código de la aplicación ni garantía de idempotencia entre dos
+pulsaciones separadas. La matriz de fase 5 detecta dos recepciones del proveedor
+ante 429/503 pese a un solo envío; la capa causante sigue pendiente de aislar.
 Las respuestas tardías no sustituyen un detalle seleccionado después.
 
 ## Despliegue incremental comprobado
@@ -53,17 +62,17 @@ Desde salesforce/:
 ```powershell
 npm.cmd ci --ignore-scripts
 npm.cmd run test:unit
-sf.cmd project deploy start --manifest manifest/fase-4.xml --target-org p05-tarifas-dev --test-level RunSpecifiedTests --tests P05ConsultaTarifaTest --tests P05TarifasServicioTest --tests P05TarifasControladorTest --wait 10
+sf.cmd project deploy start --manifest manifest/fase-5.xml --target-org p05-tarifas-dev --test-level RunSpecifiedTests --tests P05ConsultaTarifaTest --tests P05TarifasServicioTest --tests P05TarifasControladorTest --wait 10
 ```
 
-Comprobar el resultado final de despliegue. El manifiesto contiene cuatro clases nuevas,
-un LWC, los conjuntos de consulta y conexión, aplicación y pestaña. .forceignore excluye Jest y sus
+Comprobar el resultado final de despliegue. El manifiesto contiene siete clases existentes
+y un LWC; requiere la fase 4 instalada. No despliega permisos ni credenciales. .forceignore excluye Jest y sus
 archivos de prueba del despliegue. Dependencias locales con lockfile, sin herramientas
 globales. Esta instalación incremental no acredita una instalación desde cero.
 
 ## Demostración reproducible
 
-Preparar el usuario comercial únicamente con autorización expresa. Para Login As,
+Reutilizar la cuenta comercial existente. Para Login As,
 registrar el estado inicial de la política y restaurarlo después. Usar el cambio oficial
 a Lightning dentro de esa sesión; comprobar identidad antes de guardar, pues una
 pestaña administrativa previa no demuestra los permisos del comercial.
@@ -76,7 +85,8 @@ lecturas son evidencia complementaria y no se presentan como API ordinaria del c
 Comprobar cantidad inválida, aislamiento del histórico/detalle y un fallo sin insert ni
 éxito anterior. Cerrar los procesos propios, verificar puerto libre y repetir únicamente
 lectura del histórico/detalle. Conservar las instantáneas válidas y evidencia saneada.
-No alterar el reloj ni relajar validaciones para forzar el resultado. Robustez temporal
-y matriz final de fallos reales pertenecen a fase 5; la V1 no se declara cerrada.
+No alterar el reloj ni relajar otras validaciones para forzar el resultado. El margen
+temporal de fase 5 está documentado en [CLIENTE_APEX](CLIENTE_APEX.md).
+Pruebas aisladas y matriz real en [FASE-5](FASE-5.md); la V1 no se declara cerrada.
 
 Resultados y límites de la ejecución: [STATUS](STATUS.md).

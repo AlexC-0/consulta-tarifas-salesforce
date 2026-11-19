@@ -10,10 +10,10 @@ cambios, comprobaciones y limitaciones del proyecto. Utilizar redacción técnic
 directa. Excluir relatos de conversaciones, asignaciones personales, firmas
 automáticas y detalles internos de elaboración.
 
-Fase 4: controlador y DTO de nivel superior, LWC, aplicación/pestaña P05 y
-recorrido comercial real. Conservar servicio, USER_MODE, permisos e integridad.
-Sin ampliaciones comerciales ni cierre V1. No cambiar relojes automáticamente;
-la robustez temporal y matriz final de fallos se revisarán en fase 5.
+Fase 5: robustez temporal y matriz de fallos. Conservar funcionalidades, USER_MODE,
+permisos e integridad. Emisión futura: margen fijo máximo de 1000 ms; caducidad sin
+tolerancia y duración exacta de 24 horas. No cambiar relojes ni configuración NTP.
+Sin ampliaciones comerciales ni cierre definitivo V1 antes de revisión.
 Fase 3 publicada en 148d0e0; conservar históricos y P05-000000.
 No acceder a Gmail. No imprimir secretos, tokens, archivos de autenticación ni URLs
 reutilizables de acceso. No reutilizar organizaciones ajenas o destinos implícitos.
@@ -31,4 +31,13 @@ Fase 4 completada: nueve componentes, 36/36 Apex y 21/21 Jest. Recorrido comerci
 real, P05-000001 conservada junto con P05-000000, detalle ajeno denegado e histórico
 sin proveedor comprobados. Login As restaurado false; cuenta comercial mínima
 conservada. Fase 4 publicada en df23ec6. Ver docs/STATUS.md y docs/USO.md.
-Fase 5 requiere autorización específica; V1 no cerrada.
+Fase 5 autorizada, incluido despliegue incremental en la organización P05 existente
+tras verificar identidad y con destino explícito. Túnel y Login As requieren alcance
+expreso aplicable a la ejecución. No crear organizaciones ni usuarios persistentes.
+Conservar credenciales e instantáneas. V1 no cerrada.
+Fase 5 desplegada incrementalmente: 40/40 Apex, 30/30 Jest, 43/43 proveedor.
+P05-000000 a P05-000004 conservadas. Proveedor/túnel cerrados, endpoint inicial
+y Login As=false restaurados. Ver docs/STATUS.md y docs/evidencias-fase-5.json.
+Pendiente V1: aislar dos recepciones ante 429/503 pese a un callout Apex y un envío
+LWC. No afirmar ausencia de repeticiones de extremo a extremo. Instalación limpia
+sin comprobar. No añadir idempotencia ni reintentos para ocultar el hallazgo.

@@ -1,26 +1,24 @@
 # P05 — Consulta de tarifas de proveedor desde Salesforce
 
-**Fase 4 completada:** un comercial selecciona producto y cantidad en Lightning,
-consulta el proveedor y guarda una instantánea privada. El histórico funciona con
-proveedor y túnel detenidos. La V1 sigue pendiente de fase 5.
+Fase 5: robustez temporal, vigencia estimada desde Salesforce y matriz de fallos.
+Un comercial selecciona producto y cantidad, consulta el proveedor y guarda una
+instantánea privada. El histórico funciona sin proveedor. **V1 no cerrada**:
+quedan por aislar entregas repetidas ante 429/503 en el recorrido externo.
 
-Fase 4 publicada en [df23ec6](https://github.com/AlexC-0/consulta-tarifas-salesforce/commit/df23ec6fcbe3305b3a2250a251a774dd6cb1033f),
-sobre la base `148d0e0` de fase 3.
+Base publicada: fase 4 en `df23ec6`, revisión documental en `bece641`.
+Los cambios de fase 5 quedan preparados para revisión, sin commit ni publicación.
 
-## Acceso
+## Acceso y componentes
 
 Iniciador de aplicaciones → **P05 Tarifas** → **Consulta de tarifas**.
 Perfil mínimo y tres conjuntos P05: datos, consulta y conexión. [Guía de uso](docs/USO.md).
-Demo comercial real mediante Login As autorizado, cerrado y restaurado.
 
-## Componentes
-
-- Proveedor Node.js/TypeScript/Fastify: tres productos ficticios; precios en céntimos.
-- P05ConsultaTarifa: cliente HTTPS, contrato y correlación.
-- P05TarifasServicio e integridad: autorización, USER_MODE, guardado e histórico propio.
-- P05TarifasControlador y dos DTO de nivel superior: adaptador Aura sin duplicar negocio.
-- p05Tarifas: LWC con SLDS, validación, confirmación, detalle, caducidad e histórico.
-- Aplicación, pestaña y permisos mínimos versionados; sin secretos ni endpoint temporal.
+- Proveedor Node.js/TypeScript/Fastify, autenticado, catálogo ficticio e importes en céntimos.
+- Cliente Apex: contrato estricto, correlación y timeout de diez segundos, sin reintentos.
+- Servicio e integridad: autorización, USER_MODE, instantáneas privadas e inmutables.
+- Controlador y DTO: operaciones comerciales y referencia temporal de Salesforce.
+- LWC con SLDS: validación, confirmación, detalle, vigencia estimada e histórico propio.
+- Banco de fallos aislado y desactivado en el arranque normal; sin controles comerciales.
 
 | Producto | Precio EUR |
 | --- | --- |
@@ -29,28 +27,30 @@ Demo comercial real mediante Login As autorizado, cerrado y restaurado.
 | PROD-003 | 0.99 |
 
 La fuente de precios es [el proveedor](proveedor/src/app.ts). Product2 no almacena
-precios. PROD-999 se conserva como fixture negativo, excluido del selector comercial.
+precios. PROD-999 es un fixture negativo excluido del selector comercial.
 
-## Verificación
+## Robustez temporal y verificación
 
-- Despliegue incremental final: **9 componentes**, API 68.0; **36/36 Apex**.
-- **21/21 Jest**, dependencias locales y lockfile. Proveedor sin cambios; 42/42 de fase 2 reutilizadas.
-- Guardado comercial **P05-000001**, PROD-001 × 3, **59.70 EUR**, propietario/autoría y requestId contrastados.
-- Cantidad inválida, detalle ajeno denegado y fallo sin insert ni resultado antiguo.
-- Histórico/detalle tras recarga con proveedor y túnel apagados; **P05-000000** original conservado.
-- Login As restaurado false; cuenta comercial conservada; puerto 3055 libre.
+Emisión futura admitida hasta **1000 ms**, duración exacta de **24 horas** y
+**ninguna tolerancia de caducidad**. Recepción única al retornar Http.send y nueva
+comprobación de vigencia al guardar. No se cambian relojes ni fechas recibidas.
 
-Reapareció el desfase temporal y se corrigió puntualmente con autorización expresa.
-No se cambiaron validaciones ni fechas del proveedor. Robustez y matriz final de fallos
-reales quedan para fase 5. Instalación limpia desde cero no ejecutada.
+El LWC usa hora de Salesforce y tiempo monotónico; actualiza la referencia al
+reanudar la vista. La latencia puede dejar la vigencia pendiente de verificar.
+No hay sondeo al proveedor ni renovación de instantáneas.
+
+Despliegue incremental de ocho componentes y **40/40 Apex**. **30/30 Jest**,
+**43/43 pruebas del proveedor**, incluida matriz HTTP local real, y TypeScript correcto.
+Resultados externos, conservación de datos, restauración y límites en [STATUS](docs/STATUS.md).
+Instalación limpia desde cero no ejecutada.
 
 ## Documentación
 
-[Estado](docs/STATUS.md) · [evidencia fase 4](docs/evidencias-fase-4.json) · [uso/despliegue](docs/USO.md).
+[Estado y matriz](docs/STATUS.md) · [fase 5](docs/FASE-5.md) · [uso/despliegue](docs/USO.md).
 [Modelo](docs/MODELO.md) · [seguridad](docs/SEGURIDAD.md) · [persistencia](docs/PERSISTENCIA.md).
 [Cliente HTTP](docs/CLIENTE_APEX.md) · [OpenAPI](docs/openapi.json) · [conexión](docs/CONEXION.md).
 [Alcance](docs/PROJECT_BRIEF.md) · [entorno](docs/ENVIRONMENT.md).
-Históricos: [fase 3](docs/FASE-3.md), [fase 2](docs/FASE-2.md), [fase 1B](docs/FASE-1B.md).
+Históricos: [fase 4](docs/FASE-4.md), [fase 3](docs/FASE-3.md), [fase 2](docs/FASE-2.md), [fase 1B](docs/FASE-1B.md).
 
-Organización y clave ya existen. Para leer el histórico basta Salesforce.
-Cada consulta nueva satisfactoria crea otra instantánea; no repetirla como lectura.
+Organización y clave ya existen. Leer el histórico solo requiere Salesforce.
+Cada nueva consulta satisfactoria crea otra instantánea; no repetirla como lectura.

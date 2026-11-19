@@ -56,17 +56,17 @@ public with sharing class P05TarifasServicio {
         }
         // No DML ni savepoint antes de la llamada. El cliente conserva categoría y UUID.
         P05ConsultaTarifa.Tarifa quote = P05ConsultaTarifa.consultar(product.CodigoProveedor__c, quantity);
-        Datetime receivedAt = Datetime.now();
         ConsultaTarifa__c snapshot = new ConsultaTarifa__c(
             OwnerId = UserInfo.getUserId(), Producto__c = product.Id,
             NombreProducto__c = product.Name, CodigoProveedor__c = product.CodigoProveedor__c,
             Cantidad__c = quote.quantity, PrecioUnitario__c = quote.unitPrice, Total__c = quote.totalPrice,
             Moneda__c = quote.currencyCode, EmitidaEn__c = quote.issuedAt,
-            RecibidaEn__c = receivedAt, CaducaEn__c = quote.validUntil,
+            RecibidaEn__c = quote.receivedAt, CaducaEn__c = quote.validUntil,
             RequestId__c = quote.requestId, QuoteId__c = quote.quoteId,
             TariffVersion__c = quote.tariffVersion, SchemaVersion__c = '1'
         );
         // El rollback cubre también una anomalía de lectura posterior al insert.
+        validateAtSave(quote.validUntil, Datetime.now(), quote.requestId);
         Savepoint checkpoint = Database.setSavepoint();
         try {
             pendingInsert = snapshot.clone(false, false, false, false);
@@ -77,6 +77,12 @@ public with sharing class P05TarifasServicio {
             throw new ServicioException('SAVE_FAILED (requestId=' + quote.requestId + ')');
         } finally {
             pendingInsert = null;
+        }
+    }
+
+    @TestVisible private static void validateAtSave(Datetime expiry, Datetime nowValue, String requestId) {
+        if (expiry <= nowValue) {
+            throw new ServicioException('INVALID_RESPONSE (requestId=' + requestId + ')');
         }
     }
 
@@ -138,6 +144,8 @@ public with sharing class P05TarifasServicio {
         ConsultaTarifa__c expected = pendingInsert;
         pendingInsert = null; // Un solo uso, incluso frente a invocaciones recursivas.
         Boolean allowed = Trigger.isBefore && Trigger.isInsert && rows.size() == 1 && expected != null;
+        // Último control en before insert, con el vencimiento original del candidato.
+        if (allowed && expected.CaducaEn__c <= Datetime.now()) { allowed = false; }
         for (ConsultaTarifa__c row : rows) {
             Boolean matches = allowed && row.OwnerId == UserInfo.getUserId() && row.OwnerId == expected.OwnerId;
             if (matches) {

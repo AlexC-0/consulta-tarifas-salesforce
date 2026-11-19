@@ -89,6 +89,7 @@ private class P05TarifasControladorTest {
             System.assertEquals(59.70,saved.totalPrice);System.assertEquals('EUR',saved.currencyCode);
             System.assertEquals('PROD-001',saved.productCode);System.assertEquals(3,saved.quantity);
             System.assertEquals(86400000,saved.validUntil.getTime()-saved.issuedAt.getTime());
+            System.assert(saved.serverNow >= saved.receivedAt && saved.serverNow <= Datetime.now());
             Map<String,Object> json=(Map<String,Object>)JSON.deserializeUntyped(JSON.serialize(saved));
             System.assert(!json.containsKey('registro'));System.assert(!json.containsKey('OwnerId'));
             System.assert(!json.containsKey('vigente'));System.assert(json.containsKey('validUntil'));
@@ -153,5 +154,19 @@ private class P05TarifasControladorTest {
         System.assertEquals(null,unknown.get('requestId'));
         Map<String,Object> generic=payload(P05TarifasControlador.safeError(new QueryException('private database details')));
         System.assertEquals('UNEXPECTED',generic.get('code'));
+    }
+    @IsTest static void serverTimeIsAuthorizedAndNeverCallsProvider(){
+        System.runAs(actor('p05ui1')){
+            Datetime before=Datetime.now();
+            Datetime reference=P05TarifasControlador.obtenerHora();
+            System.assert(reference>=before && reference<=Datetime.now());
+            P05TarifaVista historical=P05TarifasControlador.listarPropias()[0];
+            System.assert(historical.serverNow>=before);
+            System.assertEquals(0,Limits.getCallouts());
+        }
+        System.runAs(actor('p05uino')){
+            try{P05TarifasControlador.obtenerHora();System.assert(false);}
+            catch(AuraHandledException ex){System.assertEquals('ACCESS_DENIED',payload(ex).get('code'));}
+        }
     }
 }

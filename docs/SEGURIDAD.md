@@ -1,4 +1,4 @@
-# Seguridad e integridad — fases 3–4
+# Seguridad e integridad — fases 3–5
 
 ## Permisos
 
@@ -105,7 +105,7 @@ Histórico: 50 propias; detalle ajeno rechazado por el servicio.
 Los errores conocidos se traducen mediante una lista de categorías admitidas.
 Solo se extrae requestId con formato UUID; no se devuelven stacks ni mensajes DML.
 Errores desconocidos invitan a revisar el histórico antes de repetir el guardado.
-No hay reintentos automáticos, modificaciones de precios en JavaScript ni llamada
+No hay bucles de reintento en la aplicación, modificaciones de precios en JavaScript ni llamada
 directa del navegador al proveedor. El control privado de integridad no cambia.
 
 Los permisos específicos ausentes del perfil mínimo fueron comprobados en P05:
@@ -114,3 +114,27 @@ permite usar el secreto protegido con el principal expresamente asignado. No se
 conceden Create/Edit/Delete de ese objeto ni permisos de administración.
 Referencias oficiales: [acceso a Lightning](https://help.salesforce.com/s/articleView?id=sf.lex_enable_users.htm&language=en_US&type=5) y
 [credenciales de usuario y acceso al secreto](https://developer.salesforce.com/docs/platform/named-credentials/references/named-credentials-reference/nc-glossary.html).
+
+## Robustez de fase 5
+
+La tolerancia de 1000 ms afecta exclusivamente a emisión; no concede gracia a
+tarifas caducadas. El servicio comprueba caducidad antes del DML y el trigger sobre
+el candidato original antes de insertar. USER_MODE, permisos y contexto privado
+de un solo uso permanecen. No hay setters ni excepciones de integridad para tests.
+
+El DTO incluye serverNow y obtenerHora permite actualizar solo la referencia de
+Salesforce con el permiso funcional existente. No admite fecha ni identidad del
+consumidor y no accede al proveedor. La estimación del LWC nunca autoriza guardados.
+
+El banco de fallos vive en scripts de prueba; el servidor normal no lo importa.
+Se activa por comando explícito, escucha en loopback y lee el escenario desde un
+archivo local. No tiene rutas de administración. Los fallos inducidos se aplican
+después de autenticación y validación normales. No sustituye la clave persistente.
+La sonda administrativa compara todos los campos históricos antes y después de
+cada rechazo. Los resultados de red se distinguen de HttpCalloutMock y Jest.
+
+La restauración de Login As puede realizarse con el campo
+enableAdminLoginAsAnyUser de [SecuritySettings](https://developer.salesforce.com/docs/platform/api-metadata/references/meta-types/metadata-securitysettings.html),
+mediante el destino P05 ya autenticado. Comparar metadata antes/después y cambiar
+solo ese valor. No iniciar automáticamente una nueva sesión si el cierre comercial
+termina también la sesión administrativa del navegador.

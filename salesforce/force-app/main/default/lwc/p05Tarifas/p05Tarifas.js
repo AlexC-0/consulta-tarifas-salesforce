@@ -4,6 +4,7 @@ import listarProductos from '@salesforce/apex/P05TarifasControlador.listarProduc
 import consultarYGuardar from '@salesforce/apex/P05TarifasControlador.consultarYGuardar';
 import listarPropias from '@salesforce/apex/P05TarifasControlador.listarPropias';
 import obtener from '@salesforce/apex/P05TarifasControlador.obtener';
+import obtenerHora from '@salesforce/apex/P05TarifasControlador.obtenerHora';
 
 const GENERIC = 'No se ha podido confirmar el resultado. Revisa Mis consultas antes de volver a intentarlo.';
 const CODES = new Set(['INVALID_REQUEST','PRODUCT_UNAVAILABLE','PRODUCT_NOT_FOUND','ACCESS_DENIED',
@@ -26,7 +27,21 @@ export default class P05Tarifas extends LightningElement {
     loadingHistory = false;
     loadingDetail = false;
     saving = false;
-    now = Date.now();
+    now;
+    _clock;
+    _clockEpoch = 0;
+    _clockPending = false;
+    _lastTick;
+    _resume = () => {
+        if (document.visibilityState === 'hidden') {
+            this._clockEpoch += 1;
+            this._clockPending = false;
+            this._clock = undefined;
+            this.now = undefined;
+        } else if (this.detail) {
+            this.refreshClock();
+        }
+    };
     timeZone = TIME_ZONE;
     _alive = false;
     _detailEpoch = 0;
@@ -42,7 +57,11 @@ export default class P05Tarifas extends LightningElement {
     ];
     connectedCallback() {
         this._alive = true;
-        this._timer = setInterval(() => { this.now = Date.now(); }, 1000);
+        this._lastTick = performance.now();
+        this._timer = setInterval(() => this.tick(), 1000);
+        document.addEventListener('visibilitychange', this._resume);
+        window.addEventListener('focus', this._resume);
+        window.addEventListener('pageshow', this._resume);
         this.loadProducts();
         this.refreshHistory();
     }
@@ -51,12 +70,61 @@ export default class P05Tarifas extends LightningElement {
         this._detailEpoch += 1;
         this._historyEpoch += 1;
         clearInterval(this._timer);
+        this._clockEpoch += 1;
+        this._clockPending = false;
+        this._clock = undefined;
+        this.now = undefined;
+        document.removeEventListener('visibilitychange', this._resume);
+        window.removeEventListener('focus', this._resume);
+        window.removeEventListener('pageshow', this._resume);
     }
     get submitDisabled() { return this.saving || this.loadingProducts || !this.productOptions.length; }
     get noProducts() { return !this.loadingProducts && !this.productError && !this.productOptions.length; }
     get emptyHistory() { return !this.loadingHistory && !this.historyError && !this.rows.length; }
     get hasRows() { return this.rows.length > 0; }
-    get validity() { return Date.parse(this.detail?.validUntil) > this.now ? 'Vigente' : 'Caducada'; }
+    get validity() {
+        if (!Number.isFinite(this.now)) return 'Vigencia pendiente de verificar';
+        const expiry = Date.parse(this.detail?.validUntil);
+        if (expiry <= this.now) return 'Caducada';
+        if (expiry <= this.now + this._clock.roundTrip) return 'Vigencia pendiente de verificar';
+        return 'Vigente';
+    }
+    acceptClock(serverNow, started) {
+        const received = performance.now();
+        const time = Date.parse(serverNow);
+        this._clockEpoch += 1;
+        this._clockPending = false;
+        this._clock = Number.isFinite(time) && document.visibilityState !== 'hidden'
+            ? { time, received, roundTrip:Math.max(0, received - started) } : undefined;
+        this.now = this._clock?.time;
+        this._lastTick = received;
+    }
+    tick() {
+        const current = performance.now();
+        const gap = current - this._lastTick;
+        this._lastTick = current;
+        if (this.detail && (gap > 5000 || gap < 0)) {
+            this.refreshClock();
+        } else if (this._clock) {
+            this.now = this._clock.time + Math.max(0, current - this._clock.received);
+        }
+    }
+    async refreshClock() {
+        if (!this._alive || this._clockPending || document.visibilityState === 'hidden') return;
+        const epoch = ++this._clockEpoch;
+        this._clockPending = true;
+        this._clock = undefined;
+        this.now = undefined;
+        const started = performance.now();
+        try {
+            const serverNow = await obtenerHora();
+            if (this._alive && epoch === this._clockEpoch) this.acceptClock(serverNow, started);
+        } catch {
+            // La referencia desconocida no altera confirmación ni canales de error.
+        } finally {
+            if (epoch === this._clockEpoch) this._clockPending = false;
+        }
+    }
     get detailHeading() { return this.detailKind === 'saved' ? 'Tarifa guardada' : 'Detalle histórico'; }
     safeMessage(error, fallback = GENERIC) {
         try {
@@ -94,11 +162,12 @@ export default class P05Tarifas extends LightningElement {
             return;
         }
         this.saving = true;
+        const started = performance.now();
         try {
             const saved = await consultarYGuardar({productId:this.productId,quantity});
             if (!this._alive) return;
             this.confirmation = 'Consulta ' + saved.reference + ' guardada.';
-            if (epoch === this._detailEpoch) { this.detail = saved; this.detailKind = 'saved'; this.now = Date.now(); }
+            if (epoch === this._detailEpoch) { this.detail = saved; this.detailKind = 'saved'; this.acceptClock(saved.serverNow, started); }
             // La lectura tiene su propio canal de error: no deshacer la confirmación.
             await this.refreshHistory();
         } catch (error) {
@@ -123,9 +192,10 @@ export default class P05Tarifas extends LightningElement {
         this.detail = undefined;
         this.detailError = '';
         this.loadingDetail = true;
+        const started = performance.now();
         try {
             const detail = await obtener({recordId:event.detail.row.recordId});
-            if (this._alive && epoch === this._detailEpoch) { this.detail = detail; this.detailKind = 'history'; this.now = Date.now(); }
+            if (this._alive && epoch === this._detailEpoch) { this.detail = detail; this.detailKind = 'history'; this.acceptClock(detail.serverNow, started); }
         } catch (error) {
             if (this._alive && epoch === this._detailEpoch) this.detailError = this.safeMessage(error, 'No se pudo abrir esta consulta histórica.');
         } finally { if (this._alive && epoch === this._detailEpoch) this.loadingDetail = false; }

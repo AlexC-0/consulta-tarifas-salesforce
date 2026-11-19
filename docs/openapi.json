@@ -241,7 +241,7 @@
         "type": "apiKey",
         "in": "header",
         "name": "X-API-Key",
-        "description": "64 caracteres hexadecimales aleatorios, generados localmente y almacenados como secreto protegido."
+        "description": "64 caracteres hexadecimales aleatorios, generados localmente e introducidos como secreto protegido."
       }
     },
     "schemas": {
@@ -306,13 +306,14 @@
           "issuedAt": {
             "type": "string",
             "format": "date-time",
-            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$"
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$",
+            "description": "Emisión original UTC. Salesforce admite como máximo 1000 ms de adelanto respecto al retorno de Http.send; no desplaza ninguna fecha."
           },
           "validUntil": {
             "type": "string",
             "format": "date-time",
             "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{3}Z$",
-            "description": "issuedAt más exactamente 24 horas."
+            "description": "issuedAt más exactamente 86400000 ms. Debe ser estrictamente posterior a la recepción y seguir vigente al guardar; sin tolerancia de caducidad ni renovación al leer."
           },
           "tariffVersion": {
             "type": "string",

@@ -1,5 +1,14 @@
 public with sharing class P05TarifasControlador {
     @AuraEnabled
+    public static Datetime obtenerHora() {
+        try {
+            if (!FeatureManagement.checkPermission('P05_Consultar_Tarifas')) {
+                throw new P05TarifasServicio.ServicioException('ACCESS_DENIED');
+            }
+            return Datetime.now();
+        } catch(Exception ex) {throw safeError(ex);}
+    }
+    @AuraEnabled
     public static List<P05ProductoOpcion> listarProductos() {
         try {
             if (!FeatureManagement.checkPermission('P05_Consultar_Tarifas') ||

@@ -10,6 +10,7 @@ coverage/
 .sf/
 .sfdx/
 .local/
+.playwright-cli/
 .auth/
 auth/
 logs/

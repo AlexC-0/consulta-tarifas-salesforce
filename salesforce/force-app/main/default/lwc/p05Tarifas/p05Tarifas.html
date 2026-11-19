@@ -33,7 +33,7 @@
                         <dt class="slds-item_label">Fecha de consulta</dt><dd class="slds-item_detail"><lightning-formatted-date-time value={detail.createdAt} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" second="2-digit" time-zone={timeZone} time-zone-name="short"></lightning-formatted-date-time></dd>
                         <dt class="slds-item_label">Emisión del proveedor</dt><dd class="slds-item_detail"><lightning-formatted-date-time value={detail.issuedAt} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" second="2-digit" time-zone={timeZone} time-zone-name="short"></lightning-formatted-date-time></dd>
                         <dt class="slds-item_label">Caducidad</dt><dd class="slds-item_detail"><lightning-formatted-date-time value={detail.validUntil} year="numeric" month="2-digit" day="2-digit" hour="2-digit" minute="2-digit" second="2-digit" time-zone={timeZone} time-zone-name="short"></lightning-formatted-date-time></dd>
-                        <dt class="slds-item_label">Vigencia</dt><dd data-message="validity" role="status" class="slds-item_detail">{validity}</dd>
+                        <dt class="slds-item_label">Vigencia estimada</dt><dd data-message="validity" role="status" class="slds-item_detail">{validity}</dd>
                     </dl>
                     <p class="slds-m-top_small">{detail.notice}</p>
                     <p class="slds-text-body_small">Zona horaria: {timeZone}</p>

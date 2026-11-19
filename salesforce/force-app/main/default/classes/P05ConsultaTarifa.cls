@@ -13,6 +13,7 @@ public with sharing class P05ConsultaTarifa {
         public Decimal unitPrice;
         public Decimal totalPrice;
         public Datetime issuedAt;
+        public Datetime receivedAt;
         public Datetime validUntil;
         public String tariffVersion;
         public Integer httpStatus;
@@ -49,6 +50,8 @@ public with sharing class P05ConsultaTarifa {
                 'TIMEOUT' : 'CONNECTION_ERROR';
             throw failure(category, requestId);
         }
+        // Recepción: retorno de Http.send, antes de interpretar el cuerpo.
+        Datetime receivedAt = Datetime.now();
         if (response.getStatusCode() != 200) {
             Map<Integer, String> errors = new Map<Integer, String>{
                 400 => 'INVALID_REQUEST', 401 => 'UNAUTHORIZED',
@@ -86,9 +89,7 @@ public with sharing class P05ConsultaTarifa {
             require(totalPrice == unitPrice * requestedQuantity);
             Datetime issuedAt = utc(text(data, 'issuedAt'));
             Datetime validUntil = utc(text(data, 'validUntil'));
-            Datetime receivedAt = Datetime.now();
-            require(issuedAt <= receivedAt && validUntil > receivedAt);
-            require(validUntil.getTime() - issuedAt.getTime() == 86400000);
+            validateTimes(issuedAt, validUntil, receivedAt);
             Tarifa result = new Tarifa();
             result.requestId = requestId;
             result.quoteId = quoteId;
@@ -98,6 +99,7 @@ public with sharing class P05ConsultaTarifa {
             result.unitPrice = unitPrice;
             result.totalPrice = totalPrice;
             result.issuedAt = issuedAt;
+            result.receivedAt = receivedAt;
             result.validUntil = validUntil;
             result.tariffVersion = tariffVersion;
             result.httpStatus = 200;
@@ -105,6 +107,12 @@ public with sharing class P05ConsultaTarifa {
         } catch (Exception ex) {
             throw failure('INVALID_RESPONSE', requestId);
         }
+    }
+    // Margen fijo de 1 s solo para emisión; nunca se modifica la caducidad.
+    @TestVisible private static void validateTimes(Datetime issuedAt, Datetime validUntil, Datetime receivedAt) {
+        require(issuedAt.getTime() <= receivedAt.getTime() + 1000);
+        require(validUntil > receivedAt);
+        require(validUntil.getTime() - issuedAt.getTime() == 86400000);
     }
     private static String text(Map<String, Object> data, String key) {
         require(data.get(key) instanceof String);

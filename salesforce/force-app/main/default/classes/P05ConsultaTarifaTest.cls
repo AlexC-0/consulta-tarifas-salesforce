@@ -88,6 +88,37 @@ private class P05ConsultaTarifaTest {
         System.assertEquals(19.90, result.unitPrice);
         System.assertEquals(59.70, result.totalPrice);
         System.assertEquals(86400000, result.validUntil.getTime() - result.issuedAt.getTime());
+        System.assert(result.receivedAt <= Datetime.now());
+    }
+    @IsTest static void temporalBoundariesPreserveExactDurationAndExpiry() {
+        Datetime received = Datetime.newInstanceGmt(2026, 11, 19, 12, 0, 0);
+        for (Integer offset : new List<Integer>{-1, 0, 13, 999, 1000}) {
+            Datetime issued = Datetime.newInstance(received.getTime() + offset);
+            P05ConsultaTarifa.validateTimes(issued, issued.addHours(24), received);
+        }
+        for (Integer offset : new List<Integer>{1001, 2000, -86400000, -86400001}) {
+            Datetime issued = Datetime.newInstance(received.getTime() + offset);
+            try {
+                P05ConsultaTarifa.validateTimes(issued, issued.addHours(24), received);
+                System.assert(false, 'Debe rechazar emisión fuera del margen o caducidad sin gracia.');
+            } catch (P05ConsultaTarifa.ConsultaException ex) { System.assertEquals('Respuesta incoherente.', ex.getMessage()); }
+        }
+        P05ConsultaTarifa.validateTimes(Datetime.newInstance(received.getTime()-86399999),
+            Datetime.newInstance(received.getTime()+1), received);
+        for (Integer drift : new List<Integer>{-1, 1}) {
+            try {
+                P05ConsultaTarifa.validateTimes(received, Datetime.newInstance(received.getTime()+86400000+drift), received);
+                System.assert(false, 'La duración debe ser exacta al milisegundo.');
+            } catch (P05ConsultaTarifa.ConsultaException ex) { System.assertEquals('Respuesta incoherente.', ex.getMessage()); }
+        }
+    }
+    @IsTest static void acceptsSmallFutureEmissionThroughHttpClient() {
+        ProviderMock mock = new ProviderMock(); mock.issuedOffsetSeconds = 1;
+        Test.setMock(HttpCalloutMock.class, mock);
+        P05ConsultaTarifa.Tarifa quote = P05ConsultaTarifa.consultarDemo();
+        System.assert(quote.issuedAt.getTime() <= quote.receivedAt.getTime()+1000);
+        System.assertEquals(86400000, quote.validUntil.getTime()-quote.issuedAt.getTime());
+        System.assertEquals(1, Limits.getCallouts());
     }
     @IsTest static void mapsHttpErrorsWithoutTrustingBody() {
         Map<Integer, String> cases = new Map<Integer, String>{

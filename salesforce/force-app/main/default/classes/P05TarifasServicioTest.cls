@@ -213,9 +213,11 @@ private class P05TarifasServicioTest {
     @IsTest static void providerErrorsCreateNoRows() {
         Id id=product('PROD-001').Id;
         System.runAs(actor('p05a')) {
-            for(String category:new List<String>{'PRODUCT_NOT_FOUND','TIMEOUT','INVALID_RESPONSE'}) {
+            Map<String,Integer> statuses = new Map<String,Integer>{'PRODUCT_NOT_FOUND'=>404,'UNAUTHORIZED'=>401,
+                'RATE_LIMITED'=>429,'INTERNAL_ERROR'=>500,'PROVIDER_UNAVAILABLE'=>503,'TIMEOUT'=>200,'INVALID_RESPONSE'=>200};
+            for(String category:statuses.keySet()) {
                 ProviderMock mock=new ProviderMock();
-                mock.status=category=='PRODUCT_NOT_FOUND'?404:200;
+                mock.status=statuses.get(category);
                 mock.timeout=category=='TIMEOUT';mock.invalidResponse=category=='INVALID_RESPONSE';
                 Test.setMock(HttpCalloutMock.class,mock);
                 Integer before=countAll(),calls=Limits.getCallouts(),dml=Limits.getDmlStatements();
@@ -227,6 +229,23 @@ private class P05TarifasServicioTest {
                 System.assertEquals(dml,Limits.getDmlStatements());
             }
         }
+    }
+    @IsTest static void rejectsExpiryAtSaveEvenIfValidAtReceipt() {
+        Datetime received = Datetime.newInstanceGmt(2026,11,19,12,0,0);
+        Datetime expiry = received.addSeconds(1);
+        P05ConsultaTarifa.validateTimes(expiry.addHours(-24), expiry, received);
+        String requestId = UUID.randomUUID().toString();
+        Integer before = countAll();
+        P05TarifasServicio.validateAtSave(expiry, Datetime.newInstance(expiry.getTime()-1), requestId);
+        for (Integer elapsed : new List<Integer>{0,1,1000}) {
+            try {
+                P05TarifasServicio.validateAtSave(expiry, Datetime.newInstance(expiry.getTime()+elapsed), requestId);
+                System.assert(false, 'No existe tolerancia de caducidad al guardar.');
+            } catch (P05TarifasServicio.ServicioException ex) {
+                System.assertEquals('INVALID_RESPONSE (requestId='+requestId+')', ex.getMessage());
+            }
+        }
+        System.assertEquals(before,countAll());
     }
     @IsTest static void insertionFailureHasNoFalseSuccessOrLeakedPermit() {
         Id id=product('PROD-005').Id;

@@ -4,6 +4,8 @@ import listarProductos from '@salesforce/apex/P05TarifasControlador.listarProduc
 import consultarYGuardar from '@salesforce/apex/P05TarifasControlador.consultarYGuardar';
 import listarPropias from '@salesforce/apex/P05TarifasControlador.listarPropias';
 import obtener from '@salesforce/apex/P05TarifasControlador.obtener';
+import obtenerHora from '@salesforce/apex/P05TarifasControlador.obtenerHora';
+jest.mock('@salesforce/apex/P05TarifasControlador.obtenerHora',()=>({default:jest.fn()}),{virtual:true});
 jest.mock('@salesforce/apex/P05TarifasControlador.listarProductos',()=>({default:jest.fn()}),{virtual:true});
 jest.mock('@salesforce/apex/P05TarifasControlador.consultarYGuardar',()=>({default:jest.fn()}),{virtual:true});
 jest.mock('@salesforce/apex/P05TarifasControlador.listarPropias',()=>({default:jest.fn()}),{virtual:true});
@@ -12,7 +14,7 @@ const flush=async()=>{for(let i=0;i<10;i++)await Promise.resolve();};
 const deferred=()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};};
 const quote=(id='one')=>({recordId:id,reference:'P05-'+id,productName:'Producto de prueba',productCode:'PROD-001',
 quantity:3,unitPrice:19.9,totalPrice:59.7,currencyCode:'EUR',createdAt:'2026-11-19T10:00:00.000Z',
-issuedAt:'2026-11-19T10:00:00.000Z',validUntil:'2026-11-20T10:00:00.000Z',
+issuedAt:'2026-11-19T10:00:00.000Z',validUntil:'2026-11-20T10:00:00.000Z',serverNow:'2026-11-19T12:00:00.000Z',
 notice:'Información obtenida en esta consulta; no se actualiza automáticamente'});
 let el;
 const root=()=>el.shadowRoot;
@@ -25,6 +27,7 @@ const row=(id)=>root().querySelector('lightning-datatable').dispatchEvent(new Cu
 const mount=async()=>{el=createElement('c-p05-tarifas',{is:P05Tarifas});document.body.appendChild(el);await flush();};
 beforeEach(()=>{
  jest.useFakeTimers();jest.setSystemTime(new Date('2026-11-19T12:00:00Z'));
+ obtenerHora.mockResolvedValue('2026-11-19T12:00:00.000Z');
  listarProductos.mockResolvedValue([{productId:'product-id',name:'Producto de prueba',code:'PROD-001'}]);
  listarPropias.mockResolvedValue([]);consultarYGuardar.mockResolvedValue(quote());obtener.mockResolvedValue(quote('old'));
 });
@@ -97,10 +100,68 @@ test('refresco reemplaza filas sin duplicarlas',async()=>{
  expect(root().querySelector('lightning-datatable').data).toHaveLength(1);
 });
 test('vigencia cambia con la caducidad sin consultas externas',async()=>{
+ consultarYGuardar.mockResolvedValue({...quote(),serverNow:'2026-11-20T09:59:59.000Z'});
  await mount();select();clickSave();await flush();expect(root().querySelector('[data-message="validity"]').textContent).toBe('Vigente');
- jest.setSystemTime(new Date('2026-11-20T10:00:01Z'));jest.advanceTimersByTime(1000);await flush();
+ jest.advanceTimersByTime(1000);await flush();
  expect(root().querySelector('[data-message="validity"]').textContent).toBe('Caducada');
  expect(consultarYGuardar).toHaveBeenCalledTimes(1);
+ expect(obtenerHora).not.toHaveBeenCalled();
+});
+test.each(['2020-01-01','2040-01-01'])('reloj local %s no determina vigencia histórica',async localTime=>{
+ jest.setSystemTime(new Date(localTime));listarPropias.mockResolvedValue([quote('old')]);
+ await mount();row('old');await flush();expect(root().querySelector('[data-message="validity"]').textContent).toBe('Vigente');
+ jest.setSystemTime(new Date('2050-01-01'));jest.advanceTimersByTime(1000);await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toBe('Vigente');
+ expect(consultarYGuardar).not.toHaveBeenCalled();
+});
+test('latencia próxima a caducidad no presenta vigencia falsa',async()=>{
+ const pending=deferred();consultarYGuardar.mockReturnValue(pending.promise);
+ await mount();select();clickSave();jest.advanceTimersByTime(2000);
+ pending.resolve({...quote(),serverNow:'2026-11-20T09:59:59.000Z'});await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toContain('pendiente');
+ jest.advanceTimersByTime(1000);await flush();expect(root().querySelector('[data-message="validity"]').textContent).toBe('Caducada');
+});
+test('reanudar invalida referencia, deduplica y consulta solo Salesforce',async()=>{
+ await mount();select();clickSave();await flush();const pending=deferred();obtenerHora.mockReturnValue(pending.promise);
+ window.dispatchEvent(new Event('focus'));window.dispatchEvent(new Event('pageshow'));await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toContain('pendiente');
+ expect(obtenerHora).toHaveBeenCalledTimes(1);pending.resolve('2026-11-20T10:00:00.000Z');await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toBe('Caducada');
+ expect(consultarYGuardar).toHaveBeenCalledTimes(1);
+});
+test('fallo de referencia conserva confirmación sin reintentos',async()=>{
+ await mount();select();clickSave();await flush();obtenerHora.mockRejectedValue(new Error('private'));
+ window.dispatchEvent(new Event('focus'));await flush();jest.advanceTimersByTime(3000);await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toContain('pendiente');
+ expect(root().textContent).toContain('P05-one guardada');expect(root().textContent).not.toContain('private');
+ expect(obtenerHora).toHaveBeenCalledTimes(1);
+});
+test('referencia tardía no sustituye la de un nuevo detalle',async()=>{
+ listarPropias.mockResolvedValue([quote('old')]);await mount();row('old');await flush();
+ const pending=deferred();obtenerHora.mockReturnValue(pending.promise);window.dispatchEvent(new Event('focus'));
+ row('old');await flush();pending.resolve('2026-11-21T12:00:00Z');await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toBe('Vigente');
+});
+test('desconexión elimina listeners y descarta hora pendiente',async()=>{
+ await mount();select();clickSave();await flush();const pending=deferred();obtenerHora.mockReturnValue(pending.promise);
+ window.dispatchEvent(new Event('focus'));document.body.removeChild(el);pending.resolve('2026-11-21T12:00:00Z');await flush();
+ window.dispatchEvent(new Event('focus'));document.dispatchEvent(new Event('visibilitychange'));
+ expect(obtenerHora).toHaveBeenCalledTimes(1);expect(jest.getTimerCount()).toBe(0);
+});
+test('vista oculta invalida hora y vuelve a obtenerla al hacerse visible',async()=>{
+ await mount();select();clickSave();await flush();
+ const visibility=jest.spyOn(document,'visibilityState','get').mockReturnValue('hidden');
+ document.dispatchEvent(new Event('visibilitychange'));await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toContain('pendiente');
+ expect(obtenerHora).not.toHaveBeenCalled();visibility.mockReturnValue('visible');
+ obtenerHora.mockResolvedValue('2026-11-20T10:00:00Z');document.dispatchEvent(new Event('visibilitychange'));await flush();
+ expect(root().querySelector('[data-message="validity"]').textContent).toBe('Caducada');visibility.mockRestore();
+});
+test('pausa larga de temporizadores exige otra referencia Salesforce',async()=>{
+ await mount();select();clickSave();await flush();const clock=jest.spyOn(performance,'now').mockReturnValue(60_000);
+ obtenerHora.mockResolvedValue('2026-11-20T10:00:00Z');jest.advanceTimersByTime(1000);await flush();
+ expect(obtenerHora).toHaveBeenCalledTimes(1);
+ expect(root().querySelector('[data-message="validity"]').textContent).toBe('Caducada');clock.mockRestore();
 });
 test('errores independientes de productos e histórico',async()=>{
  listarProductos.mockRejectedValue(new Error('secret'));listarPropias.mockRejectedValue(new Error('secret'));
