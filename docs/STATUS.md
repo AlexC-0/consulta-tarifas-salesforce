@@ -6,15 +6,12 @@ servicio existente → HTTPS autenticado → instantánea privada → resultado/
 
 ## Base, alcance y acceso
 
-Ruta: C:\Users\kaosk\source\repos\consulta-tarifas-salesforce.
-Rama main; origin https://github.com/AlexC-0/consulta-tarifas-salesforce.git.
-Inicio limpio, HEAD/origin main en 148d0e0b8654efcb1d57ba3af5b211f98083f9a6.
-Alex publicó fase 3. Cambios sin staging, sin commits ni push de Codex.
-No se inspeccionaron ni modificaron P01–P04; sin Gmail ni herramientas globales nuevas.
+Fase 4 publicada en `df23ec6fcbe3305b3a2250a251a774dd6cb1033f`, sobre la base
+de fase 3 `148d0e0b8654efcb1d57ba3af5b211f98083f9a6`.
 
 Organización P05 e identidad comprobadas, destino explícito p05-tarifas-dev, API 68.0.
 Conexión, principal y clave reutilizados; solo se actualizó el endpoint temporal.
-El estado publicado de fase 3 se conserva íntegro en [FASE-3](FASE-3.md), junto con
+Los resultados de fase 3 se conservan en [FASE-3](FASE-3.md), junto con
 sus evidencias y los históricos anteriores.
 
 Acceso: Iniciador de aplicaciones → **P05 Tarifas** → **Consulta de tarifas**.
@@ -41,7 +38,7 @@ Acceso: Iniciador de aplicaciones → **P05 Tarifas** → **Consulta de tarifas*
 
 ## Perfil y permisos reales
 
-Se comprobó una licencia Salesforce libre. Alex autorizó crear Comercial Demo P05,
+Se utilizó una licencia Salesforce libre para crear Comercial Demo P05,
 perfil **Minimum Access - Salesforce**, sin rol, sin enviar correos ni cambiar
 credenciales existentes. Cuenta conservada, con exactamente tres conjuntos:
 P05_Datos_Tarifas, P05_Consultar_Tarifas y P05_Conexion_Proveedor.
@@ -115,7 +112,7 @@ Tras corregirlos, otra obtuvo HTTP 200 pero fue rechazada por INVALID_RESPONSE s
 Sonda administrativa de diagnóstico sin DML: emisión **13 ms futura** respecto a recepción;
 correlación, producto, cantidad, importes y duración exacta de 24 horas correctos.
 
-Alex autorizó expresamente la sincronización de fase 4. w32tm /resync /rediscover
+La sincronización puntual de fase 4 mediante w32tm /resync /rediscover
 terminó con código 0; la medición posterior aún mostraba adelanto local de 49.9497 ms.
 Se completó corrección puntual con tres muestras NTP correlacionadas de la misma
 fuente time.windows.com. Medición posterior: offset +6.01825 ms (local ligeramente
@@ -134,14 +131,12 @@ La caducidad visual depende del reloj del navegador. La validación Apex sigue
 siendo estricta y sensible a desfases pequeños. Sin idempotencia entre pulsaciones
 separadas: si falta confirmación, revisar el histórico antes de repetir.
 No hay bloqueos pendientes de fase 4. Robustez temporal y matriz final de fallos
-reales quedan para fase 5, con nuevo encargo. **No declarar V1 cerrada.**
-
-Revisión y publicación manual de Alex. Codex no realiza staging, commit ni push.
+reales quedan para fase 5. **V1 no cerrada.**
 
 ## Revisión local final
 
-99 archivos versionables revisados: 11 JSON, 36 XML y 57 enlaces relativos correctos.
+Al finalizar la fase 4 se revisaron 99 archivos versionables: 11 JSON, 36 XML y
+57 enlaces relativos correctos.
 Escaneo en memoria sin clave, endpoint temporal, dominio/usuario ni IDs privados.
-.env, .local, .sf y node_modules excluidos. Histórico fase 3 idéntico al STATUS
-del commit base. Cliente, servicio, proveedor y OpenAPI sin cambios.
-Git sin staging; HEAD y origin/main siguen en 148d0e0. Sin commits ni push.
+.env, .local, .sf y node_modules excluidos. Resultados de fase 3 conservados.
+Cliente, servicio, proveedor y OpenAPI sin cambios durante la fase 4.

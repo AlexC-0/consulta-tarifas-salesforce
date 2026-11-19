@@ -63,7 +63,7 @@ globales. Esta instalación incremental no acredita una instalación desde cero.
 
 ## Demostración reproducible
 
-Preparar el usuario comercial únicamente con autorización de Alex. Para Login As,
+Preparar el usuario comercial únicamente con autorización expresa. Para Login As,
 registrar el estado inicial de la política y restaurarlo después. Usar el cambio oficial
 a Lightning dentro de esa sesión; comprobar identidad antes de guardar, pues una
 pestaña administrativa previa no demuestra los permisos del comercial.

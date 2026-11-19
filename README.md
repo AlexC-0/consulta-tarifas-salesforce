@@ -4,8 +4,8 @@
 consulta el proveedor y guarda una instantánea privada. El histórico funciona con
 proveedor y túnel detenidos. La V1 sigue pendiente de fase 5.
 
-Base publicada por Alex: `148d0e0` (fase 3). Cambios actuales sin staging,
-para revisión, commit y push manuales.
+Fase 4 publicada en [df23ec6](https://github.com/AlexC-0/consulta-tarifas-salesforce/commit/df23ec6fcbe3305b3a2250a251a774dd6cb1033f),
+sobre la base `148d0e0` de fase 3.
 
 ## Acceso
 
@@ -50,8 +50,7 @@ reales quedan para fase 5. Instalación limpia desde cero no ejecutada.
 [Modelo](docs/MODELO.md) · [seguridad](docs/SEGURIDAD.md) · [persistencia](docs/PERSISTENCIA.md).
 [Cliente HTTP](docs/CLIENTE_APEX.md) · [OpenAPI](docs/openapi.json) · [conexión](docs/CONEXION.md).
 [Alcance](docs/PROJECT_BRIEF.md) · [entorno](docs/ENVIRONMENT.md).
-Históricos: [fase 3](docs/FASE-3.md), [fase 2](docs/FASE-2.md), [sesión 1B](docs/SESION-1B.md).
+Históricos: [fase 3](docs/FASE-3.md), [fase 2](docs/FASE-2.md), [fase 1B](docs/FASE-1B.md).
 
 Organización y clave ya existen. Para leer el histórico basta Salesforce.
 Cada consulta nueva satisfactoria crea otra instantánea; no repetirla como lectura.
-Alex realiza staging, commit y push.

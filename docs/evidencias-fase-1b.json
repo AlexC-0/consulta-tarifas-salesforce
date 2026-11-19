@@ -1,5 +1,5 @@
 {
-    "session":  "1B",
+    "phase":  "1B",
     "date":  "2026-11-19",
     "transport":  "Apex -\u003e Named Credential -\u003e HTTPS -\u003e proveedor P05",
     "userProfile":  "System Administrator",

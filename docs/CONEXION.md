@@ -1,7 +1,7 @@
 # Conexión P05 — configuración verificada y repetición
 
-La fase 3 añade guardado real e histórico sin callouts; véase [PERSISTENCIA](PERSISTENCIA.md). La fase 2 conserva las tres tarifas 200 y el 404; la sesión 1B conserva 200 → 401 → 200.
-Resultados en [STATUS](STATUS.md); evidencia en [evidencias-sesion-1b.json](evidencias-sesion-1b.json).
+La fase 3 añade guardado real e histórico sin callouts; véase [PERSISTENCIA](PERSISTENCIA.md). La fase 2 conserva las tres tarifas 200 y el 404; la fase 1B conserva 200 → 401 → 200.
+Resultados en [STATUS](STATUS.md); evidencia en [evidencias-fase-1b.json](evidencias-fase-1b.json).
 Proveedor y túnel quedaron cerrados. No crear otro Playground ni regenerar la clave.
 
 ## Destino y herramientas
@@ -12,7 +12,7 @@ API 68.0. Antes de nuevas escrituras, verificar que el alias sigue apuntando al
 destino autorizado; no usar destinos implícitos ni sf org display.
 
 La creación y el login originales están completados. Para una instalación nueva,
-crear una organización independiente; Alex realiza login personal en navegador
+crear una organización independiente y completar el login manual en navegador
 oficial, sin --set-default. Consultar versiones con:
 
 ```powershell
@@ -37,21 +37,20 @@ GET /health devuelve estado mínimo; tarifas exige X-API-Key y X-Request-Id.
 No se sirven carpetas. Sin secreto válido, el arranque falla.
 
 Para una instalación nueva sin .env, usar scripts/create-local-secret.ps1.
-No sobrescribe ni imprime el valor. La autorización de sesión 1B permitió a Codex
-ejecutarlo y cargar la clave mediante un helper local; no concede una autorización
-general para mostrar secretos o cambiar credenciales ajenas.
+No sobrescribe ni imprime el valor. Ejecutarlo manualmente y mantener el secreto
+fuera de código, argumentos y registros. No cambiar credenciales ajenas.
 
 ## Reloj
 
 Mantener el reloj del equipo sincronizado. La validación de Apex rechaza fechas
-futuras y caducadas. En sesión 1B se diagnosticaron 2,08 s de adelanto y se ejecutó,
+futuras y caducadas. En fase 1B se diagnosticaron 2,08 s de adelanto y se ejecutó,
 con autorización expresa y elevación de Windows, una resincronización puntual.
 No añadir tolerancias arbitrarias ni alterar fechas del proveedor para superar pruebas.
 
 ## Túnel temporal
 
-Las autorizaciones de sesiones anteriores cubrieron sus demostraciones ya cerradas. Antes de una nueva
-exposición, confirmar autorización para el mismo entorno y finalidad.
+Antes de abrir un túnel público, presentar servicio, puerto, duración y finalidad
+y obtener confirmación expresa. Las demostraciones anteriores ya están cerradas.
 
 Desde la raíz del repositorio, con proveedor activo:
 
@@ -110,7 +109,7 @@ El valor de ApiKey está configurado. No debe recuperarse ni imprimirse para ver
 Su funcionamiento se comprueba con la llamada real.
 
 Para una instalación nueva, introducirlo en el principal mediante Setup o,
-si Alex lo autoriza expresamente, mediante la API oficial:
+con autorización expresa, mediante la API oficial:
 POST /services/data/v68.0/named-credentials/credential, con protocolo Custom,
 principal P05_Compartido, tipo NamedPrincipal y credentials.ApiKey.encrypted=true.
 PUT sobre el mismo recurso permite sustituir/restaurar el valor.
@@ -160,7 +159,7 @@ PROD-999 × 1 produce PRODUCT_NOT_FOUND y HTTP 404 en el proveedor.
 El script comprueba importes, rechazo del desconocido y cero DML; emite únicamente
 campos de tarifa o categoría/requestId, sin cuerpo externo. Correlacionar los cuatro
 UUID con los logs mínimos y conservar solo esa evidencia saneada.
-La prueba de clave incorrecta de sesión 1B no se repite por rutina si no cambia
+La prueba de clave incorrecta de fase 1B no se repite por rutina si no cambia
 la autenticación ni hay indicios de fallo. Cerrar los procesos propios al terminar.
 ## Estado tras fase 3
 

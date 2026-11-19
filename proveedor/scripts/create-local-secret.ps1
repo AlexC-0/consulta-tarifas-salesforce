@@ -1,4 +1,4 @@
-# Alex ejecuta este script localmente. No imprime ni copia el secreto al portapapeles.
+# Generación local del secreto. No imprime ni copia el valor al portapapeles.
 $ErrorActionPreference = 'Stop'
 $providerRoot = Split-Path $PSScriptRoot -Parent
 $target = Join-Path $providerRoot '.env'

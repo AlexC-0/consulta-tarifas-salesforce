@@ -3,21 +3,17 @@
 Tres productos operativos, cliente Apex parametrizable y demostración real de
 los tres productos y del 404. Sin Product2, persistencia, instantáneas ni LWC.
 
-## Estado inicial y Git
+## Base y alcance
 
-Ruta: `C:\Users\kaosk\source\repos\consulta-tarifas-salesforce`.
-Rama main; origin propio: https://github.com/AlexC-0/consulta-tarifas-salesforce.git.
-Inicio limpio; HEAD y origin/main en `679182be305255b0c411c15d0a6dd72b40df4487`,
-sesión 1B publicada por Alex. No había cambios locales que preservar.
+Base de fase 1B: `679182be305255b0c411c15d0a6dd72b40df4487`.
 
 La organización P05 y sus credenciales ya existían. Se verificó de nuevo
 Organization contra la identidad previamente autorizada, usando
 `--target-org p05-tarifas-dev`. Developer Edition, IsSandbox=false, API 68.0.
 No se crearon organizaciones ni se rehízo la autenticación.
 
-Los cambios de fase 2 quedan sin staging. Codex no realiza commits ni push
-y no ha modificado P01–P04. [Histórico completo de sesión 1B](SESION-1B.md)
-y [evidencia anterior](evidencias-sesion-1b.json) conservados.
+[Histórico de fase 1B](FASE-1B.md)
+y [evidencia anterior](evidencias-fase-1b.json) conservados.
 
 ## Cambios y decisiones
 
@@ -35,7 +31,7 @@ y [evidencia anterior](evidencias-sesion-1b.json) conservados.
 - Contrato y ejemplos actualizados. Ajv 8.20.0, ya presente transitivamente,
   declarado como dependencia directa de desarrollo para los tests del contrato.
   Sin nuevas dependencias de ejecución ni herramientas globales.
-- AGENTS actualizado al alcance de fase 2. Detalle en [CLIENTE_APEX](CLIENTE_APEX.md).
+- Detalle del cliente en [CLIENTE_APEX](CLIENTE_APEX.md).
 
 ## Pruebas y despliegue
 
@@ -51,7 +47,7 @@ y [evidencia anterior](evidencias-sesion-1b.json) conservados.
 
 Las 42 pruebas incluyen las 27 anteriores y los casos nuevos; se ejecutaron de
 nuevo porque cambió el proveedor. Los mocks no sustituyen la prueba de red.
-No se repitió la sustitución de clave protegida de sesión 1B: autenticación intacta,
+No se repitió la sustitución de clave protegida de fase 1B: autenticación intacta,
 sin indicios de fallo. Los dos 401 del smoke emplean una clave efímera local.
 
 ## Evidencia real Apex → HTTPS
@@ -71,9 +67,9 @@ El 404 se captura como excepción controlada; no se presenta como tarifa válida
 Perfil del usuario consultado de nuevo: **System Administrator**, UserType Standard.
 Esta demostración no acredita permisos del futuro comercial.
 
-## Autorización y cierre
+## Conexión y cierre
 
-Alex autorizó expresamente el nuevo Quick Tunnel de fase 2 exclusivamente hacia
+El Quick Tunnel de fase 2 se limitó a
 127.0.0.1:3055 durante la demostración. Binding comprobado en loopback.
 Se reutilizaron .env, clave protegida, principal y permisos.
 Solo se desplegó la Named Credential con la nueva URL; no se versiona esa URL.
@@ -83,20 +79,16 @@ Proveedor y túnel propios detenidos comprobando PID, ejecutable y binding;
 cero listeners en 3055. Las credenciales quedan válidas, con endpoint temporal
 inactivo hasta una nueva demostración autorizada.
 
-No hay bloqueos de fase 2. Siguiente paso: revisión y publicación manual de Alex.
-Persistencia, Product2, seguridad comercial y LWC requieren sus siguientes encargos.
+Fase 2 completada. Persistencia, Product2, seguridad comercial y LWC quedaron
+fuera de esta fase; su evolución se documenta en [STATUS](STATUS.md).
 
 ## Revisión local final
 
-37 archivos versionables revisados: ocho JSON/plantillas, seis XML/plantillas,
+Al finalizar la fase 2 se revisaron 37 archivos versionables: ocho JSON/plantillas, seis XML/plantillas,
 tres scripts PowerShell y 22 enlaces relativos correctos. Sin coincidencias de
 la clave local, ID/dominio/usuario privado ni endpoint temporal en esos archivos;
 comparación en memoria, sin mostrar valores. .env, .local y .sf excluidos de Git.
-Histórico de sesión 1B contrastado íntegramente con STATUS del commit base.
+Resultados de fase 1B conservados.
 Conversión DX local final correcta (estado 0); git diff --check sin errores.
-Staging vacío y HEAD/origin/main conservados en 679182b.
-
-Se retiraron once archivos temporales propios de esta ejecución: logs, PID,
-endpoint materializado y respuestas completas de despliegue. Se conservan la
-clave existente, originales, herramientas, conversión local y evidencia saneada.
+Se conservan la clave existente, originales, herramientas, conversión local y evidencia saneada.
 No se guardaron logs de depuración Apex completos.

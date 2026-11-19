@@ -241,7 +241,7 @@
         "type": "apiKey",
         "in": "header",
         "name": "X-API-Key",
-        "description": "64 caracteres hexadecimales aleatorios, generados e introducidos por Alex."
+        "description": "64 caracteres hexadecimales aleatorios, generados localmente y almacenados como secreto protegido."
       }
     },
     "schemas": {

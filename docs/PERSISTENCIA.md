@@ -2,7 +2,7 @@
 
 ## Despliegue incremental de fase 3
 
-Requiere la organización P05 y la conexión ya configuradas en sesiones anteriores.
+Requiere la organización P05 y la conexión ya configuradas en fases anteriores.
 El manifiesto de esta fase no recrea credenciales ni incluye secretos.
 Desde salesforce/:
 

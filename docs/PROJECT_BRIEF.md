@@ -25,7 +25,7 @@ fechas de emisión/recepción/caducidad, requestId, quoteId y versión de tarifa
 Importes Number de dos decimales y moneda explícita. Consultas privadas por defecto;
 comerciales sin edición ni borrado; creación controlada desde la integración.
 
-## Sesión 1 — antecedente
+## Fase 1 — antecedente
 
 Un producto PROD-001 a 19.90 EUR, API sin base de datos, autenticación, validación,
 health mínimo, logs de requestId/estado/duración y pruebas locales.
@@ -51,7 +51,7 @@ schemaVersion="1"; tariffVersion de 1 a 64 caracteres, no solo espacios.
 Detalle en [CLIENTE_APEX](CLIENTE_APEX.md) y [STATUS](STATUS.md).
 
 Demostrados los tres productos y PRODUCT_NOT_FOUND/404 desde Apex mediante HTTPS.
-La organización y las credenciales de sesión 1B se reutilizan. Seguridad comercial,
+La organización y las credenciales de fase 1B se reutilizan. Seguridad comercial,
 Product2, persistencia e interfaz quedan para fases posteriores.
 ## Fase 3 — servicio y persistencia
 

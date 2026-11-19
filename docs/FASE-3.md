@@ -6,16 +6,12 @@ V1 no terminada: quedan LWC, demostración comercial y matriz final de fallos re
 
 ## Base y alcance
 
-Ruta: `C:\Users\kaosk\source\repos\consulta-tarifas-salesforce`.
-Rama main; origin: https://github.com/AlexC-0/consulta-tarifas-salesforce.git.
-Inicio limpio, HEAD y origin/main en `ae25cecd4ae10b9a7ecf9f03552074937f0e6982`.
-Alex publicó la fase 2. Los cambios actuales quedan sin staging; Codex no ejecuta
-commits ni push. No se modifican otros proyectos ni se consulta Gmail.
+Base de fase 2: `ae25cecd4ae10b9a7ecf9f03552074937f0e6982`.
 
 Organización P05 reutilizada e identidad contrastada antes de desplegar.
 Destino explícito p05-tarifas-dev, API 68.0, Developer Edition.
 Se mantienen cliente, contrato, secreto y conexión anteriores.
-[Histórico fase 2](FASE-2.md), [sesión 1B](SESION-1B.md) y sus JSON se conservan.
+[Histórico fase 2](FASE-2.md), [fase 1B](FASE-1B.md) y sus JSON se conservan.
 
 ## Implementación
 
@@ -106,15 +102,15 @@ Dos intentos de guardado fueron rechazados por INVALID_RESPONSE antes de inserta
 El diagnóstico observó emisión 42 ms futura respecto a Salesforce, con importes,
 correlación y duración correctos. Recuento posterior: cero instantáneas.
 
-Alex autorizó expresamente la sincronización puntual de Windows y completó la
-elevación. w32tm /resync /rediscover terminó con código 0, pero mantenía unos
+La sincronización puntual de Windows mediante w32tm /resync /rediscover,
+con elevación, terminó con código 0, pero mantenía unos
 91 ms de adelanto. Se completó el ajuste puntual con tres muestras NTP correlacionadas
 de la misma fuente time.windows.com y Set-Date, sin cambios de configuración
 persistente. Medición seleccionada previa: -93.1574 ms; posterior: +13.05225 ms
 (reloj local ligeramente por detrás). La llamada siguiente fue válida.
 No se alteraron fechas del proveedor ni validaciones del cliente.
 
-Alex autorizó el Quick Tunnel de fase 3 solo hacia 127.0.0.1:3055 durante la
+El Quick Tunnel de fase 3 se limitó a 127.0.0.1:3055 durante la
 demostración. Binding verificado. Túnel y proveedor propios detenidos; puerto
 3055 sin listeners. La lectura posterior se ejecutó después de ese cierre.
 
@@ -123,22 +119,20 @@ y la instantánea válida; no se borra automáticamente evidencia de negocio.
 El endpoint temporal queda inactivo hasta una nueva ejecución autorizada.
 No hay bloqueos pendientes para cerrar fase 3.
 
-## Siguiente paso
+## Límites de la fase
 
-Revisión y publicación manual de Alex. La siguiente fase necesita su nuevo encargo:
-interfaz LWC, recorrido comercial y matriz final de fallos reales.
+La interfaz LWC, el recorrido comercial y la matriz final de fallos reales quedaron
+fuera de esta fase. Su evolución se documenta en [STATUS](STATUS.md).
 La instalación probada es incremental sobre P05; no se ha ejecutado una instalación
 limpia desde cero.
 
 ## Revisión local final
 
-74 archivos versionables revisados: nueve JSON/plantillas, 30 XML/plantillas,
+Al finalizar la fase 3 se revisaron 74 archivos versionables: nueve JSON/plantillas, 30 XML/plantillas,
 tres scripts PowerShell y 39 enlaces relativos correctos. Clave, ID/dominio/usuario
 privado y URL temporal ausentes de los archivos versionables, comprobados en memoria
 sin mostrar valores. .env, .local y .sf siguen excluidos de Git.
-El histórico de fase 2 coincide íntegramente con STATUS del commit base.
+Resultados de fase 2 conservados.
 
-Se retiraron 16 temporales propios de diagnóstico, elevación, despliegue y túnel.
 Se conservan originales, herramientas, evidencia saneada y conversión local.
-No se guardaron logs de depuración Apex completos. Árbol sin staging;
-HEAD y origin/main siguen en ae25cec. Puerto 3055 libre al cierre.
+No se guardaron logs de depuración Apex completos. Puerto 3055 libre al cierre.

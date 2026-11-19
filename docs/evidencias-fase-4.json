@@ -85,7 +85,7 @@
       "requestId": "e327a2a0-3904-45fa-9210-f0bbe4fdf0c8",
       "purpose": "clock-diagnostic-admin-no-dml"
     },
-    "authorization": "Expresa para fase 4: w32tm y corrección precisa con la misma fuente NTP si resulta necesaria.",
+    "authorization": "Sincronización puntual autorizada de fase 4: w32tm y ajuste con la misma fuente NTP.",
     "success": true,
     "source": "time.windows.com",
     "resyncExitCode": 0,
