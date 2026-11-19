@@ -9,7 +9,7 @@ public with sharing class P05ConsultaTarifa {
         public String quoteId;
         public String productCode;
         public Integer quantity;
-        public String currency;
+        public String currencyCode;
         public Decimal unitPrice;
         public Decimal totalPrice;
         public Datetime issuedAt;
@@ -84,7 +84,7 @@ public with sharing class P05ConsultaTarifa {
             result.quoteId = quoteId;
             result.productCode = 'PROD-001';
             result.quantity = 3;
-            result.currency = 'EUR';
+            result.currencyCode = 'EUR';
             result.unitPrice = unitPrice;
             result.totalPrice = totalPrice;
             result.issuedAt = issuedAt;

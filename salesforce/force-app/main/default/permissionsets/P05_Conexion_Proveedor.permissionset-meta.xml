@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>P05ConsultaTarifa</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <description>Acceso a la sonda Apex y al principal del proveedor P05, sin permisos generales.</description>
+    <externalCredentialPrincipalAccesses>
+        <enabled>true</enabled>
+        <externalCredentialPrincipal>P05_Proveedor_Externo-P05_Compartido</externalCredentialPrincipal>
+    </externalCredentialPrincipalAccesses>
+    <label>P05 Conexion Proveedor</label>
+</PermissionSet>

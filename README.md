@@ -1,20 +1,26 @@
 # P05 — Consulta de tarifas de proveedor desde Salesforce
 
-Proyecto independiente con datos ficticios. Sesión 1: API local autenticada y
-sonda Apex preparada. **La conexión real desde Salesforce está pendiente.**
-No existe todavía LWC ni guardado de instantáneas.
+**Sesión 1B completada:** llamada real desde Apex mediante Named Credential y
+HTTPS al proveedor autenticado, rechazo de clave incorrecta y restauración comprobados.
+La demostración utilizó un administrador; los permisos del futuro comercial no
+están acreditados. No hay todavía LWC ni modelo de instantáneas.
 
-## Estructura
+La base local fue publicada por Alex en `603ebd1`. Los cambios de sesión 1B quedan
+para su revisión, staging, commit y push manuales.
 
-- `proveedor/`: Node.js 24, TypeScript y Fastify 5; catálogo en código.
-- `salesforce/`: cliente Apex fijo para PROD-001 × 3, mocks y preparación DX.
-- `docs/`: [alcance](docs/PROJECT_BRIEF.md), [estado y evidencias](docs/STATUS.md),
-  [entorno](docs/ENVIRONMENT.md), [contrato OpenAPI](docs/openapi.json) y
-  [conexión paso a paso](docs/CONEXION.md).
+## Componentes
 
-## Comprobación local
+- `proveedor/`: Node.js 24, TypeScript y Fastify 5; PROD-001 a 19.90 EUR.
+- `salesforce/`: proyecto DX API 68.0, sonda Apex, ocho métodos de prueba,
+  External Credential y Permission Set mínimo.
+- `salesforce/templates/`: Named Credential actual sin URL temporal ni secreto.
+- `docs/`: [alcance](docs/PROJECT_BRIEF.md), [resultados](docs/STATUS.md),
+  [entorno](docs/ENVIRONMENT.md), [OpenAPI](docs/openapi.json),
+  [conexión reproducible](docs/CONEXION.md) y [evidencia saneada](docs/evidencias-sesion-1b.json).
 
-Desde `proveedor/`, con las versiones registradas en ENVIRONMENT:
+## Pruebas locales
+
+Desde `proveedor/`:
 
 ```powershell
 npm.cmd ci --ignore-scripts
@@ -22,26 +28,26 @@ npm.cmd run check
 npm.cmd run smoke
 ```
 
-`check` ejecuta TypeScript y pruebas por inyección. `smoke` abre temporalmente
-solo `127.0.0.1:3055`, comprueba HTTP con un secreto efímero en memoria y cierra
-el servicio. No usa Salesforce, HTTPS ni el secreto de desarrollo de Alex.
+`check` verifica tipos y ejecuta 27 pruebas. `smoke` abre temporalmente
+`127.0.0.1:3055`, prueba HTTP con clave efímera y cierra el servicio.
+Estas pruebas no sustituyen el callout real de Salesforce.
 
-## Arranque para la conexión
+## Retomar el proveedor
 
-Alex ejecuta una vez desde `proveedor/`:
+Ya existe una clave local en `proveedor/.env`, excluida de Git. No regenerarla.
+Desde `proveedor/`:
 
 ```powershell
-.\scripts\create-local-secret.ps1
 npm.cmd start
 ```
 
-El script crea `.env` ignorado por Git, no imprime el secreto y no sobrescribe
-un archivo existente. Alex introduce ese mismo valor en el parámetro protegido
-de Salesforce según CONEXION. No pegarlo en chats, comandos ni documentación.
+Para una instalación nueva sin .env, Alex ejecuta primero
+`scripts/create-local-secret.ps1`; no imprime el valor ni sobrescribe archivos.
+La sesión 1B contó con autorización expresa de Alex para que Codex generara y
+cargara el secreto mediante un proceso local.
 
-El servidor escucha exclusivamente en `127.0.0.1:3055`. `GET /health` devuelve
-solo estado. `POST /v1/tarifas/consultar` exige clave y UUID. Sin secreto válido
-el arranque falla. Ctrl+C detiene el servicio. No se abre un túnel automáticamente.
-
-Alex revisa, hace staging, commit y push por sesión. Convención:
-`tipo: descripción en castellano`; descripción basada en resultados ejecutados.
+El proveedor escucha solo en loopback. No abre túneles automáticamente.
+/health es mínimo y público; tarifas exige clave y UUID.
+**Proveedor y túnel de la demostración quedaron cerrados.** Para repetirla,
+seguir CONEXION: la URL del Quick Tunnel cambia y debe actualizarse en Salesforce.
+Mantener sincronizado el reloj: Apex rechaza emisiones futuras y tarifas caducadas.

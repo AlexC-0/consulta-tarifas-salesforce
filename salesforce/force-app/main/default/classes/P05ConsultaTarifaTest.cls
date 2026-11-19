@@ -72,7 +72,7 @@ private class P05ConsultaTarifaTest {
         System.assertEquals(200, result.httpStatus);
         System.assertEquals('PROD-001', result.productCode);
         System.assertEquals(3, result.quantity);
-        System.assertEquals('EUR', result.currency);
+        System.assertEquals('EUR', result.currencyCode);
         System.assertEquals(19.90, result.unitPrice);
         System.assertEquals(59.70, result.totalPrice);
         System.assertEquals(86400000, result.validUntil.getTime() - result.issuedAt.getTime());

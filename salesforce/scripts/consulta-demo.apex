@@ -7,7 +7,7 @@ System.debug(LoggingLevel.INFO, JSON.serialize(new Map<String, Object>{
     'quoteId' => tarifa.quoteId,
     'productCode' => tarifa.productCode,
     'quantity' => tarifa.quantity,
-    'currency' => tarifa.currency,
+    'currency' => tarifa.currencyCode,
     'unitPrice' => tarifa.unitPrice,
     'totalPrice' => tarifa.totalPrice,
     'issuedAt' => tarifa.issuedAt,

@@ -1,135 +1,142 @@
-# Retomar la conexión real
+# Conexión P05 — configuración verificada y repetición
 
-Proveedor local probado; organización, credencial y túnel pendientes.
-Este procedimiento está preparado, no ejecutado.
+La sesión 1B completó 200 → 401 → 200 desde Apex mediante HTTPS.
+Resultados en [STATUS](STATUS.md); evidencia en [evidencias-sesion-1b.json](evidencias-sesion-1b.json).
+Proveedor y túnel quedaron cerrados. No crear otro Playground ni regenerar la clave.
 
-## Organización exclusiva y versión API
+## Destino y herramientas
 
-Alex crea o identifica un Playground nuevo de P05 en Trailhead y lo abre.
-Comprueba Setup → Company Information: Organization ID y nombre; conserva
-localmente dominio My Domain. No publicar IDs privados, usuario ni dominio.
-No reutilizar organizaciones anteriores.
+El Playground P05 Consulta Tarifas ya existe y está autenticado en la CLI como
+p05-tarifas-dev. Se contrastó Organization con la tarjeta de Trailhead y se comprobó
+API 68.0. Antes de nuevas escrituras, verificar que el alias sigue apuntando al
+destino autorizado; no usar destinos implícitos ni sf org display.
 
-Antes del login, comprobar que `p05-tarifas-dev` sigue libre (lo estaba en la
-inspección). Si está ocupado, verificar identidad; no sobrescribirlo.
-Alex hace login en navegador oficial con el dominio propio del Playground:
-
-```powershell
-sf.cmd org login web --alias p05-tarifas-dev --instance-url https://DOMINIO-P05.my.salesforce.com
-```
-
-DOMINIO-P05 es un marcador. No usar --set-default. No imprimir tokens,
-sf org display ni URLs reutilizables de acceso.
-Contrastar Organization (Id, Name, OrganizationType, IsSandbox) con Company
-Information mediante consulta dirigida a `--target-org p05-tarifas-dev`.
-El alias por sí solo no acredita identidad.
-
-Después de verificar el destino:
+La creación y el login originales están completados. Para una instalación nueva,
+crear una organización independiente; Alex realiza login personal en navegador
+oficial, sin --set-default. Consultar versiones con:
 
 ```powershell
 sf.cmd api request rest /services/data/ --target-org p05-tarifas-dev
 ```
 
-Elegir una versión devuelta por P05, mínimo 60.0 por UUID.
-Desde salesforce/, sustituir VERSION_VERIFICADA por ese número:
+El proyecto actual ya contiene sfdx-project.json y cls-meta.xml con 68.0.
+El script prepare-project.ps1 se conserva para instalaciones nuevas; no ejecutarlo
+sobre los archivos existentes, porque se niega a sobrescribirlos.
+
+## Proveedor y secreto
+
+Desde proveedor/:
 
 ```powershell
-.\scripts\prepare-project.ps1 -ApiVersion VERSION_VERIFICADA
+npm.cmd ci --ignore-scripts
+npm.cmd start
 ```
 
-Genera sfdx-project.json y dos cls-meta.xml sin desplegar ni sobrescribir.
-Estos archivos serán versionables con la versión real y sin IDs privados.
-Hasta entonces no se presenta el directorio como paquete desplegable completo.
+Usa el .env ya existente. El proceso solo escucha en 127.0.0.1:3055.
+GET /health devuelve estado mínimo; tarifas exige X-API-Key y X-Request-Id.
+No se sirven carpetas. Sin secreto válido, el arranque falla.
 
-## Secreto y proveedor
+Para una instalación nueva sin .env, usar scripts/create-local-secret.ps1.
+No sobrescribe ni imprime el valor. La autorización de sesión 1B permitió a Codex
+ejecutarlo y cargar la clave mediante un helper local; no concede una autorización
+general para mostrar secretos o cambiar credenciales ajenas.
 
-Alex ejecuta `proveedor/scripts/create-local-secret.ps1` localmente.
-No se ejecutó durante la implementación. Genera 32 bytes aleatorios como 64
-caracteres hexadecimales en proveedor/.env, sin imprimir y sin sobrescribir.
-Alex abre ese archivo localmente para introducir el valor en Salesforce;
-no enviarlo por chat ni registrarlo en comandos, logs o metadatos.
+## Reloj
 
-Desde proveedor/: `npm.cmd start`. Comprobar `http://127.0.0.1:3055/health`.
-Solo sirve la API, sin carpetas o archivos estáticos.
+Mantener el reloj del equipo sincronizado. La validación de Apex rechaza fechas
+futuras y caducadas. En sesión 1B se diagnosticaron 2,08 s de adelanto y se ejecutó,
+con autorización expresa y elevación de Windows, una resincronización puntual.
+No añadir tolerancias arbitrarias ni alterar fechas del proveedor para superar pruebas.
 
-## Túnel: confirmación previa de Alex
+## Túnel temporal
 
-Exposición propuesta: **solo el proveedor de 127.0.0.1:3055**, mediante HTTPS de
-Cloudflare Quick Tunnel, durante la comprobación Salesforce de esta sesión,
-cerrándolo inmediatamente después. Tarifas exige clave; /health es público y mínimo.
+La autorización de sesión 1B cubrió la demostración ya cerrada. Antes de una nueva
+exposición, confirmar autorización para el mismo entorno y finalidad.
 
-Antes de abrirlo, obtener confirmación expresa para esa exposición.
-cloudflared 2026.11.1 ya está preparado como `.local/cloudflared.exe` dentro de
-P05 (ignorado), con SHA256 oficial verificado. No se instaló globalmente ni como
-servicio Windows. No es necesario modificar PATH.
-
-Desde la raíz, con proveedor activo y exposición autorizada:
+Desde la raíz del repositorio, con proveedor activo:
 
 ```powershell
-.\.local\cloudflared.exe --version
-.\.local\cloudflared.exe tunnel --url http://127.0.0.1:3055
+.\.local\cloudflared.exe --no-autoupdate tunnel --url http://127.0.0.1:3055
 ```
 
-Terminal de Alex en primer plano; Ctrl+C al terminar. URL temporal no versionable.
-No usar autenticación por correo: no sirve para el callout no interactivo.
-Quick Tunnel es desarrollo, sin disponibilidad garantizada y puede devolver 429.
-Si la red lo impide, registrar error saneado. Alternativa a evaluar con autorización
-separada: alojar temporalmente el mismo proveedor en un servicio HTTPS gratuito
-compatible con Node 24; no contratar ni crear recursos automáticamente.
+cloudflared portable 2026.11.1 está preparado en .local, con checksum verificado.
+No instalar servicios globales. Exponer solo ese puerto durante la comprobación;
+tarifas tiene API key y /health es público. Cerrar al terminar.
+La URL HTTPS cambia al iniciar otro Quick Tunnel; no versionarla.
+No añadir autenticación por correo, incompatible con el callout no interactivo.
 
-## Credenciales actuales en Salesforce
+## Metadata reproducible sin secretos
 
-En la organización P05 verificada, Setup → Named Credentials:
+Configuración comprobada:
 
-| Elemento | Configuración |
+| Elemento | Valor |
 | --- | --- |
-| External Credential | P05_Proveedor_Externo; protocolo Custom |
-| Principal | P05_Compartido; Named Principal; secuencia 1 |
-| Parámetro protegido del principal | ApiKey; Alex introduce el secreto |
-| Cabecera de External Credential | X-API-Key = {!$Credential.P05_Proveedor_Externo.ApiKey} |
-| Named Credential actual | P05_Proveedor; URL HTTPS base del túnel; External Credential anterior |
-| Opciones | Enabled for Callouts; Allow Formulas in HTTP Header; Generate Authorization Header desactivado |
-| Permission Set | P05_Conexion_Proveedor; acceso al principal anterior y clase P05ConsultaTarifa |
+| External Credential | P05_Proveedor_Externo; Custom |
+| Principal | P05_Compartido; NamedPrincipal; secuencia 1 |
+| Parámetro protegido | ApiKey; encrypted=true |
+| Cabecera | X-API-Key = {!$Credential.P05_Proveedor_Externo.ApiKey}; secuencia 1 |
+| Named Credential | P05_Proveedor; SecuredEndpoint; callouts habilitados |
+| Opciones | Merge fields en cabecera activado; Authorization automática desactivada |
+| Permission Set | P05_Conexion_Proveedor; solo principal y clase P05ConsultaTarifa |
 
-Asignar el Permission Set solo al usuario de demostración. Comprobar requisitos
-de User External Credentials de ese perfil según documentación y destino real;
-no conceder permisos generales para superar errores. No es una prueba de roles
-ordinarios: registrar qué tipo de usuario ejecute el callout.
+External Credential y Permission Set están en force-app.
+Named Credential es una plantilla sin endpoint temporal, dentro de templates/.
+prepare-connection.ps1 genera un paquete Metadata API de tres componentes sin
+secreto bajo .local/connection-metadata. No sobrescribe un staging existente.
+Antes de repetir, retirar o archivar únicamente ese directorio temporal generado,
+conservando .env y los originales. Nunca borrar .local completo.
 
-Sin Legacy Named Credential, secretos en Custom Metadata ni API keys en código.
-Se preparan pasos UI porque el encargo lo permite y aún no hay destino ni URL
-verificados. Si después se versiona metadata, excluir secretos, URL temporal e IDs.
-
-## Despliegue explícito y mocks
-
-Solo con identidad y versión verificadas, desde salesforce/:
+Para una primera instalación, desde salesforce/, ejecutar en este orden: clases,
+paquete de conexión y asignación al usuario de la demostración.
 
 ```powershell
 sf.cmd project deploy start --source-dir force-app/main/default/classes --target-org p05-tarifas-dev --test-level RunSpecifiedTests --tests P05ConsultaTarifaTest --wait 10
+.\scripts\prepare-connection.ps1 -Endpoint https://URL-TEMPORAL.trycloudflare.com
+sf.cmd project deploy start --metadata-dir ..\.local\connection-metadata --target-org p05-tarifas-dev --wait 10
+sf.cmd org assign permset --name P05_Conexion_Proveedor --target-org p05-tarifas-dev
 ```
 
-Solo dos clases, sin destructivos. Ocho métodos con HttpCalloutMock preparados.
-No prueban red, secreto protegido ni permisos reales. Si la operación sigue,
-consultar su identificador con destino explícito. No declarar aprobado Apex
-hasta compilar y ejecutar pruebas en P05.
+Comprobar el resultado satisfactorio de cada paso antes de continuar. La URL del
+ejemplo es un marcador: sustituirla por la real. No desplegarlo literalmente.
+Para una repetición con credenciales ya configuradas, actualizar solo la URL de
+P05_Proveedor mediante Setup y conservar principal, clave y permisos.
+No recrearlos por rutina ni asignar permisos a usuarios ajenos a la demostración.
+Si una operación continúa asíncronamente, consultar su resultado final con destino
+explícito; ejecutar un comando no acredita éxito.
 
-## Callout real y cierre
+## Parámetro protegido
 
-Con proveedor, túnel y credencial activos, desde salesforce/:
+El valor de ApiKey está configurado. No debe recuperarse ni imprimirse para verificarlo.
+Su funcionamiento se comprueba con la llamada real.
+
+Para una instalación nueva, introducirlo en el principal mediante Setup o,
+si Alex lo autoriza expresamente, mediante la API oficial:
+POST /services/data/v68.0/named-credentials/credential, con protocolo Custom,
+principal P05_Compartido, tipo NamedPrincipal y credentials.ApiKey.encrypted=true.
+PUT sobre el mismo recurso permite sustituir/restaurar el valor.
+El secreto viaja por stdin desde .env, nunca como argumento, código Apex o metadata.
+No conservar cuerpos de respuesta ni logs de depuración completos.
+
+## Demostración real
+
+Desde salesforce/, con proveedor y túnel activos y URL actualizada:
 
 ```powershell
 sf.cmd apex run --file scripts/consulta-demo.apex --target-org p05-tarifas-dev
 ```
 
-Fuera de Test: HTTP 200, PROD-001, cantidad 3, EUR, unitario 19.90, total 59.70,
-UUID y vigencia correctos. Correlacionar requestId del resultado Apex con el log
-del proveedor. Retener solo resultado saneado, no el debug log completo.
-HTTP local o curl al túnel no acreditan este recorrido.
+Esperado: HTTP 200, PROD-001, cantidad 3, EUR, 19.90, 59.70, UUID y 24 horas.
+Guardar únicamente los campos que emite el script y correlacionar requestId con
+el log mínimo del proveedor. No copiar la salida completa de depuración.
 
-Si es viable, Alex introduce temporalmente un valor incorrecto en el parámetro
-protegido; repetir y verificar UNAUTHORIZED/401 correlacionado. Alex restaura
-el valor válido y se comprueba de nuevo éxito. No dejar permisos temporales.
-Nunca imprimir cabeceras, secretos ni cuerpos de errores externos.
+La prueba negativa sustituye temporalmente el parámetro protegido por otra clave,
+ejecuta la sonda y exige UNAUTHORIZED en Apex y 401 en proveedor con el mismo UUID.
+Restaurar siempre la clave válida, incluso si falla la comprobación, y exigir un
+nuevo éxito correlacionado. No dejar configuración inválida.
 
-Detener proveedor y túnel. Registrar en STATUS resultados saneados y tipo de
-usuario, separando mocks de llamada real. Los secretos los gestiona Alex.
+Estas llamadas se ejecutan fuera de Test. Los ocho métodos HttpCalloutMock
+no prueban red o permisos ordinarios. La demostración 1B se realizó como
+System Administrator; no se atribuye a un comercial.
+
+Detener los procesos propios de proveedor y túnel, verificar puerto libre y
+registrar resultados saneados. No modificar procesos o configuraciones ajenos.
