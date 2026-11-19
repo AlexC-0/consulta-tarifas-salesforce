@@ -1,6 +1,6 @@
 # Uso comercial y reproducción de P05
 
-Implementación y diagnóstico completados; aceptación final pendiente.
+V1 completada y aceptada dentro del alcance documentado, con limitaciones conocidas.
 La guía describe el comportamiento implementado. Evidencias por fase en
 [ACEPTACION-V1](ACEPTACION-V1.md); procedimiento completo en [INSTALACION](INSTALACION.md).
 
@@ -93,7 +93,8 @@ Comprobar cantidad inválida, aislamiento del histórico/detalle y un fallo sin 
 lectura del histórico/detalle. Conservar las instantáneas válidas y evidencia saneada.
 No alterar el reloj ni relajar otras validaciones para forzar el resultado. El margen
 temporal de fase 5 está documentado en [CLIENTE_APEX](CLIENTE_APEX.md).
-Pruebas aisladas y matriz real en [FASE-5](FASE-5.md); la V1 no se declara cerrada.
+Pruebas aisladas y matriz real históricas en [FASE-5](FASE-5.md).
+El cierre aceptado no autoriza repetir estas operaciones sin un nuevo encargo.
 
 Resultados históricos: [estado de fase 5](ESTADO-FASE-5.md).
-Revisión y decisiones pendientes: [STATUS](STATUS.md).
+Estado y cierre aceptado: [STATUS](STATUS.md).

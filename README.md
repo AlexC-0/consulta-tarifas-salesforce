@@ -1,15 +1,17 @@
 # P05 — Consulta de tarifas de proveedor desde Salesforce
 
-**Implementación y diagnóstico completados; aceptación final pendiente.**
-Fase 6: revisión final documental y preparación de la decisión de cierre V1.
+**V1 completada y aceptada dentro del alcance documentado, con limitaciones conocidas.**
+Cierre definitivo registrado el **19/11/2026** sobre la revisión final publicada.
 Un comercial selecciona producto y cantidad, consulta el proveedor y guarda una
-instantánea privada. El histórico funciona sin proveedor. **V1 no cerrada**:
+instantánea privada. El histórico funciona sin proveedor. Limitación aceptada:
 el recorrido externo de Apex presenta dos recepciones ante 429/503. La comparación
 con HTTP local y HTTPS acota el tramo, sin identificar su componente interno.
 
-Base publicada: fase 5B en `756e931dbb2e78f4d3bdf64c762738f71344e976`.
+Revisión final publicada: `061485df3455dab9296950a7bdf5df33630ab069`.
+Diagnóstico de transporte publicado: `756e931dbb2e78f4d3bdf64c762738f71344e976`.
 Implementación funcional: fase 5 en `3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16`.
-Esta entrega documental de fase 6 permanece pendiente de publicación y aceptación.
+La aceptación es efectiva; esta actualización documental local queda pendiente de
+publicación. No añade pruebas ni despliegues a las evidencias históricas.
 Proveedor, catálogo y datos de demostración simulados; no es un servicio en producción.
 
 ## Acceso y componentes
@@ -47,12 +49,14 @@ Fase 5 publicada: despliegue incremental de ocho componentes y **40/40 Apex**. *
 **43/43 pruebas del proveedor**, incluida matriz HTTP local real, y TypeScript correcto.
 Resultados externos, conservación de datos, restauración y límites en [STATUS](docs/STATUS.md).
 Instalación incremental comprobada; [instalación limpia documentada](docs/INSTALACION.md)
-y revisada estáticamente, sin ejecución desde cero.
+y revisada estáticamente, sin ejecución desde cero. Este alcance está aceptado para V1.
 
 Fase 5B: TypeScript correcto y **3/3 pruebas afectadas**. Matriz A/B/C de 14
 operaciones: una entrada por caso local y HTTPS; dos por callout Apex ante 429/503,
 confirmadas una vez por estado. Sin cambio de código desplegable ni nuevo recorrido
-comercial. No se garantiza entrega única de extremo a extremo.
+comercial. Se acepta la ausencia de reintentos programados en la aplicación, sin
+garantizar entrega física única ni idempotencia entre acciones separadas. Estas
+limitaciones no constituyen tareas obligatorias pendientes de V1.
 
 ## Documentación
 

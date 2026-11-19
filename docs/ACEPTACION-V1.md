@@ -1,9 +1,14 @@
-# V1 — Matriz de aceptación propuesta
+# V1 — Matriz de aceptación definitiva
 
-Revisión documental de 19/11/2026 sobre `756e931dbb2e78f4d3bdf64c762738f71344e976`.
-**Implementación y diagnóstico completados; aceptación final pendiente.**
-«Verificado» describe evidencia existente, no una decisión de aceptación final.
-No se ejecutan pruebas, servicios ni despliegues en fase 6.
+**V1 completada y aceptada dentro del alcance documentado, con limitaciones conocidas.**
+Aceptación definitiva registrada el **19/11/2026**, sobre la revisión final publicada
+en `061485df3455dab9296950a7bdf5df33630ab069`. La revisión de fase 6 se realizó
+sobre el diagnóstico `756e931dbb2e78f4d3bdf64c762738f71344e976`; la implementación
+funcional corresponde a `3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16`.
+La matriz funcional y sus limitaciones quedan aceptadas para V1. «Verificado»
+identifica evidencia histórica; no representa una ejecución nueva por este cierre.
+El registro documental local queda pendiente de publicación. No se ejecutan pruebas,
+servicios ni despliegues ni se modifican retrospectivamente los JSON de evidencia.
 
 ## Fuentes y capas de evidencia
 
@@ -33,7 +38,7 @@ Los nombres de métodos de prueba permiten localizar la comprobación exacta en
 [controlador](../salesforce/force-app/main/default/classes/P05TarifasControladorTest.cls)
 y [Jest](../salesforce/force-app/main/default/lwc/p05Tarifas/__tests__/p05Tarifas.test.js).
 
-| Criterio y comportamiento requerido | Implementación | Evidencia concreta y fase | Resultado, límite y pendiente |
+| Criterio y comportamiento requerido | Implementación | Evidencia concreta y fase | Resultado y límite aceptado |
 | --- | --- | --- | --- |
 | Catálogo: tres productos ficticios, selección por producto activo/código | [Proveedor](../proveedor/src/app.ts), `listarProductos`, [carga](../salesforce/scripts/cargar-productos.apex) | E2 `records`; E4 `ui.normalProducts`, `negativeFixtureExcluded`; `productsAreFilteredOrderedAndMinimal` en E5 | Verificado. El selector admite hasta 200 candidatos y excluye PROD-999; no es sincronización de catálogo |
 | Cantidad: entero 1–10.000; rechazo antes del callout | Cliente/servicio/controlador y `handleSave` del LWC | `rejectsInvalidInputBeforeCallout`, `rejectsInputsAndUnavailableProducts`, `invalidInputAndUnauthorizedSaveNeverCallProvider` en E5; E4 `quantityZeroRejected` | Verificado. Fronteras automatizadas; no se atribuye cada valor a una prueba UI real |
@@ -49,15 +54,16 @@ y [Jest](../salesforce/force-app/main/default/lwc/p05Tarifas/__tests__/p05Tarifa
 | Interfaz: entrada P05, confirmación, detalle, errores seguros y vigencia estimada | [LWC](../salesforce/force-app/main/default/lwc/p05Tarifas/p05Tarifas.js), DTO y controlador | E4 `ui`; E5 30 Jest y recorrido comercial; `resume.visibleValidityEvidence` | Verificado. Reanudación «Vigente» confirmada visualmente; texto no capturado automáticamente. DateTime persistido en segundos y estimación con incertidumbre |
 | Errores: categorías seguras, timeout, sin instantáneas ni éxito anterior | `safeError`, `safeMessage`, timeout 10 s; sin reintento propio | `mapsHttpErrorsWithoutTrustingBody`, `mapsTimeoutAndConnectionErrors`, `allKnownErrorsAreSafeAndUnknownDetailsAreHidden`; E5 `serviceReal`, ocho `commercialFailures` | Verificado. Desconexión vía túnel devuelve HTTP_ERROR; timeout HTTP local separado del real Salesforce |
 | Recuperación: controles reutilizables y nuevo éxito; histórico intacto | Estado LWC y servicio síncrono | Jest de recuperación; [HTTP real](../proveedor/test/fault-http.test.ts); E5 `commercialRecovery`, `snapshots` | Verificado: P05-000004 posterior a los fallos. E5B conserva las cinco filas sin DML |
-| Ausencia de reintentos automáticos | Un `Http.send` por invocación; una llamada LWC con bloqueo mientras guarda | E5B `matrix`: un callout por operación y dos entradas 429/503; controles Node una | A demostrada; B no garantizada. Aceptación de la delimitación pendiente, según propuesta siguiente |
+| Ausencia de reintentos automáticos | Un `Http.send` por invocación; una llamada LWC con bloqueo mientras guarda | E5B `matrix`: un callout por operación y dos entradas 429/503; controles Node una | A demostrada y aceptada; B no garantizada. Delimitación aceptada el 19/11/2026 según el registro siguiente |
 
-## Propuesta de aceptación del transporte
+## Aceptación del transporte — 19/11/2026
 
 La regla inicial de [PROJECT_BRIEF](PROJECT_BRIEF.md) en `603ebd1` dice «Sin
 reintentos automáticos; timeout Apex inicial de diez segundos». No especifica una
 garantía técnica de entrega física única. El estado de fase 5 introdujo expresamente
 ese criterio pendiente al detectar repeticiones; [5B](FASE-5B.md) lo delimitó sin
-aceptarlo. Esta revisión conserva esa trazabilidad, sin resolver la ambigüedad en silencio.
+aceptarlo. El cierre actual acepta expresamente la delimitación siguiente y conserva
+esa trazabilidad; no modifica retrospectivamente el diagnóstico.
 
 - **A — demostrada:** ausencia de reintentos programados en la aplicación. Una
   invocación del cliente produce un callout Apex; el bloqueo UI evita otro envío
@@ -67,7 +73,7 @@ aceptarlo. Esta revisión conserva esa trazabilidad, sin resolver la ambigüedad
   Node correspondientes. El componente externo causante no está identificado.
   No se demostró reintento propio y las sondas no modificaron instantáneas.
 
-**Texto propuesto para aceptación final, aún NO aprobado:**
+**Alcance aceptado para V1:**
 
 > La V1 garantiza ausencia de reintentos programados en el código de la aplicación.
 > Se acepta como limitación conocida que el recorrido externo probado puede producir
@@ -75,9 +81,9 @@ aceptarlo. Esta revisión conserva esa trazabilidad, sin resolver la ambigüedad
 > identificado. No se garantiza entrega física única ni idempotencia entre acciones
 > separadas. El hallazgo y sus evidencias se conservan sin cambios.
 
-Si no se acepta esta delimitación, el criterio de transporte queda pendiente; no
-se da por fallida una implementación propia no demostrada ni se introduce una
-solución fuera de alcance. No se abre otro túnel ni se contacta soporte en fase 6.
+Esta limitación está aceptada y no constituye una tarea obligatoria pendiente de
+V1. No se introduce una solución fuera de alcance ni se atribuye la causa a una
+plataforma concreta. El cierre no requiere repetir el diagnóstico ni contactar soporte.
 
 <a id="instalacion"></a>
 ## Instalación y alcance comprobado
@@ -95,23 +101,27 @@ registran como límite o comprobación pendiente, sin una aprobación específic
 una nueva instalación. No se ha localizado una fuente del proyecto que la convierta
 en condición obligatoria ya aprobada. Esta conclusión se limita a esas fuentes.
 
-**Decisión propuesta, aún pendiente:** aceptar el alcance incremental demostrado
-y el procedimiento limpio documentado, dejando su ejecución como limitación de
-verificación. Si se exige demostrar una instalación limpia antes de aceptar V1,
-hará falta un alcance posterior autorizado; no se crea una organización en esta fase.
+**Decisión aceptada el 19/11/2026:** despliegue incremental comprobado e instalación
+desde cero documentada y revisada estáticamente, pero no ejecutada. La falta de
+ejecución limpia queda aceptada como limitación de verificación, sin constituir
+una tarea obligatoria pendiente de V1. Una ampliación posterior requiere nuevo encargo.
 
 ## Defectos, límites y decisión de cierre
 
-No se identifica un defecto funcional nuevo en esta revisión estática; no equivale
-a una suite nueva ni demuestra ausencia universal de defectos. Se corrige una
-instrucción documental de instalación obsoleta y se incorpora el manifiesto
-completo: desplegar todas las clases antes del esquema ya no era un orden válido.
+En la revisión estática de fase 6 no se identificó un defecto funcional nuevo;
+no equivalía a una suite nueva ni demostraba ausencia universal de defectos.
+Aquella revisión corrigió la instrucción documental de instalación obsoleta e
+incorporó el manifiesto completo: desplegar todas las clases antes del esquema
+ya no era un orden válido. El cierre actual no modifica esos archivos operativos.
 
 Límites conocidos: transporte anterior, instalación limpia sin ejecutar, proveedor
 y catálogo simulados, UI de escritorio, histórico acotado, resolución temporal y
 estimación, ausencia de idempotencia entre acciones y de controles de producción
 fuera del alcance. No se exigen como funcionalidades nuevas de V1.
 
-Quedan por aceptar expresamente la propuesta de transporte, el alcance de
-instalación y la entrega funcional con estos límites. **No hay cierre definitivo
-ni aceptación registrada por esta revisión.**
+El alcance funcional, las evidencias revisadas y las dos delimitaciones anteriores
+quedan aceptados el **19/11/2026**. **V1 queda cerrada definitivamente dentro de
+este alcance.** Las limitaciones se conservan y no son tareas obligatorias pendientes
+de esta versión. El cierre no acredita entrega física única, instalación limpia
+ejecutada ni pruebas nuevas. Su aceptación actual y la publicación posterior de
+esta actualización documental son hechos distintos.

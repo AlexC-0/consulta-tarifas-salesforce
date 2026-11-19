@@ -1,6 +1,8 @@
 # Alcance de P05
 
-**Implementación y diagnóstico completados; aceptación final pendiente.**
+**V1 completada y aceptada dentro del alcance documentado, con limitaciones conocidas.**
+Aceptación definitiva del 19/11/2026 sobre la revisión final publicada en
+`061485df3455dab9296950a7bdf5df33630ab069`.
 Fase 5B publicada en `756e931dbb2e78f4d3bdf64c762738f71344e976`; funcionalidad de
 fase 5 en `3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16`. Revisión documental de fase 6.
 El perfil funcional es un comercial de demostración, con proveedor y datos simulados.
@@ -23,17 +25,20 @@ LWC → Apex → Named Credential → API HTTPS → validación Apex → instant
 - Sin reintentos automáticos; timeout Apex inicial de diez segundos.
 - No confiar en importes ni respuestas del proveedor aportados por el navegador.
 
-La formulación original «Sin reintentos automáticos» se conserva. La propuesta
-final la delimita a reintentos programados en la aplicación; no promete entrega
-física única. Esta interpretación **requiere aceptación final**, junto con la
-limitación externa 429/503. Véase la [matriz y propuesta](ACEPTACION-V1.md).
+La formulación original «Sin reintentos automáticos» se conserva. La aceptación
+final del 19/11/2026 la delimita a reintentos programados en la aplicación; no
+garantiza entrega física única ni idempotencia entre acciones separadas. Se acepta
+la limitación externa 429/503, cuyo componente causante no está identificado.
+Véase la [matriz y aceptación](ACEPTACION-V1.md).
 No cambia el contrato, no oculta el hallazgo ni añade mecanismos de deduplicación.
 
 La instalación limpia no figura como criterio aprobado en las reglas originales
 del brief (`603ebd1`). Las fases 3–5B la registran como verificación no ejecutada.
 Se conserva esa limitación y se documenta el procedimiento; no se convierte por
-defecto en una ampliación obligatoria. La aceptación de este alcance de instalación
-también queda pendiente. [Fuentes y distinción](ACEPTACION-V1.md#instalacion).
+defecto en una ampliación obligatoria. Queda aceptado el despliegue incremental
+comprobado y la instalación limpia documentada y revisada estáticamente, sin
+ejecución desde cero. Ninguna de estas dos limitaciones es una tarea obligatoria
+pendiente de V1. [Fuentes y distinción](ACEPTACION-V1.md#instalacion).
 
 ## Modelo implementado en fase 3
 
@@ -93,7 +98,7 @@ histórico propio sin proveedor, errores seguros y caducidad visual dinámica.
 
 Recorrido comercial real, propiedad/autoría, detalle ajeno denegado y lectura offline
 comprobados. 36/36 Apex y 21/21 Jest. Fase 5 conserva la matriz final de fallos reales
-y revisión de robustez temporal; la V1 no se declara terminada.
+y revisión de robustez temporal; en aquel estado la V1 aún no se declaró terminada.
 
 ## Fase 5 — robustez temporal y fallos
 
@@ -108,5 +113,7 @@ Resultados, criterios V1 y limitaciones en [STATUS](STATUS.md) y [FASE-5](FASE-5
 5B confirma dos entradas HTTP distintas ante 429/503 por un callout Apex, frente
 a una en los controles Node; no identifica el componente externo ni demuestra
 reintento propio. Sus sondas no alteran instantáneas. [Diagnóstico](FASE-5B.md).
-Fase 6 consolida aceptación, reproducción y ficha técnica mediante revisión estática,
-sin nuevas funcionalidades, ejecuciones externas ni cierre definitivo.
+Fase 6 consolidó aceptación propuesta, reproducción y ficha técnica mediante revisión
+estática, sin nuevas funcionalidades, ejecuciones externas ni cierre en aquella revisión.
+La aceptación actual cierra V1 con las limitaciones indicadas; esta actualización
+documental local aún no está publicada y no representa pruebas nuevas.

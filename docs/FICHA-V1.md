@@ -1,6 +1,7 @@
 # P05 — Ficha técnica V1
 
-**Implementación y diagnóstico completados; aceptación final pendiente.**
+**V1 completada y aceptada dentro del alcance documentado, con limitaciones conocidas.**
+Aceptación definitiva: **19/11/2026**, sobre la revisión publicada `061485d`.
 Proyecto de demostración con proveedor HTTP, catálogo y datos simulados; sin
 clientes, tráfico de producción ni métricas de impacto empresarial atribuidas.
 
@@ -67,6 +68,9 @@ La causa interna de las repeticiones externas sigue sin identificar. UI de escri
 histórico acotado, DateTime persistido en segundos y vigencia visual estimada.
 Los controles de integridad no impiden a un administrador cambiar el código.
 
-La [propuesta de aceptación](ACEPTACION-V1.md) delimita reintentos de aplicación y
-transporte, y explicita el alcance de instalación. Ninguna de esas decisiones se
-registra como aprobada; V1 no está cerrada.
+La [aceptación definitiva](ACEPTACION-V1.md) establece la garantía de ausencia de
+reintentos programados en la aplicación y acepta la limitación externa de transporte.
+También acepta el despliegue incremental comprobado y la instalación limpia
+documentada y revisada estáticamente, sin ejecución. Estas limitaciones no son
+tareas obligatorias pendientes de V1. El cierre no añade pruebas ni despliegues;
+su registro documental local queda pendiente de publicación.

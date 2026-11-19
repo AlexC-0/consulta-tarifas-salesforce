@@ -10,21 +10,23 @@ cambios, comprobaciones y limitaciones del proyecto. Utilizar redacción técnic
 directa. Excluir relatos de conversaciones, asignaciones personales, firmas
 automáticas y detalles internos de elaboración.
 
-Fase 6: revisión documental y preparación de la aceptación V1, sobre fase 5B
-publicada en 756e931dbb2e78f4d3bdf64c762738f71344e976. Implementación funcional
-publicada en 3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16.
-Estado: implementación y diagnóstico completados; aceptación final pendiente.
-Contrastar criterios, código, evidencias y reproducción sin añadir funcionalidades.
-Conservar íntegro el diagnóstico 5B y distinguir evidencias históricas de revisión
-estática. Proponer ausencia de reintentos de aplicación sin dar por aceptada la
-delimitación del transporte. No atribuir causas internas sin evidencia.
+Mantenimiento de V1 cerrada y aceptada el 19/11/2026.
+Estado: V1 completada y aceptada dentro del alcance documentado, con limitaciones conocidas.
+Revisión final publicada en 061485df3455dab9296950a7bdf5df33630ab069;
+diagnóstico en 756e931dbb2e78f4d3bdf64c762738f71344e976 e implementación funcional
+en 3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16.
+Conservar diagnóstico, resultados y JSON históricos sin atribuirles la aceptación
+posterior. El registro del cierre es documental; su publicación es un paso separado.
+No atribuir causas internas sin evidencia. Ampliaciones y operaciones posteriores
+requieren un nuevo encargo; no convertir limitaciones aceptadas en tareas pendientes.
 No ejecutar suites, servicios, túneles, Login As, despliegues ni llamadas externas
-en esta fase. No contactar soporte, crear organizaciones ni reinicializar datos.
-Se permiten documentación y manifiestos acotados revisados estáticamente.
+para registrar este cierre. No contactar soporte, crear organizaciones ni reinicializar datos.
+Actualizar únicamente documentación; no modificar código, pruebas, manifiestos,
+dependencias, contrato, permisos, datos ni configuración funcional.
 Conservar funcionalidades, USER_MODE,
 permisos e integridad. Emisión futura: margen fijo máximo de 1000 ms; caducidad sin
 tolerancia y duración exacta de 24 horas. No cambiar relojes ni configuración NTP.
-Sin ampliaciones comerciales ni cierre definitivo V1 antes de revisión.
+Sin ampliaciones comerciales ni inicio del P06.
 Fase 3 publicada en 148d0e0; conservar históricos y P05-000000.
 No acceder a Gmail. No imprimir secretos, tokens, archivos de autenticación ni URLs
 reutilizables de acceso. No reutilizar organizaciones ajenas o destinos implícitos.
@@ -42,9 +44,9 @@ Fase 4 completada: nueve componentes, 36/36 Apex y 21/21 Jest. Recorrido comerci
 real, P05-000001 conservada junto con P05-000000, detalle ajeno denegado e histórico
 sin proveedor comprobados. Login As restaurado false; cuenta comercial mínima
 conservada. Fase 4 publicada en df23ec6. Ver docs/STATUS.md y docs/USO.md.
-La autorización de despliegue y demostración de fase 5 es histórica; no habilita
-operaciones nuevas en fase 6. No crear organizaciones ni usuarios persistentes.
-Conservar credenciales e instantáneas. V1 no cerrada.
+Las autorizaciones anteriores de pruebas, túneles y despliegues son históricas;
+no habilitan operaciones nuevas ni representan trabajos pendientes de ejecución.
+No crear organizaciones ni usuarios persistentes. Conservar credenciales e instantáneas.
 Fase 5 desplegada incrementalmente: 40/40 Apex, 30/30 Jest, 43/43 proveedor.
 P05-000000 a P05-000004 conservadas. Proveedor/túnel cerrados, endpoint inicial
 y Login As=false restaurados. Ver docs/STATUS.md y docs/evidencias-fase-5.json.
@@ -54,8 +56,9 @@ externo de Apex acotado, componente interno sin identificar. Sin defecto propio
 demostrado. TypeScript y 3/3 pruebas afectadas correctos; sin despliegue de aplicación.
 Cinco instantáneas intactas, endpoint restaurado, procesos propios detenidos en
 3,78 minutos de túnel autorizado; Login As no utilizado. Ver docs/FASE-5B.md.
-Pendiente V1: revisar la garantía de ausencia de reintentos programados sin prometer
-entrega única externa; instalación limpia sin comprobar. No añadir idempotencia
-ni reintentos para ocultar el hallazgo. Fase 5B publicada en 756e931.
-La instalación limpia está documentada pero no ejecutada; no convertir esa
-limitación en requisito aprobado sin fuente. No declarar cierre V1 ni iniciar P06.
+Aceptado para V1: ausencia de reintentos programados en la aplicación, sin garantía
+de entrega física única ni idempotencia entre acciones separadas. Se conservan las
+dos recepciones ante 429/503 por callout Apex y el componente externo sin identificar.
+Aceptado: despliegue incremental comprobado e instalación limpia documentada y
+revisada estáticamente, pero no ejecutada. No son tareas obligatorias pendientes
+de V1. No añadir idempotencia ni reintentos para ocultar el hallazgo.
