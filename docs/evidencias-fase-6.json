@@ -1,0 +1,86 @@
+{
+  "phase": 6,
+  "date": "2026-11-19",
+  "type": "Revisión estática documental",
+  "publishedBase": "756e931dbb2e78f4d3bdf64c762738f71344e976",
+  "functionalBase": "3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16",
+  "initialWorkingTreeClean": true,
+  "status": "Implementación y diagnóstico completados; aceptación final pendiente",
+  "historicalEvidence": {
+    "phase5": {
+      "apex": 40,
+      "jest": 30,
+      "provider": 43
+    },
+    "phase5b": {
+      "affectedTests": 3,
+      "operations": 14,
+      "apexCallouts": 6,
+      "httpEntries": 18
+    },
+    "rerun": false,
+    "originalDiagnosisUnchanged": true,
+    "status5bArchivedVerbatim": true
+  },
+  "staticReview": {
+    "xmlParsed": 40,
+    "manifestMembers": 20,
+    "sourceMetadataCovered": 34,
+    "snapshotFields": 14,
+    "missingComponents": 0,
+    "broadObjectPermissions": 0,
+    "conversionExecuted": false,
+    "deploymentExecuted": false,
+    "commandsExecuted": false,
+    "salesforceCommandsWithExplicitTarget": 12,
+    "powerShellBlocksParsed": 16,
+    "apexTestMethodsLocated": 40,
+    "matrixTestMethodReferences": 24,
+    "operationalFilesLocated": 10,
+    "versionableFiles": 122,
+    "affectedFiles": 14,
+    "jsonFilesParsed": 14,
+    "relativeLinksChecked": 172,
+    "anchorsChecked": 3,
+    "diffCheck": "passed",
+    "encoding": "UTF-8",
+    "editorialCheck": "passed",
+    "secretsOrAccessUrlsFound": 0,
+    "productionFilesChanged": 0,
+    "contractsChanged": 0
+  },
+  "acceptance": {
+    "applicationRetriesGuarantee": "Propuesta: ausencia de reintentos programados en la aplicación",
+    "transportSingleDeliveryGuaranteed": false,
+    "transportDelimitationApproved": false,
+    "cleanInstallationExecuted": false,
+    "cleanInstallationExplicitApprovedRequirementFound": false,
+    "installationScopeAccepted": false,
+    "v1Closed": false
+  },
+  "operations": {
+    "suitesExecuted": 0,
+    "servicesStarted": 0,
+    "tunnelsOpened": 0,
+    "salesforceCalls": 0,
+    "deployments": 0,
+    "dataWrites": 0,
+    "globalChanges": 0,
+    "communications": 0,
+    "stagedFiles": 0,
+    "commits": 0,
+    "pushes": 0
+  },
+  "documents": [
+    "ACEPTACION-V1.md",
+    "INSTALACION.md",
+    "FICHA-V1.md",
+    "STATUS.md",
+    "ESTADO-FASE-5B.md"
+  ],
+  "limits": [
+    "No se verifica el estado remoto actual; la conservación/restauración citada es histórica de 5B.",
+    "Revisión de rutas, dependencias y sintaxis; no compilación ni instalación nueva.",
+    "Decisiones de transporte, alcance de instalación y aceptación final pendientes."
+  ]
+}

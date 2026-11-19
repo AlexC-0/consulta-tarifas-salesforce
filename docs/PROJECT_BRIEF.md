@@ -1,8 +1,12 @@
 # Alcance de P05
 
-Un comercial seleccionará producto y cantidad y pulsará **Consultar y guardar tarifa**.
+**Implementación y diagnóstico completados; aceptación final pendiente.**
+Fase 5B publicada en `756e931dbb2e78f4d3bdf64c762738f71344e976`; funcionalidad de
+fase 5 en `3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16`. Revisión documental de fase 6.
+El perfil funcional es un comercial de demostración, con proveedor y datos simulados.
+Selecciona producto y cantidad y pulsa **Consultar y guardar tarifa**.
 
-Recorrido previsto:
+Recorrido implementado:
 LWC → Apex → Named Credential → API HTTPS → validación Apex → instantánea Salesforce → LWC.
 
 ## Reglas de V1
@@ -18,6 +22,18 @@ LWC → Apex → Named Credential → API HTTPS → validación Apex → instant
 - Histórico sin actualización automática. Nueva consulta, nueva instantánea.
 - Sin reintentos automáticos; timeout Apex inicial de diez segundos.
 - No confiar en importes ni respuestas del proveedor aportados por el navegador.
+
+La formulación original «Sin reintentos automáticos» se conserva. La propuesta
+final la delimita a reintentos programados en la aplicación; no promete entrega
+física única. Esta interpretación **requiere aceptación final**, junto con la
+limitación externa 429/503. Véase la [matriz y propuesta](ACEPTACION-V1.md).
+No cambia el contrato, no oculta el hallazgo ni añade mecanismos de deduplicación.
+
+La instalación limpia no figura como criterio aprobado en las reglas originales
+del brief (`603ebd1`). Las fases 3–5B la registran como verificación no ejecutada.
+Se conserva esa limitación y se documenta el procedimiento; no se convierte por
+defecto en una ampliación obligatoria. La aceptación de este alcance de instalación
+también queda pendiente. [Fuentes y distinción](ACEPTACION-V1.md#instalacion).
 
 ## Modelo implementado en fase 3
 
@@ -81,8 +97,16 @@ y revisión de robustez temporal; la V1 no se declara terminada.
 
 ## Fase 5 — robustez temporal y fallos
 
-Margen fijo de emisión, recepción única, vigencia al guardar y referencia temporal
+Margen fijo de emisión, marca de recepción capturada una vez, vigencia al guardar y referencia temporal
 Salesforce para la interfaz. Pruebas de fronteras y suspensión, banco aislado y
 matriz diferenciada entre mocks, HTTP local, callout Salesforce y LWC comercial.
 Sin ampliaciones de negocio, nuevos permisos amplios o cambios de reloj.
 Resultados, criterios V1 y limitaciones en [STATUS](STATUS.md) y [FASE-5](FASE-5.md).
+
+## Fases 5B y 6
+
+5B confirma dos entradas HTTP distintas ante 429/503 por un callout Apex, frente
+a una en los controles Node; no identifica el componente externo ni demuestra
+reintento propio. Sus sondas no alteran instantáneas. [Diagnóstico](FASE-5B.md).
+Fase 6 consolida aceptación, reproducción y ficha técnica mediante revisión estática,
+sin nuevas funcionalidades, ejecuciones externas ni cierre definitivo.

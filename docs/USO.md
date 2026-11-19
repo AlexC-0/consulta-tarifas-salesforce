@@ -1,4 +1,8 @@
-# Uso comercial y despliegue de fase 5
+# Uso comercial y reproducción de P05
+
+Implementación y diagnóstico completados; aceptación final pendiente.
+La guía describe el comportamiento implementado. Evidencias por fase en
+[ACEPTACION-V1](ACEPTACION-V1.md); procedimiento completo en [INSTALACION](INSTALACION.md).
 
 ## Acceso y permisos
 
@@ -57,7 +61,8 @@ Las respuestas tardías no sustituyen un detalle seleccionado después.
 
 ## Despliegue incremental comprobado
 
-Requiere fases 1B–3 instaladas, conexión y clave existentes; no recrearlas.
+Requiere fases 1B–4 instaladas, conexión y clave existentes; no recrearlas.
+Es el despliegue histórico de fase 5. Fases 5B y 6 no requieren desplegar aplicación.
 Desde salesforce/:
 
 ```powershell
@@ -90,4 +95,5 @@ No alterar el reloj ni relajar otras validaciones para forzar el resultado. El m
 temporal de fase 5 está documentado en [CLIENTE_APEX](CLIENTE_APEX.md).
 Pruebas aisladas y matriz real en [FASE-5](FASE-5.md); la V1 no se declara cerrada.
 
-Resultados y límites de la ejecución: [STATUS](STATUS.md).
+Resultados históricos: [estado de fase 5](ESTADO-FASE-5.md).
+Revisión y decisiones pendientes: [STATUS](STATUS.md).

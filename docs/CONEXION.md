@@ -20,8 +20,9 @@ sf.cmd api request rest /services/data/ --target-org p05-tarifas-dev
 ```
 
 El proyecto actual ya contiene sfdx-project.json y cls-meta.xml con 68.0.
-El script prepare-project.ps1 se conserva para instalaciones nuevas; no ejecutarlo
-sobre los archivos existentes, porque se niega a sobrescribirlos.
+prepare-project.ps1 es histórico y prepara solo las dos clases iniciales; no es un
+instalador de V1 ni debe ejecutarse sobre este checkout. Para el orden completo
+revisado, seguir [INSTALACION](INSTALACION.md), sin ejecutarlo en fase 6.
 
 ## Proveedor y secreto
 
@@ -77,7 +78,7 @@ Configuración comprobada:
 | Cabecera | X-API-Key = {!$Credential.P05_Proveedor_Externo.ApiKey}; secuencia 1 |
 | Named Credential | P05_Proveedor; SecuredEndpoint; callouts habilitados |
 | Opciones | Merge fields en cabecera activado; Authorization automática desactivada |
-| Permission Set | P05_Conexion_Proveedor; solo principal y clase P05ConsultaTarifa |
+| Permission Set | P05_Conexion_Proveedor; principal, clase P05ConsultaTarifa y lectura UserExternalCredential |
 
 External Credential y Permission Set están en force-app.
 Named Credential es una plantilla sin endpoint temporal, dentro de templates/.
@@ -86,14 +87,15 @@ secreto bajo .local/connection-metadata. No sobrescribe un staging existente.
 Antes de repetir, retirar o archivar únicamente ese directorio temporal generado,
 conservando .env y los originales. Nunca borrar .local completo.
 
-Para una primera instalación, desde salesforce/, ejecutar en este orden: clases,
-paquete de conexión y asignación al usuario de la demostración.
+Para una primera instalación, seguir el orden de [INSTALACION](INSTALACION.md):
+solo cliente independiente y su test, paquete de conexión, conjunto completo V1,
+secreto manual, permisos y datos. No desplegar todas las clases antes del esquema.
+El siguiente fragmento muestra únicamente la preparación del paquete de conexión,
+una vez desplegado el cliente, desde salesforce/:
 
 ```powershell
-sf.cmd project deploy start --source-dir force-app/main/default/classes --target-org p05-tarifas-dev --test-level RunSpecifiedTests --tests P05ConsultaTarifaTest --wait 10
 .\scripts\prepare-connection.ps1 -Endpoint https://URL-TEMPORAL.trycloudflare.com
 sf.cmd project deploy start --metadata-dir ..\.local\connection-metadata --target-org p05-tarifas-dev --wait 10
-sf.cmd org assign permset --name P05_Conexion_Proveedor --target-org p05-tarifas-dev
 ```
 
 Comprobar el resultado satisfactorio de cada paso antes de continuar. La URL del
@@ -109,12 +111,14 @@ explícito; ejecutar un comando no acredita éxito.
 El valor de ApiKey está configurado. No debe recuperarse ni imprimirse para verificarlo.
 Su funcionamiento se comprueba con la llamada real.
 
-Para una instalación nueva, introducirlo en el principal mediante Setup o,
-con autorización expresa, mediante la API oficial:
+Para una instalación nueva, introducirlo manualmente en el principal mediante
+Setup. Como referencia histórica, el recurso oficial empleado para credenciales es:
 POST /services/data/v68.0/named-credentials/credential, con protocolo Custom,
 principal P05_Compartido, tipo NamedPrincipal y credentials.ApiKey.encrypted=true.
 PUT sobre el mismo recurso permite sustituir/restaurar el valor.
-El secreto viaja por stdin desde .env, nunca como argumento, código Apex o metadata.
+La vía técnica descrita utiliza stdin desde .env, nunca un argumento, código Apex
+o metadata. No es una instrucción para automatizar su
+introducción en una nueva instalación.
 No conservar cuerpos de respuesta ni logs de depuración completos.
 
 ## Demostración real
@@ -135,8 +139,9 @@ El banco aislado rechaza deliberadamente con 401 después de la autenticación n
 sin reemplazar secretos. La autenticación incorrecta real se comprueba por HTTP local
 con una clave efímera independiente. Véase [FASE-5](FASE-5.md).
 
-Estas llamadas se ejecutan fuera de Test. Los 16 métodos HttpCalloutMock actuales
-no prueban red o permisos ordinarios. La demostración 1B se realizó como
+Estas llamadas se ejecutan fuera de Test. Los 16 métodos del cliente de fase 2
+fueron ampliados a 18 en fase 5; los mocks no prueban red o permisos ordinarios.
+La demostración 1B se realizó como
 System Administrator; no se atribuye a un comercial.
 
 Detener los procesos propios de proveedor y túnel, verificar puerto libre y

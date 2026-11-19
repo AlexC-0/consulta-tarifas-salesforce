@@ -2,6 +2,10 @@
 
 ## Despliegue incremental de fase 3
 
+Antecedente de esa fase, no receta de instalación limpia con las fuentes actuales.
+Los permisos actuales incluyen referencias a la interfaz posterior; para preparar
+V1 completa usar el orden y manifiesto de [INSTALACION](INSTALACION.md).
+
 Requiere la organización P05 y la conexión ya configuradas en fases anteriores.
 El manifiesto de esta fase no recrea credenciales ni incluye secretos.
 Desde salesforce/:

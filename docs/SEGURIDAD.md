@@ -95,7 +95,8 @@ el resultado de su recorrido interactivo y restauración consta en [STATUS](STAT
 ## Adaptador y presentación de fase 4
 
 P05TarifasControlador es with sharing y conserva las comprobaciones del servicio.
-Sus cuatro métodos Aura son imperativos y no cacheables. El guardado acepta solo
+Sus cinco métodos Aura, incluida la lectura horaria de fase 5, son imperativos y
+no cacheables. El guardado acepta solo
 productId y quantity. P05ProductoOpcion y P05TarifaVista son DTO de nivel superior
 con propiedades AuraEnabled; no se expone la clase interna Detalle ni un SObject.
 Productos: autorización funcional, CRUD/FLS, WITH USER_MODE, activos/código válido,

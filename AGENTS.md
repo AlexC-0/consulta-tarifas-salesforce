@@ -10,13 +10,17 @@ cambios, comprobaciones y limitaciones del proyecto. Utilizar redacción técnic
 directa. Excluir relatos de conversaciones, asignaciones personales, firmas
 automáticas y detalles internos de elaboración.
 
-Fase 5B: diagnóstico acotado de recepciones repetidas ante 429/503, sobre fase 5
-publicada en 3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16. Distinguir entrada HTTP,
-hook y respuesta mediante identificación local por recepción. Comparar 200/401/429/503
-en loopback, HTTPS del túnel y una llamada Apex. Evitar Login As salvo necesidad.
-No atribuir causas más allá de la evidencia ni cambiar criterios de aceptación.
-No desplegar componentes Salesforce si solo cambian herramientas o documentación.
-Túnel de fase 5 cerrado: esta ejecución requiere autorización temporal específica.
+Fase 6: revisión documental y preparación de la aceptación V1, sobre fase 5B
+publicada en 756e931dbb2e78f4d3bdf64c762738f71344e976. Implementación funcional
+publicada en 3f6a4dcd9aa08ce3884a78ef9dc252cf684ede16.
+Estado: implementación y diagnóstico completados; aceptación final pendiente.
+Contrastar criterios, código, evidencias y reproducción sin añadir funcionalidades.
+Conservar íntegro el diagnóstico 5B y distinguir evidencias históricas de revisión
+estática. Proponer ausencia de reintentos de aplicación sin dar por aceptada la
+delimitación del transporte. No atribuir causas internas sin evidencia.
+No ejecutar suites, servicios, túneles, Login As, despliegues ni llamadas externas
+en esta fase. No contactar soporte, crear organizaciones ni reinicializar datos.
+Se permiten documentación y manifiestos acotados revisados estáticamente.
 Conservar funcionalidades, USER_MODE,
 permisos e integridad. Emisión futura: margen fijo máximo de 1000 ms; caducidad sin
 tolerancia y duración exacta de 24 horas. No cambiar relojes ni configuración NTP.
@@ -38,9 +42,8 @@ Fase 4 completada: nueve componentes, 36/36 Apex y 21/21 Jest. Recorrido comerci
 real, P05-000001 conservada junto con P05-000000, detalle ajeno denegado e histórico
 sin proveedor comprobados. Login As restaurado false; cuenta comercial mínima
 conservada. Fase 4 publicada en df23ec6. Ver docs/STATUS.md y docs/USO.md.
-Fase 5 autorizada, incluido despliegue incremental en la organización P05 existente
-tras verificar identidad y con destino explícito. Túnel y Login As requieren alcance
-expreso aplicable a la ejecución. No crear organizaciones ni usuarios persistentes.
+La autorización de despliegue y demostración de fase 5 es histórica; no habilita
+operaciones nuevas en fase 6. No crear organizaciones ni usuarios persistentes.
 Conservar credenciales e instantáneas. V1 no cerrada.
 Fase 5 desplegada incrementalmente: 40/40 Apex, 30/30 Jest, 43/43 proveedor.
 P05-000000 a P05-000004 conservadas. Proveedor/túnel cerrados, endpoint inicial
@@ -53,4 +56,6 @@ Cinco instantáneas intactas, endpoint restaurado, procesos propios detenidos en
 3,78 minutos de túnel autorizado; Login As no utilizado. Ver docs/FASE-5B.md.
 Pendiente V1: revisar la garantía de ausencia de reintentos programados sin prometer
 entrega única externa; instalación limpia sin comprobar. No añadir idempotencia
-ni reintentos para ocultar el hallazgo. Fase 5B preparada sin commit ni publicación.
+ni reintentos para ocultar el hallazgo. Fase 5B publicada en 756e931.
+La instalación limpia está documentada pero no ejecutada; no convertir esa
+limitación en requisito aprobado sin fuente. No declarar cierre V1 ni iniciar P06.
